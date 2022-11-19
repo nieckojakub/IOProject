@@ -6,6 +6,8 @@ from flask_login import LoginManager
 
 def create_app():
     app = Flask(__name__)
+
+    """ Configuration for Development, Testing, Production.  """
     app.config.from_object('config.DevelopmentConfig')
 
     from .views import views
