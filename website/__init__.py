@@ -13,7 +13,7 @@ def create_app():
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
-    app.register_blueprint(search, url_prefix="/search/")
+    app.register_blueprint(search, url_prefix="/search")
 
     return app
 
