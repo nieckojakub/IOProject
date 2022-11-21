@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf  %}
 {% block title %}Login{% endblock %}
 {% block content %}
 
@@ -11,36 +10,55 @@
 
         <!-- login card-->
         <div class="card" style="background-color:#5200cc">
-            <!-- card header-->
-            <div class="card-body">
-                <h4 class="card-title">Sign in!</h4>
+           <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Log In</legend>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-control-label") }}
+                    {% if form.password.errors %}
+                        {{ form.password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-check">
+                    {{ form.remember(class="form-check-input") }}
+                    {{ form.remember.label(class="form-check-label") }}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
             </div>
-
-            <!-- card body-->
-            <div class="card-body">
-
-                <!-- Log in form-->
-                <form name="login_form" action="/login" method="POST">
-
-                    <!-- email-->
-                    <div class="form-group my-2">
-                        <label for="user_email_label">Email address</label>
-                        <input name="user_email_label" type="text" class="form-control my-2" id="user_email_label"
-                               placeholder="Enter Your email address">
-                    </div>
-                    <!-- password-->
-                    <div class="form-group mt-2 mb-0">
-                        <label for="user_password_label">Password</label>
-                        <input name="user_password_input" type="password" class="form-control my-2" id="user_password_label"
-                               placeholder="Enter Your password">
-                    </div>
-                    <!-- Log in btn-->
-                    <input class="btn btn-primary mt-4" type="submit" id="submit_login_button" value="Log in">
-                </form>
-            </div>
-
-            <div class="card-footer">Haven't registered yet? <a class="text-dark fw-bold" href="">Sign up now!</a>
-            </div>
+            <small class="text-muted ml-2">
+                <a href="#">Forgot Password?</a>
+            </small>
+        </form>
+    </div>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Need An Account? <a class="ml-2" href="{{ url_for('auth.signup') }}">Sign Up Now</a>
+        </small>
+    </div>
 
         </div>
 
