@@ -1,7 +1,4 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from os import path
-from flask_login import LoginManager
 
 
 def create_app():
@@ -10,11 +7,13 @@ def create_app():
     """ Configuration for Development, Testing, Production.  """
     app.config.from_object('config.DevelopmentConfig')
 
-    from .views import views
-    from .auth import auth
+    from website.views.views import views
+    from website.views.auth import auth
+    from website.views.search import search
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(search, url_prefix="/search")
 
     return app
 

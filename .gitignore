@@ -15,3 +15,5 @@ build/
 
 .env
 ./venv
+.idea/misc.xml
+.idea/IOProject.iml
