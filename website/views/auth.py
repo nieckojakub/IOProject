@@ -7,6 +7,12 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'admin@admin.com' and form.password.data == 'password':
+            flash(f'You have been logged in!','success')
+            return redirect(url_for('views.home'))
+        else:
+            flash(f'Login Unsuccessful. Please check username and password', 'danger')
     return render_template("login.html",form=form )
 
 
