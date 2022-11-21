@@ -134,3 +134,16 @@ body{
     }
 
 }
+
+
+/* Modify the background color */
+.navbar-custom {
+    background-color: #5200cc;
+}
+
+
+/* Modify brand and text color */
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+    color: #FFFFFF;
+}

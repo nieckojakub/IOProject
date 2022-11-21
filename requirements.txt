@@ -3,3 +3,5 @@ Flask-SQLAlchemy
 flask-login
 
 WTForms~=3.0.1
+
+email_validator
