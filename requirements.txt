@@ -2,3 +2,4 @@ flask~=2.2.2
 Flask-SQLAlchemy
 flask-login
 WTForms~=3.0.1
+flask-bcrypt

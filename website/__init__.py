@@ -2,9 +2,12 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from os import path
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 
 db = SQLAlchemy()
 DB_NAME = 'site.db'
+bcrypt = Bcrypt()
 
 
 def create_app():
@@ -13,6 +16,8 @@ def create_app():
     """ Configuration for Development, Testing, Production.  """
     app.config.from_object('config.DevelopmentConfig')
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+
+    bcrypt = Bcrypt(app)
 
     db.init_app(app)
 
