@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, request, url_for, flash,redirect
+from datetime import datetime
+#from website.token import generate_confirmation_token, confirm_token
 from website.views.forms import RegistrationForm, LoginForm
 from website import bcrypt, db
 from website.models import User
@@ -40,6 +42,26 @@ def signup():
         user = User(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
+        token = generate_confirmation_token(user.email)
         flash(f'Account created for {form.firstName.data}!','success')
         return redirect(url_for('auth.login'))
     return render_template('signup.html',form=form)
+
+
+@auth.route('/confirm/<token>')
+#@login_required
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    user = User.query.filter_by(email=email).first_or_404()
+    if user.confirmed:
+        flash('Account already confirmed. Please login.', 'success')
+    else:
+        user.confirmed = True
+        user.confirmed_on = datetime.now()
+        db.session.add(user)
+        db.session.commit()
+        flash('You have confirmed your account. Thanks!', 'success')
+    return redirect(url_for('main.home'))
