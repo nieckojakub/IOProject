@@ -7,78 +7,80 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <title>{% block title %}Home{% endblock %}</title>
 </head>
+
 <body>
 
-<!--background-->
-<div class="area ">
+    <!--background-->
+    <div class="area" style="min-height: 900px ">
 
-    <nav class="navbar navbar-expand-lg navbar-dark" style="z-index: 100; background-color:#3A3ACB; color:#FFFFFF">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbar"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbar">
-        <div class="navbar-nav">
+        <!-- navbar-->
+        <nav class="container-fluid navbar navbar-expand-lg navbar-dark" style="z-index: 100; background-color:#3A3ACB; color:#FFFFFF;">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbar"
+            style="z-index: 100;"
+          >
+            <span class="navbar-toggler-icon" style="z-index: 100;"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbar" style="z-index: 100;">
+            <div class="navbar-nav" style="z-index: 100;">
 
-          <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}">Home</a>
+              <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}" style="z-index: 100;">Home</a>
 
-            <a class="nav-item nav-link" id="logout" href="{{ url_for('auth.logout') }}">Logout</a>
+                <a class="nav-item nav-link" id="logout" href="{{ url_for('auth.logout') }}" style="z-index: 100;">Logout</a>
 
-            <a class="nav-item nav-link" id="login" href="{{ url_for('auth.login') }}">Login</a>
-            <a class="nav-item nav-link" id="signUp" href="{{ url_for('auth.signup') }}">Sign Up</a>
+                <a class="nav-item nav-link" id="login" href="{{ url_for('auth.login') }}" style="z-index: 100;">Login</a>
+                <a class="nav-item nav-link" id="signUp" href="{{ url_for('auth.signup') }}" style="z-index: 100;">Sign Up</a>
 
+            </div>
+          </div>
+        </nav>
+
+        <!-- content-->
+        <div class="container-fluid" style="z-index: 100; margin-top: 10vh">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block content %}
+
+            {% endblock %}
 
         </div>
-      </div>
-    </nav>
-
-    <div class="container" >
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        {% block content %}
-
-        {% endblock %}
-
-    </div>
-
-<footer class="bg-light text-center text-white" style="position:absolute; bottom: 0%; width: 100%">
-  <!-- Copyright -->
-  <div class="text-center p-3" style="background-color: #3A3ACB;">
-    © 2020 Copyright:
-    <a class="text-white" href="https://github.com/nieckojakub/IOProject">Github.com</a>
-  </div>
-  <!-- Copyright -->
-</footer>
-<!--floating circles -->
-<ul class="circles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-</ul>
-</div> <!--end background -->
 
 
+        <footer class="bg-light text-center text-white" style=" width: 100%; position: fixed; bottom: 0vh">
+          <!-- Copyright -->
+          <div class="text-center p-3" style="background-color: #3A3ACB;">
+            © 2020 Copyright:
+            <a class="text-white" href="https://github.com/nieckojakub/IOProject">Github.com</a>
+          </div>
+          <!-- Copyright -->
+        </footer>
+
+        <!--floating circles -->
+        <ul class="circles">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+        </ul>
 
 
-
+    </div> <!--end background -->
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
