@@ -14,7 +14,7 @@
     <div class="area" style="min-height: 900px ">
 
         <!-- navbar-->
-        <nav class="container-fluid navbar navbar-expand-lg navbar-dark" style="z-index: 100; background-color:#3A3ACB; color:#FFFFFF;">
+        <nav class="navbar navbar-expand-lg navbar-dark" style=" background-color:#3A3ACB; color:#FFFFFF;">
           <button
             class="navbar-toggler"
             type="button"
@@ -24,15 +24,14 @@
           >
             <span class="navbar-toggler-icon" style="z-index: 100;"></span>
           </button>
+
           <div class="collapse navbar-collapse" id="navbar" style="z-index: 100;">
             <div class="navbar-nav" style="z-index: 100;">
 
-              <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}" style="z-index: 100;">Home</a>
-
-                <a class="nav-item nav-link" id="logout" href="{{ url_for('auth.logout') }}" style="z-index: 100;">Logout</a>
-
-                <a class="nav-item nav-link" id="login" href="{{ url_for('auth.login') }}" style="z-index: 100;">Login</a>
-                <a class="nav-item nav-link" id="signUp" href="{{ url_for('auth.signup') }}" style="z-index: 100;">Sign Up</a>
+                <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}">Home</a>
+                <a class="nav-item nav-link" id="logout" href="{{ url_for('auth.logout') }}" >Logout</a>
+                <a class="nav-item nav-link" id="login" href="{{ url_for('auth.login') }}" >Login</a>
+                <a class="nav-item nav-link" id="signUp" href="{{ url_for('auth.signup') }}" >Sign Up</a>
 
             </div>
           </div>
