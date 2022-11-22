@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from os import path
@@ -32,6 +32,11 @@ def create_app():
     from .models import User
 
     create_database(app)
+
+    # 404 error handler
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('404.html'), 404
 
     return app
 
