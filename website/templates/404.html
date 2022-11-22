@@ -2,5 +2,30 @@
 {% block title %}404 Error{% endblock %}
 {% block content %}
 
-404
+<div class="container-sm text-center" style="z-index: 100; color: #FFFFFF; width: 50%; margin-top: 20vh">
+
+        <!-- 404 card-->
+        <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px; z-index: 100;">
+
+            <!-- card header-->
+            <div class="card-body ">
+                <h4 class="card-title">Ups... Something went wrong.</h4>
+            </div>
+
+
+            <!-- card body-->
+            <div class="card-body">
+
+                <h2>It seems that we don't have, what You are looking for. Try again with something different.</h2>
+
+            </div>
+
+            <div class="card-footer">
+                Need a help? <a class="ml-2" href="{{ url_for('auth.signup') }}">Contact us! //TODO</a>
+            </div>
+
+        </div>
+
+    </div>
+
 {% endblock %}
