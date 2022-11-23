@@ -59,20 +59,26 @@ class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
     search_date = db.Column(db.DateTime(), default=datetime.utcnow)
-    is_allegro = db.Column(db.Boolean, nullable=False, default=False)
-    is_ceneo = db.Column(db.Boolean, nullable=False, default=False)
-    product1_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=False)
-    product2_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=True)
-    product3_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=True)
-    product4_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=True)
-    product5_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=True)
-    product6_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=True)
-    product7_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=True)
-    product8_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=True)
-    product9_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=True)
-    product10_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=True)
 
 
 class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
+    history_id = db.Column(db.Integer(), db.ForeignKey('history.id'), nullable=False)
+    name = db.Column(db.String, nullable=False)
+    url = db.Column(db.String, nullable=False)
+    img = db.Column(db.String, nullable=True)
+    description = db.Column(db.String, nullable=True)
+    rating = db.Column(db.Float, nullable=True)
+
+
+class Shop(db.Model):
+    __tablename__ = 'shop'
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer(), db.ForeignKey('product.id'), nullable=False)
+    name = db.Column(db.String, nullable=False)
+    url = db.Column(db.String, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    delivery_price = db.Column(db.Float, nullable=True)
+    availability = db.Column(db.Integer, nullable=True)
+    delivery_time = db.Column(db.Float, nullable=True)
