@@ -4,3 +4,5 @@ flask-login
 WTForms~=3.0.1
 flask-bcrypt
 flask_bootstrap
+flask_wtf
+email_validator
