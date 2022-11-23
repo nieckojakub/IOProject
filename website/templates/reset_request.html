@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}Reset Request{% endblock %}
 {% block content %}
 
 
@@ -10,7 +10,7 @@
 
             <!-- card header-->
             <div class="card-body ">
-                <h4 class="card-title">Log in!</h4>
+                <h4 class="card-title">Reset Password!</h4>
             </div>
 
 
@@ -36,40 +36,18 @@
                             {% endif %}
                         </div>
 
-                        <div class="form-group mb-3">
-                            {{ form.password.label(class="form-control-label") }}
-                            {% if form.password.errors %}
-                                {{ form.password(class="form-control form-control-lg is-invalid") }}
-                                <div class="invalid-feedback">
-                                    {% for error in form.password.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ form.password(class="form-control form-control-lg") }}
-                            {% endif %}
-                        </div>
 
-                        <div class="form-check mb-3">
-                            {{ form.remember(class="form-check-input") }}
-                            {{ form.remember.label(class="form-check-label") }}
-                        </div>
+
                     </fieldset>
                     <div class="form-group mb-3">
                         {{ form.submit(class="btn btn-outline-info") }}
-
-                        <small class="text-muted ml-2">
-                            <a href="{{ url_for('auth.reset_request') }}">Forgot Password?</a>
-                        </small>
                     </div>
 
                 </form>
 
             </div>
 
-            <div class="card-footer">
-                Need An Account? <a class="ml-2" href="{{ url_for('auth.signup') }}">Sign Up Now</a>
-            </div>
+
 
         </div>
 
