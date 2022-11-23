@@ -6,7 +6,7 @@ from website.app import db
 from website.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from website.app import bcrypt, login_manager
-from website.email import send_reset_email
+from website.email import send_reset_email, send_mail_confirmation
 
 auth = Blueprint('auth', __name__)
 
@@ -20,9 +20,12 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('views.home'))
+            if user.confirmed:
+                login_user(user, remember=form.remember.data)
+                next_page = request.args.get('next')
+                return redirect(next_page) if next_page else redirect(url_for('views.home'))
+            else:
+                flash('Check your mail associated with this account to confirm the account.', 'info')
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template("login.html", form=form)
@@ -44,7 +47,7 @@ def signup():
         user = User(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
-        # token = generate_confirmation_token(user.email)
+        send_mail_confirmation(user)
         flash(f'Account created for {form.firstName.data}!  Please chceck your email for verification!','success')
         return redirect(url_for('auth.login'))
     return render_template('signup.html',form=form)
@@ -83,21 +86,20 @@ def reset_token(token):
         return redirect(url_for('auth.login'))
     return render_template('reset_token.html', form=form)
 
-@auth.route('/confirm/<token>')
-#@login_required
+@auth.route('/confirm_email/<token>', methods=['GET','POST'])
 def confirm_email(token):
-    try:
-        #email = confirm_token(token)
-        email=''
-    except:
-        flash('The confirmation link is invalid or has expired.', 'danger')
-    user = User.query.filter_by(email=email).first_or_404()
-    if user.confirmed:
-        flash('Account already confirmed. Please login.', 'success')
-    else:
-        user.confirmed = True
-        user.confirmed_on = datetime.now()
+    if current_user.is_authenticated:
+        return redirect(url_for('views.home'))
+    email = User.verify_mail_confirm_token(token)
+    if email:
+        user = db.session.query(User).filter(User.email == email).one_or_none()
+        user.confirmed =True
+        user.confirmed_on=datetime.now()
         db.session.add(user)
         db.session.commit()
-        flash('You have confirmed your account. Thanks!', 'success')
-    return redirect(url_for('main.home'))
+        flash(f"Your email has been verified and you can now login to your account","success",)
+        return redirect(url_for('auth.login'))
+    else:
+        flash('The confirmation link is invalid or has expired.', 'warning')
+        return redirect(url_for('auth.signup'))
+

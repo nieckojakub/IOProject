@@ -4,9 +4,10 @@ from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
 import config
 
+
 @login_manager.user_loader
 def load_user(user_id):
-   return User.query.get(int(user_id))
+    return User.query.get(int(user_id))
 
 
 class User(db.Model, UserMixin):
@@ -21,11 +22,10 @@ class User(db.Model, UserMixin):
     confirmed = db.Column(db.Boolean, nullable=True, default=False)
     confirmed_on = db.Column(db.DateTime())
 
-
     def get_reset_token(self):
         secret_key = config.Config.SECRET_KEY
         s = Serializer(secret_key)
-        return s.dumps({'user_id':self.id})
+        return s.dumps({'user_id': self.id})
 
     @staticmethod
     def verify_reset_token(token):
@@ -36,6 +36,23 @@ class User(db.Model, UserMixin):
         except:
             return None
         return User.query.get(user_id)
+
+    def get_mail_confirm_token(self):
+        secret_key = config.Config.SECRET_KEY
+        s = Serializer(secret_key)
+        return s.dumps(self.email)
+        # return s.dumps({'user_id': self.id})
+
+    @staticmethod
+    def verify_mail_confirm_token(token):
+        secret_key = config.Config.SECRET_KEY
+        try:
+            s = Serializer(secret_key)
+            email = s.loads(token, max_age=3600)
+            return email
+        except:
+            return None
+
 
 class History(db.Model):
     __tablename__ = 'history'
