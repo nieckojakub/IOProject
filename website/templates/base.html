@@ -37,13 +37,12 @@
             type="button"
             data-toggle="collapse"
             data-target="#navbar"
-            style="z-index: 100;"
           >
-            <span class="navbar-toggler-icon" style="z-index: 100;"></span>
+            <span class="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse" id="navbar" style="z-index: 100;">
-            <div class="navbar-nav" style="z-index: 100;">
+          <div class="collapse navbar-collapse" id="navbar">
+            <div class="navbar-nav">
                 <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}">Home</a>
                 {% if current_user.is_authenticated %}
                 <a class="nav-item nav-link" id="account" href="{{ url_for('auth.account') }}" >Account</a>
@@ -72,7 +71,7 @@
                   {% block content %}{% endblock %}
         </main>
 
-        <footer class="bg-light text-center text-white" style="position: absolute; bottom: 0vh; width: 100%;">
+        <footer class="bg-light text-center text-white" style="margin-top: 5vh; position: fixed; bottom: 0vh; width: 100%;">
           <!-- Copyright -->
           <div class="text-center p-3" style="background-color: #3A3ACB;">
             © 2022 Copyright:
