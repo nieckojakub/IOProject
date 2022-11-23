@@ -1,8 +1,11 @@
 from flask import Blueprint, request
+from flask_login import current_user, login_required
+from ..models import History, Product
 
 search = Blueprint('search', __name__)
 
 
+# search
 @search.route('/', methods=['GET'])
 def search_get():
     # get params
@@ -35,6 +38,21 @@ def search_get():
     if is_allegro:
         pass
 
+    # add to history
+    # history = History(user_id=current_user.id, is_allegro=is_allegro, is_ceneo=is_ceneo)
+
     # return results
     return str(products_list) + ", ceneo: " + str(is_ceneo) + \
            ", allegro: " + str(is_allegro), 200
+
+
+# search history
+# TODO: login_required
+@search.route('/history', methods=['GET'])
+def history_get():
+    return 'History', 200
+
+
+@search.route('/history/<int:id>', methods=['DELETE'])
+def history_delete(id):
+    return id, 200
