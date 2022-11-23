@@ -16,7 +16,7 @@ def send_reset_email(user):
 <p>But don’t worry! To initiate the password reset process for your account, click the link below.</p>
 { url_for('auth.reset_token', token=token, _external=True) }
 
-If you did not make this request, you can simply ignore this email.
+<p>If you did not make this request, you can simply ignore this email.</p>
 <br><br>
 Sincerely,
 AlCen Helper Team

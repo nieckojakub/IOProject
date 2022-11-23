@@ -24,7 +24,7 @@ def login():
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('views.home'))
         else:
-            flash(f'Login Unsuccessful. Please check email and password', 'danger')
+            flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template("login.html", form=form)
 
 
@@ -45,7 +45,7 @@ def signup():
         db.session.add(user)
         db.session.commit()
         # token = generate_confirmation_token(user.email)
-        flash(f'Account created for {form.firstName.data}!  Please chceck your email for verification!','success!')
+        flash(f'Account created for {form.firstName.data}!  Please chceck your email for verification!','success')
         return redirect(url_for('auth.login'))
     return render_template('signup.html',form=form)
 
@@ -79,7 +79,7 @@ def reset_token(token):
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user.password = hashed_password
         db.session.commit()
-        flash('Your password has been update! You are now able to log in.','success!')
+        flash('Your password has been update! You are now able to log in.','success')
         return redirect(url_for('auth.login'))
     return render_template('reset_token.html', form=form)
 
