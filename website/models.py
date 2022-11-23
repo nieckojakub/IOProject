@@ -1,7 +1,8 @@
-from .app import db, login_manager
+from .app import db, login_manager, app
 from datetime import datetime
 from flask_login import UserMixin
-
+from itsdangerous import URLSafeTimedSerializer as Serializer
+import config
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -20,6 +21,21 @@ class User(db.Model, UserMixin):
     confirmed = db.Column(db.Boolean, nullable=True, default=False)
     confirmed_on = db.Column(db.DateTime())
 
+
+    def get_reset_token(self):
+        secret_key = config.Config.SECRET_KEY
+        s = Serializer(secret_key)
+        return s.dumps({'user_id':self.id})
+
+    @staticmethod
+    def verify_reset_token(token):
+        secret_key = config.Config.SECRET_KEY
+        s = Serializer(secret_key)
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
 class History(db.Model):
     __tablename__ = 'history'
