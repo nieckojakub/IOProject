@@ -1,5 +1,6 @@
 class Shop:
-    def __init__(self, name: str, url: str, price: float, delivery_price: float, availability: int, delivery_time: float):
+    def __init__(self, name: str, url: str,
+                 price: float, delivery_price: float, availability: int, delivery_time: float):
         # shop name
         self.name = name
 
