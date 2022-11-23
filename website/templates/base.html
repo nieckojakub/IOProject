@@ -11,64 +11,7 @@
 <body>
 
     <!--background-->
-    <div class="area" style="min-height: 900px ">
-
-        <!-- navbar-->
-        <header>
-        <nav class="navbar navbar-expand-lg navbar-dark" style=" background-color:#3A3ACB; color:#FFFFFF;">
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbar"
-            style="z-index: 100;"
-          >
-            <span class="navbar-toggler-icon" style="z-index: 100;"></span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbar" style="z-index: 100;">
-            <div class="navbar-nav" style="z-index: 100;">
-                <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}">Home</a>
-                {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" id="account" href="{{ url_for('auth.account') }}" >Account</a>
-                <a class="nav-item nav-link" id="logout" href="{{ url_for('auth.logout') }}" >Logout</a>
-                {% else %}
-                <a class="nav-item nav-link" id="login" href="{{ url_for('auth.login') }}" >Login</a>
-                <a class="nav-item nav-link" id="signUp" href="{{ url_for('auth.signup') }}" >Sign Up</a>
-                {% endif %}
-
-            </div>
-          </div>
-        </nav>
-        </header>
-        <main role="main" class="container">
-            <div class="row">
-                <div class="col-md-8">
-                  {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                      {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                          {{ message }}
-                        </div>
-                      {% endfor %}
-                    {% endif %}
-                  {% endwith %}
-                    <br>
-                  {% block content %}{% endblock %}
-                 </div>
-              </div>
-
-        </main>
-
-        <footer class="bg-light text-center text-white" style=" width: 100%; position: fixed; bottom: 0vh; z-index:100">
-          <!-- Copyright -->
-          <div class="text-center p-3" style="background-color: #3A3ACB;">
-            © 2020 Copyright:
-            <a class="text-white" href="https://github.com/nieckojakub/IOProject">Github.com</a>
-          </div>
-          <!-- Copyright -->
-        </footer>
-
+    <div class="area" style="position: fixed; top:0; z-index: -1">
         <!--floating circles -->
         <ul class="circles">
                 <li></li>
@@ -86,10 +29,63 @@
 
     </div> <!--end background -->
 
+        <!-- navbar-->
+        <header>
+        <nav class="navbar navbar-expand-lg navbar-dark" style=" background-color:#3A3ACB; color:#FFFFFF;">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbar"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbar">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}">Home</a>
+                {% if current_user.is_authenticated %}
+                <a class="nav-item nav-link" id="account" href="{{ url_for('auth.account') }}" >Account</a>
+                <a class="nav-item nav-link" id="logout" href="{{ url_for('auth.logout') }}" >Logout</a>
+                {% else %}
+                <a class="nav-item nav-link" id="login" href="{{ url_for('auth.login') }}" >Login</a>
+                <a class="nav-item nav-link" id="signUp" href="{{ url_for('auth.signup') }}" >Sign Up</a>
+                {% endif %}
+
+            </div>
+          </div>
+        </nav>
+        </header>
+
+        <main class="container" style="margin-top: 5vh">
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                      {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                          {{ message }}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+                    <br>
+                  {% block content %}{% endblock %}
+        </main>
+
+        <footer class="bg-light text-center text-white" style="margin-top: 5vh; position: fixed; bottom: 0vh; width: 100%;">
+          <!-- Copyright -->
+          <div class="text-center p-3" style="background-color: #3A3ACB;">
+            © 2022 Copyright:
+            <a class="text-white" href="https://github.com/nieckojakub/IOProject">Github.com</a>
+          </div>
+          <!-- Copyright -->
+        </footer>
+
+
+</body>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
 
 
-</body>
+
 </html>
