@@ -2,7 +2,7 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
-        <div class="container-sm text-center" style="color: #FFFFFF; width: 85%; margin-top: 2vh">
+    <div class="container-sm text-center" style="color: #FFFFFF; width: 85%; margin-top: 2vh">
 
         <!-- login card-->
         <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px;">
@@ -44,20 +44,32 @@
                             <input type="text" class="form-control mt-2" id="SearchInput" aria-describedby="SearchHelp">
                         </div>
                         <div class="col-auto">
-                            <button class="btn btn-primary mt-2">Add</button>
+                            <button type="button" id="addButton" class="btn btn-primary mt-2" onclick="addProduct()">Add</button>
                         </div>
                         <div id="SearchHelp" class="form-text" style="color: white;">Enter what You are looking for.</div>
 
                     </div>
 
                 </form>
+                
+                <!-- list of products-->
+                <div class="card rounded-lg" style="background-color:#ffffff; border-radius: 25px;">
+                    <div id="listOfProducts" class="card-body" style="color:#000000;">
+                        <!-- TODO zeby przylegalo do lewej i wyrownac napis z przyciskiem -->
+
+
+                    </div>
+
+                </div>
 
             </div>
 
-            <div class="card-footer"></div>
+            <div style="height: 15px;" class="card-footer"></div>
 
         </div>
 
     </div>
+
+    <script src="../static/js/home_scripts.js"></script>
 
 {% endblock %}
