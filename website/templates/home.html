@@ -1,6 +1,63 @@
 {% extends "base.html" %}
-{% block title %}Logout{% endblock %}
+{% block title %}Home{% endblock %}
 {% block content %}
 
-Home XD
+        <div class="container-sm text-center" style="color: #FFFFFF; width: 85%; margin-top: 2vh">
+
+        <!-- login card-->
+        <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px;">
+
+            <!-- card header-->
+            <div class="card-body ">
+                {% if current_user.is_authenticated %}
+                <b> CenAll </b>
+                    <h4 class="card-title">Hello {{ current_user.firstName }}, we are happy to see You!</h4>
+                {% else %}
+                    <h4 class="card-title">Good luck searching!</h4>
+                {% endif %}
+            </div>
+
+
+            <!-- card body-->
+            <div class="card-body">
+                <form>
+                    <!-- check boxes-->
+                    <h6 style="display: inline">Please, select the source of Your search:</h6>
+                    <!-- Allegro-->
+                    <div style="display: inline; margin-left: 20px">
+                        <input class="form-check-input" type="checkbox" id="AllegroCheckbox" value="Allegro">
+                        <label class="form-check-label" for="AllegroCheckbox">Allegro</label>
+                    </div>
+                    <!-- Ceneo-->
+                    <div style="display: inline; margin-left: 20px">
+                        <input class="form-check-input" type="checkbox" id="CeneoCheckbox" value="Ceneo">
+                        <label class="form-check-label" for="CeneoCheckbox">Ceneo</label>
+                    </div>
+                    <!-- Both-->
+                    <div style="display: inline; margin-left: 20px; margin-bottom: 20px">
+                        <input class="form-check-input" type="checkbox" id="BothCheckbox" value="Both">
+                        <label class="form-check-label" for="BothCheckbox">Both</label>
+                    </div>
+                    <!-- Search input + add button-->
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <input type="text" class="form-control mt-2" id="SearchInput" aria-describedby="SearchHelp">
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary mt-2">Add</button>
+                        </div>
+                        <div id="SearchHelp" class="form-text" style="color: white;">Enter what You are looking for.</div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="card-footer"></div>
+
+        </div>
+
+    </div>
+
 {% endblock %}
