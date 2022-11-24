@@ -1,17 +1,19 @@
 // variables
 var listToReturn = [];
 //input formu
-var addButton = document.getElementById("addButton");
+var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
 var allegroCheckbox = document.getElementById("AllegroCheckbox");
 var ceneoCheckbox = document.getElementById("CeneoCheckbox");
 var bothCheckbox = document.getElementById("BothCheckbox");
 //list
-var listOfProducts = document.getElementById("listOfProducts");
+var listOfProducts = document.getElementById("ListOfProducts");
 
 
 
-//function- adding name of the product to the list
+//functions
+
+//adding name of the product to the list
 function addProduct(){
 
     listToReturn.push([searchInput.value, allegroCheckbox.checked, ceneoCheckbox.checked, bothCheckbox.checked]); //nazwa, allegro, cene, both
@@ -41,5 +43,11 @@ function addProduct(){
     newProduct.appendChild(delateBtnDiv);
     //adding new product to the list
     listOfProducts.appendChild(newProduct);
+    searchInput.value = "";
     
+}
+
+//deleting product from the list
+function deleteProductFromList(){
+
 }
