@@ -6,3 +6,4 @@ flask-bcrypt
 flask_bootstrap
 flask_wtf
 email_validator
+MechanicalSoup==1.2.0
