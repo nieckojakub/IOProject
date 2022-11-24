@@ -6,6 +6,8 @@ import os
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
+
+
 db = SQLAlchemy()
 DB_NAME = 'site.db'
 
@@ -15,6 +17,7 @@ login_manager = LoginManager(app)
 bcrypt = Bcrypt(app)
 login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'info'
+
 
 def create_app():
     bootstrap = Bootstrap(app)
