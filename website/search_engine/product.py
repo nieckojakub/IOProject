@@ -17,3 +17,11 @@ class Product:
 
         # rating <0; 5>
         self.rating = rating
+
+    def __str__(self):
+        descr = "NAME: {} RATING: {}\n". format(self.name, self.rating)
+        descr += "{}\n".format(self.description)
+        for shop in self.shop_list:
+            descr += str(shop)
+        return descr + '\n'
+        
