@@ -8,6 +8,7 @@ from ..search_engine.json_encoder import CustomEncoder
 from flask_wtf import FlaskForm
 from ..models import History, Shop as ShopModel, Product as ProductModel
 from ..app import db
+from ..search_engine.ceneo import CeneoBrowser
 
 search = Blueprint('search', __name__)
 
@@ -42,15 +43,16 @@ def search_get():
         return '', 400
 
     # ceneo results
+    ceneo_browser = CeneoBrowser()
     ceneo_results = list()
     if is_ceneo:
         for product in products_list:
-            ceneo_search_result = []    # TODO: search
+            ceneo_search_result = ceneo_browser.search(product)
             # for testing
-            ceneo_search_result = [Product(product, "url", "img",
-                                           [Shop('test1', 'url', 150, 20, 0, 10),
-                                            Shop('test2', 'url', 150, 20, 0, 10)],
-                                           "desc", 4.5)]
+            # ceneo_search_result = [Product(product, "url", "img",
+            #                                [Shop('test1', 'url', 150, 20, 0, 10),
+            #                                 Shop('test2', 'url', 150, 20, 0, 10)],
+            #                                "desc", 4.5)]
             ceneo_results.append(ceneo_search_result)
 
     # allegro results

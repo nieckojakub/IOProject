@@ -1,5 +1,6 @@
 from mechanicalsoup import Browser
-from search_engine import Product, Shop
+from ..product import Product
+from ..shop import Shop
 import re
 
 
