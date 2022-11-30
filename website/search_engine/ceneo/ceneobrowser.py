@@ -15,8 +15,6 @@ class CeneoBrowser(Browser):
     FORM_SELECTOR = 'form[action="/search"]'
     FORM_INPUT_SELECTOR = '#form-head-search-q'
     PRODUCT_LIMIT = 10
-    PRODUCT_DIVS_SELECTOR = '.cat-prod-row'
-    PRODUCT_MAIN_DIV_SELECTOR = '.product-top'
     PRODUCT_OFFER_SELECTOR = '.product-offers__list__item'
 
     def __init__(self, url=URL):
@@ -52,11 +50,12 @@ class CeneoBrowser(Browser):
             'img[class="js_gallery-media gallery-carousel__media"]'
         )[0]
         product_img = "https:" + product_img["src"]
-        # Product rating
-        product_rating_span = product_main_html.select(
-            'span[class="product-review__score"]'
-        )[0]
-        product_rating = round(float(product_rating_span["content"]), 2)
+        # # Product rating
+        # product_rating_span = product_main_html.select(
+        #     'span[class="product-review__score"]'
+        # )[0]
+        # product_rating = round(float(product_rating_span["content"]), 2)
+        product_rating = None
         # Product description
         product_description_div = product_main_html.select(
             'div[class="product-top__product-info__tags"]'
@@ -75,8 +74,8 @@ class CeneoBrowser(Browser):
             shop_url = self.URL + shop_logo_link["href"]
             # Product price
             price_span = product_offer.select('span[class="price"]')[0]
-            price_value = price_span.select('span[class="value"]')[0].string
-            price_penny = price_span.select('span[class="penny"]')[0].string
+            price_value = price_span.select('span[class="value"]')[0].string.replace(' ', '')
+            price_penny = price_span.select('span[class="penny"]')[0].string.replace(' ', '')
             product_price = float(price_value) + float(price_penny.strip(",")) / 100
             # Delivery price
             delivery_price_div = product_offer.select(
@@ -144,28 +143,81 @@ class CeneoBrowser(Browser):
         Product objects (with a maximum length limited by the limit variable)
         is returned. Otherwise only one Product object is returned.
         """
+        # Row layout
+        PRODUCT_LIST_LAYOUT_SELECTOR = '.cat-prod-row'
+        # Grid layout
+        PRODUCT_GRID_LAYOUT_SELECTOR = '.grid-row'
+        # Product main page
+        PRODUCT_MAIN_LAYOUT_SELECTOR = '.product-top__wrapper'
 
+        # Fill in the search form with the given search query
         self.search_input["value"] = search_query
+        # Submit the form and access the result page
         search_results_page = self.submit(self.search_form, self.url)
+        # Check if the url has changed 
+        # - if not, something is wrong with the form
         if search_results_page.url == self.url:
-            # Invalid query
+            # Throwing an error expected here
             return
+        # Success - we are now on the results page
+        # Retrive html code
         search_result_html = search_results_page.soup
-        product_divs = search_result_html.select(self.PRODUCT_DIVS_SELECTOR)
-        product_count = len(product_divs)
+        
+        # Now we need to check what kind of results page we got
+        # There are three types of results page layout:
+        # 1 The list-like layout - every item has its own row
+        # 2 The grid-like layout - every item has its own row and column
+        # 3 The main layout - The query was specific and the
+        #   results page is actually product main page
+        
+        # Check if the main layout selector appears on the results page
+        product_main_container = search_result_html.select(
+            PRODUCT_MAIN_LAYOUT_SELECTOR)
+        if product_main_container:
+            # We got the main layout
+            return [ self.scrapProductInfo(search_results_page.url) ]
+
+        # Check if the list layout selector appears on the results page
+        product_list_containers = search_result_html.select(
+            PRODUCT_LIST_LAYOUT_SELECTOR)
+        # Check if the grid layout selector appears on the results page
+        product_grid_containers = search_result_html.select(
+            PRODUCT_GRID_LAYOUT_SELECTOR)
+        if product_list_containers:
+            # We got the list-like layout
+            product_containers = product_list_containers
+        elif product_grid_containers:
+            # We got the grid-like layout
+            product_containers = product_grid_containers
+        else:
+            # Error ??
+            return
+
+        # Count the products
+        product_count = len(product_containers)
+        # Adjust the limit if we got less products than the LIMIT variable
         limit = product_count if product_count < limit else limit
-        if limit == 0:
-            # Product main page case
-            return self.scrapProductInfo(search_results_page.url)
-        # Numerous results
+
+        # List of products to return
         product_list = list()
-        for i in range(0, limit):
+        
+        # Iterate over the product containers and scrap url to the main page
+        # of each product. Then invoke scrapProductInfo() with each url method 
+        # to create Product object. When its done simply return the list of 
+        # Product objects.
+        for i in range(0,limit):
+            # Prepare the regex to match the product main page link
             product_link_regex = re.compile("/[0-9]+")
-            links = product_divs[i].find_all("a")
-            for link in links:
-                regex_result = product_link_regex.match(link["href"])
+            # Get every <a> tag associated with the product container
+            a_tags = product_containers[i].find_all("a")
+            # Iterate over <a> tags and find the one that matches the regex
+            for a_tag in a_tags:
+                regex_result = product_link_regex.match(a_tag["href"])
                 if regex_result is not None:
-                    product_main_page_url = self.URL + link["href"]
+                    # Create the full product main page url
+                    product_main_page_url = self.URL + a_tag["href"]
                     product_list.append(self.scrapProductInfo(product_main_page_url))
                     break
+    
         return product_list
+
