@@ -69,8 +69,10 @@ def search_get():
 
     results = {"ceneo": ceneo_results, "allegro": allegro_results}
 
+    json_result = json.dumps(results, indent=4, cls=CustomEncoder, ensure_ascii=False)
+    # print(json_result)
     # return results
-    return make_response(json.dumps(results, indent=4, cls=CustomEncoder), 200)
+    return make_response(json_result, 200)
 
 
 # search history
