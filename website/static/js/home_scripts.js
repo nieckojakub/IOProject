@@ -1,6 +1,7 @@
 // variables
 var listToReturn = [];
 var productsCounter = 0;
+var submitIsShown = false;
 //input formu
 var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
@@ -10,13 +11,15 @@ var bothCheckbox = document.getElementById("BothCheckbox");
 //list
 var listOfProducts = document.getElementById("ListOfProducts");
 
-
+//idk czemu ale jak wstawiam do DOM najpierw z none to nie moge zmienic na inline a jak dam tak i zamienie to od razu to działa
+document.getElementById("SubmitBtn").style.display = "none";
 
 //functions
 
 //adding name of the product to the list
 function addProduct(){
 
+    //checking if there is max 10 items on the list
     if(productsCounter > 10){
         alert("You can only add 10 items!")
     }
@@ -24,6 +27,9 @@ function addProduct(){
     if(searchInput.value == ""){
         alert("Please, enter your product first");
         return 0;
+    }
+    if(productsCounter == 0){
+        displaySubmitBtn(1);
     }
 
     listToReturn.push([searchInput.value]); //name
@@ -55,9 +61,22 @@ function addProduct(){
     
 }
 
-//deleting product from the list- TODO
+//deleting product from the list
 function deleteProductFromList(element){
     document.getElementById(element.parentNode.parentNode.id).remove();
     productsCounter--;
+    if(productsCounter == 0){
+        displaySubmitBtn(0);
+    }
 }
 
+//show/hide Submit button --1 => show button; 0=> hide button
+function displaySubmitBtn(showFlag){
+    
+    if(showFlag == 1){//show
+        document.getElementById("SubmitBtn").style.display = "inline";
+    }else if(showFlag == 0){//hide
+        document.getElementById("SubmitBtn").style.display = "none";
+    }
+
+}
