@@ -1,5 +1,6 @@
 // variables
 var listToReturn = [];
+var productsCounter = 0;
 //input formu
 var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
@@ -16,12 +17,16 @@ var listOfProducts = document.getElementById("ListOfProducts");
 //adding name of the product to the list
 function addProduct(){
 
-    listToReturn.push([searchInput.value, allegroCheckbox.checked, ceneoCheckbox.checked, bothCheckbox.checked]); //nazwa, allegro, cene, both
+    if(productsCounter > 10){
+        alert("You can only add 10 items!")
+    }
     //checking if input is nonempty
     if(searchInput.value == ""){
         alert("Please, enter your product first");
         return 0;
     }
+
+    listToReturn.push([searchInput.value]); //name
     //creating html elements
     var newProduct = document.createElement("div");
     var nameDiv = document.createElement("div");
@@ -30,11 +35,13 @@ function addProduct(){
     var delBtn = document.createElement('button');
     //setting attributes
     newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
+    newProduct.setAttribute("id",  Math.floor(Math.random() * (1000000000 - 0) + 0));
     name.innerHTML = searchInput.value;
     nameDiv.setAttribute("class", "col");
     delateBtnDiv.setAttribute("class", "col-auto");
     delBtn.setAttribute("class", "btn btn-danger");
     delBtn.setAttribute("type", "button");
+    delBtn.setAttribute("onClick", "deleteProductFromList(this)");
     delBtn.innerHTML = "Delete";
     //connecting elements
     nameDiv.appendChild(name);
@@ -44,10 +51,13 @@ function addProduct(){
     //adding new product to the list
     listOfProducts.appendChild(newProduct);
     searchInput.value = "";
+    productsCounter++;
     
 }
 
-//deleting product from the list
-function deleteProductFromList(){
-
+//deleting product from the list- TODO
+function deleteProductFromList(element){
+    document.getElementById(element.parentNode.parentNode.id).remove();
+    productsCounter--;
 }
+
