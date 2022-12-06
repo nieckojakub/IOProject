@@ -1,6 +1,8 @@
 // variables
 var listToReturn = [];
 var productsCounter = 0;
+var INITIAL_SEARCH_HELP = "Enter what You are looking for."
+var PRODUCTS_NUMBER_EXCEDED = "You have reached maximum 10 products entries limit."
 //input formu
 var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
@@ -12,17 +14,13 @@ var listOfProducts = document.getElementById("ListOfProducts");
 
 //idk czemu ale jak wstawiam do DOM najpierw z none to nie moge zmienic na inline a jak dam tak i zamienie to od razu to działa
 document.getElementById("SubmitBtn").style.display = "none";
+document.getElementById("SearchHelp").innerHTML = INITIAL_SEARCH_HELP;
 
 //functions
 
 //adding name of the product to the list
 function addProduct(){
 
-    //checking if there is max 10 items on the list
-    if(productsCounter > 10){
-        alert("You can only add 10 items!")
-        return 0;
-    }
     //checking if input is nonempty
     if(searchInput.value == ""){
         alert("Please, enter your product first");
@@ -43,6 +41,8 @@ function addProduct(){
     //setting attributes
     newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
     newProduct.setAttribute("id",  Math.floor(Math.random() * (1000000000 - 0) + 0));
+    name.style.float = "left";
+    name.style.marginTop= "2%";
     name.innerHTML = searchInput.value;
     nameDiv.setAttribute("class", "col");
     delateBtnDiv.setAttribute("class", "col-auto");
@@ -59,12 +59,24 @@ function addProduct(){
     listOfProducts.appendChild(newProduct);
     searchInput.value = "";
     productsCounter++;
+    //checking if there is max 10 items on the list and disableing addButton
+    if(productsCounter == 10){
+        document.getElementById("AddButton").setAttribute("disabled", "true");
+        document.getElementById("SearchHelp").innerHTML = PRODUCTS_NUMBER_EXCEDED;
+    }
     
 }
 
 //deleting product from the list
 function deleteProductFromList(element){
     document.getElementById(element.parentNode.parentNode.id).remove();
+
+    //turn on addButton after products counter is no longer equal to limit
+    if(productsCounter == 10){
+        document.getElementById("AddButton").removeAttribute("disabled");
+        document.getElementById("SearchHelp").innerHTML = INITIAL_SEARCH_HELP;
+    }
+
     productsCounter--;
     if(productsCounter == 0){
         displaySubmitBtn(0);
@@ -72,7 +84,7 @@ function deleteProductFromList(element){
 
 }
 
-//show/hide Submit button --1 => show button; 0=> hide button
+//show/hide Submit button --1 => show button; 0 => hide button
 function displaySubmitBtn(showFlag){
     if(showFlag == 1){//show
         document.getElementById("SubmitBtn").style.display = "inline";
@@ -83,6 +95,7 @@ function displaySubmitBtn(showFlag){
 }
 
 //send data to the server
+//for example ?list0=name0&list1=name1&list2=name2&allegro=true&ceneo=true -- allegro and ceneo parametras are optionall but at least one of them must be checked"
 function sendProducts(){
     if(!(allegroCheckbox.checked || ceneoCheckbox.checked )){
         alert("Please, chose source of your search first.")
