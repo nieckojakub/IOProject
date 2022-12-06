@@ -1,7 +1,6 @@
 // variables
 var listToReturn = [];
 var productsCounter = 0;
-var submitIsShown = false;
 //input formu
 var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
@@ -22,17 +21,19 @@ function addProduct(){
     //checking if there is max 10 items on the list
     if(productsCounter > 10){
         alert("You can only add 10 items!")
+        return 0;
     }
     //checking if input is nonempty
     if(searchInput.value == ""){
         alert("Please, enter your product first");
         return 0;
     }
+    //showing submit button
     if(productsCounter == 0){
         displaySubmitBtn(1);
     }
 
-    listToReturn.push([searchInput.value]); //name
+    listToReturn.push(searchInput.value); //name
     //creating html elements
     var newProduct = document.createElement("div");
     var nameDiv = document.createElement("div");
@@ -68,15 +69,45 @@ function deleteProductFromList(element){
     if(productsCounter == 0){
         displaySubmitBtn(0);
     }
+
 }
 
 //show/hide Submit button --1 => show button; 0=> hide button
 function displaySubmitBtn(showFlag){
-    
     if(showFlag == 1){//show
         document.getElementById("SubmitBtn").style.display = "inline";
     }else if(showFlag == 0){//hide
         document.getElementById("SubmitBtn").style.display = "none";
     }
 
+}
+
+//send data to the server
+function sendProducts(){
+    if(!(allegroCheckbox.checked || ceneoCheckbox.checked )){
+        alert("Please, chose source of your search first.")
+        return 0;
+    }
+    
+    var dataToReturn = {};
+    //preparing data
+    listToReturn.forEach((productName,ind) => {
+        dataToReturn["list" + ind] = productName;
+    })
+
+    //sources
+    if(allegroCheckbox.checked){
+        dataToReturn["allegro"] = true;
+    }
+    //sources
+    if(ceneoCheckbox.checked){
+        dataToReturn["ceneo"] = true;
+    }
+
+    //sending data via GET headers to /search
+    $.ajax({
+        method: "GET",
+        url: "/search",
+        data: dataToReturn
+      })
 }
