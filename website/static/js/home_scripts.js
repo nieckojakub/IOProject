@@ -1,9 +1,9 @@
 // variables
 var listToReturn = [];
 var productsCounter = 0;
-var INITIAL_SEARCH_HELP = "Enter what You are looking for."
-var PRODUCTS_NUMBER_EXCEDED = "You have reached maximum 10 products entries limit."
-//input formu
+const INITIAL_SEARCH_HELP = "Enter what You are looking for."
+const PRODUCTS_NUMBER_EXCEDED = "You have reached maximum 10 products entries limit."
+//input form
 var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
 var allegroCheckbox = document.getElementById("AllegroCheckbox");
@@ -42,7 +42,7 @@ function addProduct(){
     newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
     newProduct.setAttribute("id",  Math.floor(Math.random() * (1000000000 - 0) + 0));
     name.style.float = "left";
-    name.style.marginTop= "2%";
+    name.style.marginTop= "10px";
     name.innerHTML = searchInput.value;
     nameDiv.setAttribute("class", "col");
     delateBtnDiv.setAttribute("class", "col-auto");

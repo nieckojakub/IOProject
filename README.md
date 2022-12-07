@@ -11,3 +11,5 @@ Student project for software engineering class. Application under development.
 - [@hbiros](https://www.github.com/hbiros)
 - [@miloszjaneczek](https://www.github.com/miloszjaneczek)
 
+###
+Icons by [Icons8](https://icons8.com)
