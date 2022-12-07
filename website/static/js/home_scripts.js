@@ -120,9 +120,9 @@ function sendProducts(){
     
     //if allegro is checked
     if(allegroCheckbox.checked){
-        var dataToReturn = {};
         listToReturn.forEach((element, ind) => {
             //preparing data
+            var dataToReturn = {};
             dataToReturn["allegro"] = true;
             dataToReturn["list"+(ind + 1)] = element;
             //sending data via GET headers to /search
@@ -132,8 +132,11 @@ function sendProducts(){
                 data: dataToReturn,
                 dataType: "json"
             }).done((data) => {
-                if(parseInt(bar.style.width) < 100 ){
-                    bar.style.width = (parseInt(bar.style.width) + progress_step).toString() + "%";
+                if(parseFloat(bar.style.width) < 100 ){
+                    for(let i=0; i<100; i++){
+                        var bar_width = parseFloat(bar.style.width.substring(0,bar.style.width.length-1));
+                        bar.style.width = (bar_width + (progress_step/100)).toString() + "%";
+                    }
                 }
                 console.log(data);
             })
@@ -141,9 +144,9 @@ function sendProducts(){
     }
     //if ceneo is checked
     if(ceneoCheckbox.checked){
-        var dataToReturn = {};
         listToReturn.forEach((element, ind) => {
             //preparing data
+            var dataToReturn = {};
             dataToReturn["ceneo"] = true;
             dataToReturn["list"+(ind + 1)] = element;
             //sending data via GET headers to /search
@@ -153,10 +156,13 @@ function sendProducts(){
                 data: dataToReturn,
                 dataType: "json"
             }).done((data) => {
-                //TODO-animate with setInterval
-                    if(parseInt(bar.style.width) < 100 ){
-                        bar.style.width = (parseInt(bar.style.width) + progress_step).toString() + "%";
+                if(parseFloat(bar.style.width) < 100 ){
+                    //TODO- repair animation
+                    for(let i=0; i<100; i++){
+                        var bar_width = parseFloat(bar.style.width.substring(0,bar.style.width.length-1));
+                        bar.style.width = (bar_width + (progress_step/100)).toString() + "%";
                     }
+                }
                 //TODO-redirect to result page
                 console.log(data);
             })
