@@ -147,6 +147,8 @@ class CeneoBrowser(Browser):
         PRODUCT_LIST_LAYOUT_SELECTOR = '.cat-prod-row'
         # Grid layout
         PRODUCT_GRID_LAYOUT_SELECTOR = '.grid-row'
+        # Another Grid layout
+        PRODUCT_GRID_LAYOUT_SELECTOR_2 = '.cat-prod-box__body'
         # Product main page
         PRODUCT_MAIN_LAYOUT_SELECTOR = '.product-top__wrapper'
 
@@ -183,12 +185,18 @@ class CeneoBrowser(Browser):
         # Check if the grid layout selector appears on the results page
         product_grid_containers = search_result_html.select(
             PRODUCT_GRID_LAYOUT_SELECTOR)
+        # Check if the another grid layout selector appears on the results page
+        product_grid_2_containers = search_result_html.select(
+            PRODUCT_GRID_LAYOUT_SELECTOR_2)
         if product_list_containers:
             # We got the list-like layout
             product_containers = product_list_containers
         elif product_grid_containers:
             # We got the grid-like layout
             product_containers = product_grid_containers
+        elif product_grid_2_containers:
+            # We got the another grid-like layout
+            product_containers = product_grid_2_containers
         else:
             # Error ??
             return
@@ -202,7 +210,7 @@ class CeneoBrowser(Browser):
         product_list = list()
         
         # Iterate over the product containers and scrap url to the main page
-        # of each product. Then invoke scrapProductInfo() with each url method 
+        # of each product. Then invoke scrapProductInfo() method with each url  
         # to create Product object. When its done simply return the list of 
         # Product objects.
         for i in range(0,limit):
