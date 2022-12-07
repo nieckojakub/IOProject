@@ -117,6 +117,7 @@ function sendProducts(){
     //max_progress_counter == 100% progress, progress_step = 1/max_progress_counter*100%
     var progress_step = 1/max_progres_counter*100;
     var bar = document.getElementById("progressbar");
+    var current_progres = 0;
     
     //if allegro is checked
     if(allegroCheckbox.checked){
@@ -133,10 +134,17 @@ function sendProducts(){
                 dataType: "json"
             }).done((data) => {
                 if(parseFloat(bar.style.width) < 100 ){
-                    for(let i=0; i<100; i++){
-                        var bar_width = parseFloat(bar.style.width.substring(0,bar.style.width.length-1));
-                        bar.style.width = (bar_width + (progress_step/100)).toString() + "%";
+                    var width = 1;
+                    var id = setInterval(frame, 10);
+                    function frame() {
+                    if (width >= current_progres) {
+                        clearInterval(id);
+                    } else {
+                        width++;
+                        bar.style.width = width + "%";
                     }
+                    }
+                    current_progres += progress_step;
                 }
                 console.log(data);
             })
@@ -157,11 +165,17 @@ function sendProducts(){
                 dataType: "json"
             }).done((data) => {
                 if(parseFloat(bar.style.width) < 100 ){
-                    //TODO- repair animation
-                    for(let i=0; i<100; i++){
-                        var bar_width = parseFloat(bar.style.width.substring(0,bar.style.width.length-1));
-                        bar.style.width = (bar_width + (progress_step/100)).toString() + "%";
+                    var width = 1;
+                    var id = setInterval(frame, 10);
+                    function frame() {
+                    if (width >= current_progres) {
+                        clearInterval(id);
+                    } else {
+                        width++;
+                        bar.style.width = width + "%";
                     }
+                    }
+                    current_progres += progress_step;
                 }
                 //TODO-redirect to result page
                 console.log(data);
