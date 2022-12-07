@@ -102,25 +102,42 @@ function sendProducts(){
         return 0;
     }
     
-    var dataToReturn = {};
-    //preparing data
-    listToReturn.forEach((productName,ind) => {
-        dataToReturn["list" + ind] = productName;
-    })
-
-    //sources
+    //if allegro is checked
     if(allegroCheckbox.checked){
-        dataToReturn["allegro"] = true;
+        var dataToReturn = {};
+        listToReturn.forEach((element, ind) => {
+            //preparing data
+            dataToReturn["allegro"] = true;
+            dataToReturn["list"+(ind + 1)] = element;
+            //sending data via GET headers to /search
+            $.ajax({
+                method: "GET",
+                url: "/search/",
+                data: dataToReturn,
+                dataType: "json"
+            }).done((data) => {
+                console.log(data);
+            })
+        })
     }
-    //sources
+    //if ceneo is checked
     if(ceneoCheckbox.checked){
-        dataToReturn["ceneo"] = true;
-    }
+        var dataToReturn = {};
+        listToReturn.forEach((element, ind) => {
+            //preparing data
+            dataToReturn["ceneo"] = true;
+            dataToReturn["list"+(ind + 1)] = element;
+            //sending data via GET headers to /search
+            $.ajax({
+                method: "GET",
+                url: "/search/",
+                data: dataToReturn,
+                dataType: "json"
+            }).done((data) => {
 
-    //sending data via GET headers to /search
-    $.ajax({
-        method: "GET",
-        url: "/search",
-        data: dataToReturn
-      })
+                //TODO-redirect to result page
+                console.log(data);
+            })
+        })
+    }
 }
