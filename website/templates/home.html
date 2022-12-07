@@ -2,6 +2,30 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Loading your data. Please wait...</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="progresbarDiv" style="width:100%;">
+                    <div id="progressbar" style="width:0%; background-color:green; height:10px"></div>
+                </div>
+            </div>
+            <!---
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Understood</button>
+            </div>
+            -->
+        </div>
+        </div>
+    </div>
+
+
     <div class="container-sm text-center" style="color: #FFFFFF; width: 85%; margin-top: 2vh">
 
         <!-- login card-->
@@ -19,8 +43,10 @@
 
 
             <!-- card body-->
-            <!-- TODO defaultowe wybieranie checkboxa-->
             <div class="card-body">
+                <!-- Button trigger modal -->
+                <button id="trigerProgresBar" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="display:none">
+                </button>
                 <form>
                     <!-- check boxes-->
                     <h6 style="display: inline">Please, select the source of Your search:</h6>

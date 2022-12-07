@@ -97,10 +97,26 @@ function displaySubmitBtn(showFlag){
 //send data to the server
 //for example ?list0=name0&list1=name1&list2=name2&allegro=true&ceneo=true -- allegro and ceneo parametras are optionall but at least one of them must be checked"
 function sendProducts(){
+
+    
     if(!(allegroCheckbox.checked || ceneoCheckbox.checked )){
         alert("Please, chose source of your search first.")
         return 0;
     }
+
+    document.getElementById("trigerProgresBar").click();
+
+    //progressbar var
+    var max_progres_counter = 0;
+    if(ceneoCheckbox.checked){
+        max_progres_counter = listToReturn.length;
+    }
+    if(allegroCheckbox.checked){
+        max_progres_counter += listToReturn.length;
+    }
+    //max_progress_counter == 100% progress, progress_step = 1/max_progress_counter*100%
+    var progress_step = 1/max_progres_counter*100;
+    var bar = document.getElementById("progressbar");
     
     //if allegro is checked
     if(allegroCheckbox.checked){
@@ -116,6 +132,9 @@ function sendProducts(){
                 data: dataToReturn,
                 dataType: "json"
             }).done((data) => {
+                if(parseInt(bar.style.width) < 100 ){
+                    bar.style.width = (parseInt(bar.style.width) + progress_step).toString() + "%";
+                }
                 console.log(data);
             })
         })
@@ -134,7 +153,10 @@ function sendProducts(){
                 data: dataToReturn,
                 dataType: "json"
             }).done((data) => {
-
+                //TODO-animate with setInterval
+                    if(parseInt(bar.style.width) < 100 ){
+                        bar.style.width = (parseInt(bar.style.width) + progress_step).toString() + "%";
+                    }
                 //TODO-redirect to result page
                 console.log(data);
             })
