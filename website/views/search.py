@@ -12,67 +12,51 @@ from ..search_engine.ceneo import CeneoBrowser
 
 search = Blueprint('search', __name__)
 
+search_results = dict()
+
 
 # search
-@search.route('/', methods=['GET'])
-def search_get():
+@search.route('/search/add/<token>', methods=['GET'])
+def search_add_get(token=None):
     # get params
-    products_list = list()
-    for i in range(10):
-        product = request.args.get('list' + str(i))
-        if product is not None:
-            products_list.append(product)
-    is_ceneo = request.args.get('ceneo')
-    is_allegro = request.args.get('allegro')
+    product = request.args.get('product')
+    target = request.args.get('target')     # ceneo or allegro
 
     # simple validation
-    if len(products_list) == 0:
+    if product is None:
         return '', 400
 
-    if is_ceneo is None:
-        is_ceneo = False
-    else:
-        is_ceneo = True
-
-    if is_allegro is None:
-        is_allegro = False
-    else:
-        is_allegro = True
-
-    if not (is_ceneo or is_allegro):
+    if token is None:
         return '', 400
 
-    # ceneo results
-    ceneo_browser = CeneoBrowser()
-    ceneo_results = list()
-    if is_ceneo:
-        for product in products_list:
-            ceneo_search_result = ceneo_browser.search(product)
-            # for testing
-            # ceneo_search_result = [Product(product, "url", "img",
-            #                                [Shop('test1', 'url', 150, 20, 0, 10),
-            #                                 Shop('test2', 'url', 150, 20, 0, 10)],
-            #                                "desc", 4.5)]
-            ceneo_results.append(ceneo_search_result)
+    if target == "ceneo":
+        ceneo_browser = CeneoBrowser()
+        ceneo_search_result = ceneo_browser.search(product)
+        if token not in search_results:
+            search_results[token] = {"ceneo": list(), "allegro": list()}
+        search_results[token]['ceneo'].append(ceneo_search_result)
+    elif target == "allegro":
+        return '', 400
+    else:
+        return '', 400
 
-    # allegro results
-    allegro_results = list()
-    if is_allegro:
-        for product in products_list:
-            allegro_search_result = []  # TODO: search
-            # for testing
-            allegro_search_result = [Product(product, "url", "img",
-                                             [Shop('test1', 'url', 150, 20, 0, 10),
-                                              Shop('test2', 'url', 150, 20, 0, 10)],
-                                             "desc", 4.5)]
-            allegro_results.append(allegro_search_result)
 
-    results = {"ceneo": ceneo_results, "allegro": allegro_results}
+@search.route('/search/<token>', methods=['GET'])
+def search_get(token=None):
+    if token is None:
+        return '', 400
 
-    json_result = json.dumps(results, indent=4, cls=CustomEncoder, ensure_ascii=False)
-    # print(json_result)
-    # return results
-    return make_response(json_result, 200)
+    if token in search_results:
+        # get result from results dict
+        results = search_results[token]
+        del search_results[token]
+
+        # jsonify
+        json_result = json.dumps(results, indent=4, cls=CustomEncoder, ensure_ascii=False)
+        # return results
+        return make_response(json_result, 200)
+    else:
+        return '', 404
 
 
 # search history
