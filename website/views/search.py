@@ -35,6 +35,7 @@ def search_add_get(token=None):
         if token not in search_results:
             search_results[token] = {"ceneo": list(), "allegro": list()}
         search_results[token]['ceneo'].append(ceneo_search_result)
+        return '', 200
     elif target == "allegro":
         return '', 400
     else:

@@ -94,11 +94,10 @@ function displaySubmitBtn(showFlag){
 
 }
 
+
 //send data to the server
-//for example ?list0=name0&list1=name1&list2=name2&allegro=true&ceneo=true -- allegro and ceneo parametras are optionall but at least one of them must be checked"
 function sendProducts(){
 
-    
     if(!(allegroCheckbox.checked || ceneoCheckbox.checked )){
         alert("Please, chose source of your search first.")
         return 0;
@@ -118,68 +117,47 @@ function sendProducts(){
     var progress_step = 1/max_progres_counter*100;
     var bar = document.getElementById("progressbar");
     var current_progres = 0;
-    
+
+    // TODO: generate random token
+    let token = 12345678;
+
     //if allegro is checked
     if(allegroCheckbox.checked){
-        listToReturn.forEach((element, ind) => {
-            //preparing data
-            var dataToReturn = {};
-            dataToReturn["allegro"] = true;
-            dataToReturn["list"+(ind + 1)] = element;
-            //sending data via GET headers to /search
-            $.ajax({
-                method: "GET",
-                url: "/search/",
-                data: dataToReturn,
-                dataType: "json"
-            }).done((data) => {
-                if(parseFloat(bar.style.width) < 100 ){
-                    var width = 1;
-                    var id = setInterval(frame, 10);
-                    function frame() {
-                    if (width >= current_progres) {
-                        clearInterval(id);
-                    } else {
-                        width++;
-                        bar.style.width = width + "%";
-                    }
-                    }
-                    current_progres += progress_step;
-                }
-                console.log(data);
-            })
-        })
+       alert("Allegro not supported");
+       return 0;
     }
+
+    // sending data via GET headers to /search/add/<token>
+    let url = "/search/add/" + token;
+
     //if ceneo is checked
     if(ceneoCheckbox.checked){
         listToReturn.forEach((element, ind) => {
-            //preparing data
-            var dataToReturn = {};
-            dataToReturn["ceneo"] = true;
-            dataToReturn["list"+(ind + 1)] = element;
-            //sending data via GET headers to /search
             $.ajax({
-                method: "GET",
-                url: "/search/",
-                data: dataToReturn,
-                dataType: "json"
-            }).done((data) => {
-                if(parseFloat(bar.style.width) < 100 ){
-                    var width = 1;
-                    var id = setInterval(frame, 10);
-                    function frame() {
-                    if (width >= current_progres) {
-                        clearInterval(id);
-                    } else {
-                        width++;
-                        bar.style.width = width + "%";
+                async: false,
+                type: 'GET',
+                url: url,
+                data: {target: 'ceneo', product: element},
+                success: function (data, status){
+                    console.log(element);
+
+                    if(parseFloat(bar.style.width) < 100 ){
+                        var width = 1;
+                        var id = setInterval(frame, 10);
+                        function frame() {
+                            if (width >= current_progres) {
+                                clearInterval(id);
+                            } else {
+                                width++;
+                                bar.style.width = width + "%";
+                            }
+                        }
+                        current_progres += progress_step;
                     }
-                    }
-                    current_progres += progress_step;
                 }
-                //TODO-redirect to result page
-                console.log(data);
-            })
+            });
         })
     }
+    // TODO: redirect
+    console.log("koniec");
 }
