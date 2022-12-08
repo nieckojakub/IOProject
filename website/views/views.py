@@ -9,5 +9,5 @@ def home():
 
 
 @views.route("/results/<token>")
-def results():
-    return render_template('temp.html')
+def results(token):
+    return render_template('results.html')

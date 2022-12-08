@@ -158,6 +158,7 @@ function sendProducts(){
             });
         })
     }
-    // TODO: redirect
-    console.log("koniec");
+    // redirect
+    url = window.location.origin + "/results/" + token;
+    window.location.replace(url);
 }
