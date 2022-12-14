@@ -1,11 +1,27 @@
-// variables
-var listToReturn = [];
-var productsCounter = 0;
+// ##########################################################
+// ##################### variables ##########################
+// ##########################################################
+
+// list of products {name: '', status: ''} to send to serv
+let listToReturn = [];
+
+let productsCounter = 0;
 let token = Math.floor(Math.random() * (1000000000));
 const INITIAL_SEARCH_HELP = "Enter what You are looking for."
 const PRODUCTS_NUMBER_EXCEDED = "You have reached maximum 10 products entries limit."
 
-// DOM elements
+// search done
+let searchedProductsCounter = 0;
+
+// progress bar
+let max_progres_counter = 0;
+let progress_step;
+let current_progres = 0;
+
+// ##########################################################
+// ##################### DOM elems ##########################
+// ##########################################################
+
 var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
 var allegroCheckbox = document.getElementById("AllegroCheckbox");
@@ -16,7 +32,6 @@ let bar = document.getElementById("progressbar");
 let modalSearchOverviewTableBody =
         document.getElementById('modalSearchOverviewTable').
         getElementsByTagName('tbody')[0];
-
 //list
 var listOfProducts = document.getElementById("ListOfProducts");
 
@@ -24,7 +39,9 @@ var listOfProducts = document.getElementById("ListOfProducts");
 document.getElementById("SubmitBtn").style.display = "none";
 document.getElementById("SearchHelp").innerHTML = INITIAL_SEARCH_HELP;
 
-//functions
+// ##########################################################
+// ##################### functions ##########################
+// ##########################################################
 
 //adding name of the product to the list
 function addProduct(){
@@ -39,13 +56,15 @@ function addProduct(){
         displaySubmitBtn(1);
     }
 
-    listToReturn.push(searchInput.value); //name
+    listToReturn.push({name: searchInput.value, status: "X"}); //name
+
     //creating html elements
     var newProduct = document.createElement("div");
     var nameDiv = document.createElement("div");
     var delateBtnDiv = document.createElement("div");
     var name = document.createElement('h6');
     var delBtn = document.createElement('button');
+
     //setting attributes
     newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
     newProduct.setAttribute("id",  Math.floor(Math.random() * (1000000000 - 0) + 0));
@@ -58,15 +77,18 @@ function addProduct(){
     delBtn.setAttribute("type", "button");
     delBtn.setAttribute("onClick", "deleteProductFromList(this)");
     delBtn.innerHTML = "Delete";
+
     //connecting elements
     nameDiv.appendChild(name);
     delateBtnDiv.appendChild(delBtn);
     newProduct.appendChild(nameDiv);
     newProduct.appendChild(delateBtnDiv);
+
     //adding new product to the list
     listOfProducts.appendChild(newProduct);
     searchInput.value = "";
     productsCounter++;
+
     //checking if there is max 10 items on the list and disableing addButton
     if(productsCounter == 10){
         document.getElementById("AddButton").setAttribute("disabled", "true");
@@ -78,6 +100,7 @@ function addProduct(){
 //deleting product from the list
 function deleteProductFromList(element){
     document.getElementById(element.parentNode.parentNode.id).remove();
+    // TODO: listToReturn correction
     listToReturn = listToReturn.filter(item => item !== element.parentNode.parentNode.children[0].children[0].innerHTML)
 
     //turn on addButton after products counter is no longer equal to limit
@@ -103,6 +126,17 @@ function displaySubmitBtn(showFlag){
 
 }
 
+// refresh modal table
+function refreshModalTable(){
+    for (let i = 0; i < modalSearchOverviewTableBody.rows.length; i++){
+        let row =  modalSearchOverviewTableBody.rows[i];
+         row.cells[1].innerHTML= listToReturn[i]['status'];
+         if (row.cells[1].innerHTML === "OK"){
+             row.cells[1].style.color = "green";
+         }
+    }
+}
+
 // shows modal with product list
 function showModal(){
     // clear table with products
@@ -125,10 +159,12 @@ function showModal(){
         let status = row.insertCell(1);
 
         // add values
-        name.innerHTML = element;
+        name.innerHTML = element['name'];
         status.style.color = "red";
-        status.innerHTML = "X";
+        status.innerHTML = element['status'];
     })
+
+    refreshModalTable();
 
     // show modal
     $('#staticBackdrop').modal('show');
@@ -136,17 +172,11 @@ function showModal(){
 
 //send data to the server
 function sendProducts(){
-    // search DOM elements
-    let modalSearchBtn = $("#modalSearchBtn");
-    let modalResultsBtn = $("#modalResultsBtn");
-    let modalSearchText = $("#modalSearchText");
-
     // hide search button
-    modalSearchBtn.hide();
-    modalSearchText.show();
+    $("#modalSearchBtn").hide();
+    $("#modalSearchText").show();
 
     //progressbar var
-    let max_progres_counter = 0;
     if(ceneoCheckbox.checked){
         max_progres_counter = listToReturn.length;
     }
@@ -157,8 +187,8 @@ function sendProducts(){
 
     //max_progress_counter == 100% progress,
     // progress_step = 1/max_progress_counter*100%
-    let progress_step = 1/max_progres_counter*100;
-    let current_progres = 0;
+    progress_step = 1/max_progres_counter*100;
+    current_progres = 0;
 
     //if allegro is checked
     if(allegroCheckbox.checked){
@@ -166,41 +196,64 @@ function sendProducts(){
        return 0;
     }
 
-    // sending data via GET headers to /search/add/<token>
-    let url = "/search/add/" + token;
-
     //if ceneo is checked
     if(ceneoCheckbox.checked){
         listToReturn.forEach((element, ind) => {
-            $.ajax({
-                async: true,
-                type: 'GET',
-                url: url,
-                data: {target: 'ceneo', product: element},
-                success: function (data, status){
-                    if(parseFloat(bar.style.width) < 100 ){
-                        var width = 1;
-                        var id = setInterval(frame, 10);
-                        function frame() {
-                            if (width >= current_progres) {
-                                clearInterval(id);
-                            } else {
-                                width++;
-                                bar.style.width = width + "%";
-                            }
-                        }
-                        current_progres += progress_step;
-                        // product status
-                        modalSearchOverviewTableBody.rows[ind].cells[1].innerHTML = "OK";
-                        modalSearchOverviewTableBody.rows[ind].cells[1].style.color = "green";
-                    }
-                }
-            });
+            sendOneProduct(element);
         })
     }
-    // show results button
-    modalSearchText.hide()
-    modalResultsBtn.show();
+}
+
+// extend progress bar after progress is made
+function progressbarExtend(){
+    if(parseFloat(bar.style.width) < 100 ){
+        var width = 1;
+        var id = setInterval(frame, 10);
+        function frame() {
+            if (width >= current_progres) {
+                clearInterval(id);
+            } else {
+                width++;
+                bar.style.width = width + "%";
+            }
+        }
+        current_progres += progress_step;
+    }
+}
+
+// send one product to search
+function sendOneProduct(product){
+    // sending data via GET headers to /search/add/<token>
+    let url = "/search/add/" + token;
+    // send data
+    $.ajax({
+        async: true,
+        type: 'GET',
+        url: url,
+        data: {target: 'ceneo', product: product['name']},
+        success: function (data, status){
+            product['status'] = "OK";
+            searchedProductsCounter += 1;
+            refreshModalTable();
+            progressbarExtend();
+            if (searchedProductsCounter === listToReturn.length){
+                // show results button
+                $("#modalSearchText").hide()
+                $("#modalResultsBtn").show();
+            }
+        },
+        error: function (data, status){
+            product['status'] = "ERROR";
+            searchedProductsCounter += 1;
+            refreshModalTable();
+            progressbarExtend();
+            if (searchedProductsCounter === listToReturn.length){
+                // show results button
+                $("#modalSearchText").hide()
+                $("#modalResultsBtn").show();
+            }
+        }
+    });
 }
 
 // redirect to results page
