@@ -103,8 +103,6 @@ function sendProducts(){
         return 0;
     }
 
-    document.getElementById("trigerProgresBar").click();
-
     //progressbar var
     var max_progres_counter = 0;
     if(ceneoCheckbox.checked){
@@ -118,8 +116,8 @@ function sendProducts(){
     var bar = document.getElementById("progressbar");
     var current_progres = 0;
 
-    // TODO: generate random token
-    let token = 12345678;
+    //generate random token
+    let token = Math.floor(Math.random() * (1000000000));
 
     //if allegro is checked
     if(allegroCheckbox.checked){
