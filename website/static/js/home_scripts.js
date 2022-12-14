@@ -1,14 +1,17 @@
 // variables
 var listToReturn = [];
 var productsCounter = 0;
+let token = Math.floor(Math.random() * (1000000000));
 const INITIAL_SEARCH_HELP = "Enter what You are looking for."
 const PRODUCTS_NUMBER_EXCEDED = "You have reached maximum 10 products entries limit."
+
 //input form
 var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
 var allegroCheckbox = document.getElementById("AllegroCheckbox");
 var ceneoCheckbox = document.getElementById("CeneoCheckbox");
 var bothCheckbox = document.getElementById("BothCheckbox");
+
 //list
 var listOfProducts = document.getElementById("ListOfProducts");
 
@@ -95,30 +98,47 @@ function displaySubmitBtn(showFlag){
 
 }
 
-
-//send data to the server
-function sendProducts(){
-
+// shows modal with product list
+function showModal(){
+    // validation
     if(!(allegroCheckbox.checked || ceneoCheckbox.checked )){
         alert("Please, chose source of your search first.")
         return 0;
     }
 
-    //progressbar var
-    var max_progres_counter = 0;
+    // generate overview of products
+    let modalSearchOverview = $('#modalSearchOverview');
+    let searchOverviewHTML = '';
+
+    listToReturn.forEach((element, ind) => {
+        searchOverviewHTML += '<div>';
+        searchOverviewHTML += element;
+        searchOverviewHTML += '</div>';
+    })
+
+    modalSearchOverview.html(searchOverviewHTML);
+
+    // show modal
+    $('#staticBackdrop').modal('show');
+}
+
+//send data to the server
+function sendProducts(){
+     //progressbar var
+    let max_progres_counter = 0;
     if(ceneoCheckbox.checked){
         max_progres_counter = listToReturn.length;
     }
+
     if(allegroCheckbox.checked){
         max_progres_counter += listToReturn.length;
     }
-    //max_progress_counter == 100% progress, progress_step = 1/max_progress_counter*100%
-    var progress_step = 1/max_progres_counter*100;
-    var bar = document.getElementById("progressbar");
-    var current_progres = 0;
 
-    //generate random token
-    let token = Math.floor(Math.random() * (1000000000));
+    //max_progress_counter == 100% progress,
+    // progress_step = 1/max_progress_counter*100%
+    let progress_step = 1/max_progres_counter*100;
+    let bar = document.getElementById("progressbar");
+    let current_progres = 0;
 
     //if allegro is checked
     if(allegroCheckbox.checked){
@@ -133,13 +153,12 @@ function sendProducts(){
     if(ceneoCheckbox.checked){
         listToReturn.forEach((element, ind) => {
             $.ajax({
-                async: false,
+                async: true,
                 type: 'GET',
                 url: url,
                 data: {target: 'ceneo', product: element},
                 success: function (data, status){
                     console.log(element);
-
                     if(parseFloat(bar.style.width) < 100 ){
                         var width = 1;
                         var id = setInterval(frame, 10);
@@ -157,6 +176,9 @@ function sendProducts(){
             });
         })
     }
+}
+
+function goToResults(){
     // redirect
     url = window.location.origin + "/results/" + token;
     window.location.replace(url);

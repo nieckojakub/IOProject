@@ -7,14 +7,28 @@
         <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">Loading your data. Please wait...</h5>
+            <h5 class="modal-title" id="staticBackdropLabel">Your search overview</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div id="progresbarDiv" style="width:100%;">
                     <div id="progressbar" style="width:0%; background-color:green; height:10px"></div>
                 </div>
+                <div id="modalSearchOverview"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="button" id="modalSearchBtn" class="btn btn-success
+                            mt-2" onclick="sendProducts();" style="width: 100%">Search</button>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" id="modalResultsBtn" class="btn btn-success
+                            mt-2" onclick="goToResults();" style="width: 100%">Show Results</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <!---
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -86,7 +100,7 @@
 
                 <!-- submit button-->
                     <div class="container" style="display:inline">
-                        <button type="button" id="SubmitBtn" class="btn btn-success mt-2" onclick="sendProducts();">Submit</button>
+                        <button type="button" id="SubmitBtn" class="btn btn-success mt-2" onclick="showModal();">Submit</button>
                     </div>
             </div>
 
