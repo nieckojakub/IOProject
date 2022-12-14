@@ -107,16 +107,22 @@ function showModal(){
     }
 
     // generate overview of products
-    let modalSearchOverview = $('#modalSearchOverview');
-    let searchOverviewHTML = '';
+    let modalSearchOverviewTableBody =
+        document.getElementById('modalSearchOverviewTable').
+        getElementsByTagName('tbody')[0];
 
     listToReturn.forEach((element, ind) => {
-        searchOverviewHTML += '<div>';
-        searchOverviewHTML += element;
-        searchOverviewHTML += '</div>';
+        // create element
+        let row = modalSearchOverviewTableBody.insertRow(ind);
+        let name = row.insertCell(0);
+        let status = row.insertCell(1);
+
+        // add values
+        name.innerHTML = element;
+        status.style.color = "red";
+        status.innerHTML = "X";
     })
 
-    modalSearchOverview.html(searchOverviewHTML);
 
     // show modal
     $('#staticBackdrop').modal('show');
