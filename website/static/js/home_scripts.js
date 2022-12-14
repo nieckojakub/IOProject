@@ -70,6 +70,7 @@ function addProduct(){
 //deleting product from the list
 function deleteProductFromList(element){
     document.getElementById(element.parentNode.parentNode.id).remove();
+    listToReturn = listToReturn.filter(item => item !== element.parentNode.parentNode.children[0].children[0].innerHTML)
 
     //turn on addButton after products counter is no longer equal to limit
     if(productsCounter == 10){
