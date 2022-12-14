@@ -25,18 +25,19 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-6">
-                            <button type="button" id="modalSearchBtn" class="btn btn-success
-                            mt-2" onclick="sendProducts();" style="width: 100%">Search</button>
-                        </div>
-                        <div class="col-6">
-                            <button type="button" id="modalResultsBtn" class="btn btn-success
-                            mt-2" onclick="goToResults();" style="width: 100%">Show Results</button>
-                        </div>
-                    </div>
+                <div id="modalSearchBtn">
+                    <button type="button" class="btn btn-success
+                    mt-2" onclick="sendProducts();" style="width: 100%">Search</button>
                 </div>
+                <div id="modalResultsBtn" style="display: none">
+                    <button type="button" class="btn btn-success
+                    mt-2" onclick="goToResults();" style="width: 100%">Show Results</button>
+                </div>
+
+                <div id="modalSearchText" style="display: none; width: 100%">
+                    Searching...
+                </div>
+
             </div>
 
             <!---

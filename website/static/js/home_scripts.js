@@ -5,12 +5,17 @@ let token = Math.floor(Math.random() * (1000000000));
 const INITIAL_SEARCH_HELP = "Enter what You are looking for."
 const PRODUCTS_NUMBER_EXCEDED = "You have reached maximum 10 products entries limit."
 
-//input form
+// DOM elements
 var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
 var allegroCheckbox = document.getElementById("AllegroCheckbox");
 var ceneoCheckbox = document.getElementById("CeneoCheckbox");
 var bothCheckbox = document.getElementById("BothCheckbox");
+
+let bar = document.getElementById("progressbar");
+let modalSearchOverviewTableBody =
+        document.getElementById('modalSearchOverviewTable').
+        getElementsByTagName('tbody')[0];
 
 //list
 var listOfProducts = document.getElementById("ListOfProducts");
@@ -100,6 +105,12 @@ function displaySubmitBtn(showFlag){
 
 // shows modal with product list
 function showModal(){
+    // clear table with products
+    modalSearchOverviewTableBody.innerHTML = "";
+
+    // clear progressbar
+    bar.style.width = 0;
+
     // validation
     if(!(allegroCheckbox.checked || ceneoCheckbox.checked )){
         alert("Please, chose source of your search first.")
@@ -107,10 +118,6 @@ function showModal(){
     }
 
     // generate overview of products
-    let modalSearchOverviewTableBody =
-        document.getElementById('modalSearchOverviewTable').
-        getElementsByTagName('tbody')[0];
-
     listToReturn.forEach((element, ind) => {
         // create element
         let row = modalSearchOverviewTableBody.insertRow(ind);
@@ -123,14 +130,22 @@ function showModal(){
         status.innerHTML = "X";
     })
 
-
     // show modal
     $('#staticBackdrop').modal('show');
 }
 
 //send data to the server
 function sendProducts(){
-     //progressbar var
+    // search DOM elements
+    let modalSearchBtn = $("#modalSearchBtn");
+    let modalResultsBtn = $("#modalResultsBtn");
+    let modalSearchText = $("#modalSearchText");
+
+    // hide search button
+    modalSearchBtn.hide();
+    modalSearchText.show();
+
+    //progressbar var
     let max_progres_counter = 0;
     if(ceneoCheckbox.checked){
         max_progres_counter = listToReturn.length;
@@ -143,7 +158,6 @@ function sendProducts(){
     //max_progress_counter == 100% progress,
     // progress_step = 1/max_progress_counter*100%
     let progress_step = 1/max_progres_counter*100;
-    let bar = document.getElementById("progressbar");
     let current_progres = 0;
 
     //if allegro is checked
@@ -164,7 +178,6 @@ function sendProducts(){
                 url: url,
                 data: {target: 'ceneo', product: element},
                 success: function (data, status){
-                    console.log(element);
                     if(parseFloat(bar.style.width) < 100 ){
                         var width = 1;
                         var id = setInterval(frame, 10);
@@ -177,13 +190,20 @@ function sendProducts(){
                             }
                         }
                         current_progres += progress_step;
+                        // product status
+                        modalSearchOverviewTableBody.rows[ind].cells[1].innerHTML = "OK";
+                        modalSearchOverviewTableBody.rows[ind].cells[1].style.color = "green";
                     }
                 }
             });
         })
     }
+    // show results button
+    modalSearchText.hide()
+    modalResultsBtn.show();
 }
 
+// redirect to results page
 function goToResults(){
     // redirect
     url = window.location.origin + "/results/" + token;
