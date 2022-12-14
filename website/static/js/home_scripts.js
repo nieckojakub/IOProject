@@ -43,7 +43,7 @@ document.getElementById("SearchHelp").innerHTML = INITIAL_SEARCH_HELP;
 // ##################### functions ##########################
 // ##########################################################
 
-//adding name of the product to the list
+//adding name of the product to the listToReturn and creating DOM element with the product name in the listOfProducts
 function addProduct(){
 
     //checking if input is nonempty
@@ -56,6 +56,7 @@ function addProduct(){
         displaySubmitBtn(1);
     }
 
+    //adding product name to the listToReturn
     listToReturn.push({name: searchInput.value, status: "X"}); //name
 
     //creating html elements
@@ -97,11 +98,18 @@ function addProduct(){
     
 }
 
-//deleting product from the list
+//deleting product from the listToReturn and removing DOM element for listOfProducts
+//@param- HTML element containing Delete Button
 function deleteProductFromList(element){
+    
+    //delete element from DOM
     document.getElementById(element.parentNode.parentNode.id).remove();
-    // TODO: listToReturn correction
-    listToReturn = listToReturn.filter(item => item !== element.parentNode.parentNode.children[0].children[0].innerHTML)
+    //delete from listToReturn
+    listToReturn.forEach(function(elementToRemove){
+        if(elementToRemove["name"] === element.parentNode.parentNode.children[0].children[0].innerHTML){
+            listToReturn = listToReturn.filter(item => item !== elementToRemove)
+        }
+    })
 
     //turn on addButton after products counter is no longer equal to limit
     if(productsCounter == 10){
@@ -109,6 +117,7 @@ function deleteProductFromList(element){
         document.getElementById("SearchHelp").innerHTML = INITIAL_SEARCH_HELP;
     }
 
+    //hide submit button if there is no product listed
     productsCounter--;
     if(productsCounter == 0){
         displaySubmitBtn(0);
@@ -116,7 +125,8 @@ function deleteProductFromList(element){
 
 }
 
-//show/hide Submit button --1 => show button; 0 => hide button
+//show/hide Submit button 
+//@param boolean flag: 1 => show button; 0 => hide button
 function displaySubmitBtn(showFlag){
     if(showFlag == 1){//show
         document.getElementById("SubmitBtn").style.display = "inline";
@@ -207,6 +217,7 @@ function sendProducts(){
 // extend progress bar after progress is made
 function progressbarExtend(){
     if(parseFloat(bar.style.width) < 100 ){
+        //TODO 
         var width = 1;
         var id = setInterval(frame, 10);
         function frame() {
