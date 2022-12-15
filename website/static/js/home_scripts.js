@@ -18,6 +18,13 @@ let max_progres_counter = 0;
 let progress_step;
 let current_progres = 0;
 
+// statuses
+const SearchStatus = {
+    NOT_SEARCHED: "X",
+    SERVER_ERROR: "ERROR",
+    SEARCH_SUCCESS: "OK"
+};
+
 // ##########################################################
 // ##################### DOM elems ##########################
 // ##########################################################
@@ -57,7 +64,7 @@ function addProduct(){
     }
 
     //adding product name to the listToReturn
-    listToReturn.push({name: searchInput.value, status: "X"}); //name
+    listToReturn.push({name: searchInput.value, status: SearchStatus.NOT_SEARCHED}); //name
 
     //creating html elements
     var newProduct = document.createElement("div");
@@ -141,28 +148,49 @@ function refreshModalTable(){
     for (let i = 0; i < modalSearchOverviewTableBody.rows.length; i++){
         let row =  modalSearchOverviewTableBody.rows[i];
          row.cells[1].innerHTML= listToReturn[i]['status'];
-         if (row.cells[1].innerHTML === "OK"){
+         if (row.cells[1].innerHTML === SearchStatus.SEARCH_SUCCESS){
              row.cells[1].style.color = "green";
+         }else{
+             row.cells[1].style.color = "red";
          }
     }
 }
 
 // shows modal with product list
 function showModal(){
-    // clear table with products
-    modalSearchOverviewTableBody.innerHTML = "";
-
-    // clear progressbar
-    bar.style.width = 0;
-
     // validation
     if(!(allegroCheckbox.checked || ceneoCheckbox.checked )){
         alert("Please, chose source of your search first.")
         return 0;
     }
 
+    // clear table with products
+    modalSearchOverviewTableBody.innerHTML = "";
+
+    // clear progressbar
+    bar.style.width = 0;
+
+     // show search button
+    $("#modalSearchBtn").show();
+    $("#modalSearchText").hide();
+    $("#modalResultsBtn").hide();
+
+    // delete previous searches
+    let url = "/search/" + token;
+    $.ajax({
+        async: false,
+        type: 'DELETE',
+        url: url
+    });
+
+    // reset counter
+    searchedProductsCounter = 0;
+
     // generate overview of products
     listToReturn.forEach((element, ind) => {
+        // reset status
+        element['status'] = SearchStatus.NOT_SEARCHED;
+
         // create element
         let row = modalSearchOverviewTableBody.insertRow(ind);
         let name = row.insertCell(0);
@@ -243,7 +271,7 @@ function sendOneProduct(product){
         url: url,
         data: {target: 'ceneo', product: product['name']},
         success: function (data, status){
-            product['status'] = "OK";
+            product['status'] = SearchStatus.SEARCH_SUCCESS;
             searchedProductsCounter += 1;
             refreshModalTable();
             progressbarExtend();
@@ -254,7 +282,7 @@ function sendOneProduct(product){
             }
         },
         error: function (data, status){
-            product['status'] = "ERROR";
+            product['status'] = SearchStatus.SERVER_ERROR;
             searchedProductsCounter += 1;
             refreshModalTable();
             progressbarExtend();
