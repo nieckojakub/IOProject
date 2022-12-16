@@ -94,7 +94,8 @@
                             <button type="button" id="AddButton" class="btn btn-primary mt-2" onclick="addProduct()">Add</button>
                         </div>
                         <div class="col-auto">
-                            <button type="button" id="AddFromFileButton" class="btn btn-primary mt-2">From File</button>
+                            <input type="file" id="addFromFileInput" accept=".txt" style="display: none;"></input>
+                            <button type="button" id="addFromFileButton" class="btn btn-primary mt-2" onclick="readFromFile()">From File</button>
                         </div>
                         <div id="SearchHelp" class="form-text" style="color: white;"></div>
 

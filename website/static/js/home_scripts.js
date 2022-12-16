@@ -5,6 +5,7 @@
 // list of products {name: '', status: ''} to send to serv
 let listToReturn = [];
 
+let productsFromFile = [];
 let productsCounter = 0;
 let token = Math.floor(Math.random() * (1000000000));
 const INITIAL_SEARCH_HELP = "Enter what You are looking for."
@@ -102,6 +103,49 @@ function addProduct(){
         document.getElementById("AddButton").setAttribute("disabled", "true");
         document.getElementById("SearchHelp").innerHTML = PRODUCTS_NUMBER_EXCEDED;
     }
+    
+}
+
+//adding name of the product to the listToReturn and creating DOM element with the product name in the listOfProducts
+function addProductFromFile(fileFromText){
+
+    //showing submit button
+    if(productsCounter == 0){
+        displaySubmitBtn(1);
+    }
+
+    //adding product name to the listToReturn
+    listToReturn.push({name: fileFromText, status: SearchStatus.NOT_SEARCHED}); //name
+
+    //creating html elements
+    var newProduct = document.createElement("div");
+    var nameDiv = document.createElement("div");
+    var delateBtnDiv = document.createElement("div");
+    var name = document.createElement('h6');
+    var delBtn = document.createElement('button');
+
+    //setting attributes
+    newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
+    newProduct.setAttribute("id",  Math.floor(Math.random() * (1000000000 - 0) + 0));
+    name.style.float = "left";
+    name.style.marginTop= "10px";
+    name.innerHTML = fileFromText;
+    nameDiv.setAttribute("class", "col");
+    delateBtnDiv.setAttribute("class", "col-auto");
+    delBtn.setAttribute("class", "btn btn-danger");
+    delBtn.setAttribute("type", "button");
+    delBtn.setAttribute("onClick", "deleteProductFromList(this)");
+    delBtn.innerHTML = "Delete";
+
+    //connecting elements
+    nameDiv.appendChild(name);
+    delateBtnDiv.appendChild(delBtn);
+    newProduct.appendChild(nameDiv);
+    newProduct.appendChild(delateBtnDiv);
+
+    //adding new product to the list
+    listOfProducts.appendChild(newProduct);
+    productsCounter++;
     
 }
 
@@ -300,4 +344,40 @@ function goToResults(){
     // redirect
     url = window.location.origin + "/results/" + token;
     window.location.replace(url);
+}
+
+
+//read .txt file with a list of products and load them to the listOfProducts DOM element
+//@input .txt file, each product in new line
+function readFromFile(){
+    //catch input element
+    let fileInput = document.getElementById("addFromFileInput");
+    //trigger input and then after the file was chosen catch a file
+    fileInput.click();
+    fileInput.addEventListener('change', (event) => {
+        let reader = new FileReader();
+        //translate to String
+        reader.readAsText(event.target.files[0]);
+        reader.onload = function() {
+            productsFromFile = reader.result;
+            //split after new line, optionally split after ',' or ' '
+            if( productsFromFile.includes("\r\n")){
+                productsFromFile = productsFromFile.split("\r\n");
+            }else if(productsFromFile.includes(",")){
+                productsFromFile = productsFromFile.split(",");
+            }else if(productsFromFile.includes(" ")){
+                productsFromFile = productsFromFile.split(" ");
+            }
+            //process data from user
+            productsFromFile.forEach(function(toAdd){
+                addProductFromFile(toAdd);
+            })
+          };
+
+        //TODO- alert user about errors & and ensure whether file type is .txt and 10 products limit is not exceeded
+        reader.onerror = function() {
+            console.log(reader.error);
+          };
+      });
+
 }
