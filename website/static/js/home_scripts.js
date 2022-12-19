@@ -126,7 +126,7 @@ function addProductFromFile(fileFromText){
 
     //setting attributes
     newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
-    newProduct.setAttribute("id",  Math.floor(Math.random() * (1000000000 - 0) + 0));
+    newProduct.setAttribute("id",  Math.floor(Math.random() * (1000000000)));
     name.style.float = "left";
     name.style.marginTop= "10px";
     name.innerHTML = fileFromText;

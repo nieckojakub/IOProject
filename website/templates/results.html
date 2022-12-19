@@ -3,9 +3,301 @@
 {% block content %}
 
 
-Results!!!
+<!-- results card-->
+<div class="container-sm text-center" style="color: #FFFFFF; width: 100%; margin-top: 0vh">
 
-<div id="test"></div>
+    <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px;">
+
+        <!-- card header-->
+        <div class="card-body ">
+            <b> CenAll </b>
+            <h4 class="card-title">Here are Your results!</h4>
+        </div>
+
+
+        <!-- card body-->
+        <div class="card-body">
+            
+            <!-- list of products-->
+            <div class="card rounded-lg" id="divListOfProducts" style="background-color:#ffffff; border-radius: 25px;">
+                <div id="ListOfProducts" class="card-body" style="color:#000000;">
+                    
+                    <!-- accordion with products-->
+                    <div class="accordion" id="accordionMain">
+                        
+                        <!-- pierwszy element -->
+                        <div class="accordion-item">
+                            <!-- pierwszy element: nagłówek-->
+                            <h2 class="accordion-header" id="headingMain1">
+                                <button id="productName1" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMain1" aria-expanded="true" aria-controls="collapseMain1">
+                                    Dokładne wyszukanie- product1
+                                </button>
+                            </h2>
+                            <!-- pierwszy element: content-->
+                            <div id="collapseMain1" class="accordion-collapse collapse show" aria-labelledby="headingMain1" data-bs-parent="#accordionMain">
+                                <div class="accordion-body"> 
+
+                                    <!-- TODO- resposywność tabeli-->
+                                    <table id="productTable1" class="table table-borderless">
+                                        <tbody>  
+                                            <tr>
+                                                <td id="productImg1">
+                                                    <img src="../static/img/Example_png.png" class="rounded float-start" style="max-width: 100px; max-height: 100px;">
+                                                </td>
+                                                <td id="productDetails1">
+                                                    <table class="table table-borderless">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="float-start"><b>Name</b></td>
+                                                                <td id="productName1">test</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="float-start"><b>Rating</b></td>
+                                                                <td id="productRating1">test</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="float-start"><b>Lowest price</b></td>
+                                                                <td id="productLowPrice1">test</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="float-start"><b>Shortest delivery time</b></td>
+                                                                <td id="productShorDevTime1">test</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="float-start"><b>Description</b></td>
+                                                                <td id="productDesc1" style="max-width: 500px">testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>   
+                                        </tbody>
+                                    </table>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <h5 id="product1ShopName1" class="float-start">Shop 1 name</h6>
+                                            <br>
+                                            <table class="table table-borderless"> 
+                                                <tr> <!-- TODO- wyrównane z przyciskiem-->
+                                                    <td style="text-align: center;"><b>Name</b></td>
+                                                    <td id="product1Shop1Name">test</td>
+                                                    <td><b>Price:</b></td>
+                                                    <td id="product1Shop1Price">11 zł</td>
+                                                    <td><b>Delivery price:</b></td>
+                                                    <td id="product1Shop1DevPrice">11 zł</td>
+                                                    <td><b>Delivery Time:</b></td>
+                                                    <td id="product1Shop1DevTime">7dni</td>
+                                                    <td><b>Avaibility:</b></td>
+                                                    <td id="product1Shop1Ava">Yes</td>
+                                                    <td><button type="button" id="buyButtonProduct1Shop1" class="btn btn-success mt-2 me-3">Buy now for: 22zł</button></td>
+                                                </tr>
+                                            </table>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h5 id="product1ShopName2" class="float-start">Shop 2 name</h6>
+                                            <br>
+                                            <table class="table table-borderless"> 
+                                                <tr> <!-- TODO- wyrównane z przyciskiem-->
+                                                    <td style="text-align: center;"><b>Name</b></td>
+                                                    <td id="product1Shop2Name">test</td>
+                                                    <td><b>Price:</b></td>
+                                                    <td id="product1Shop2Price">11 zł</td>
+                                                    <td><b>Delivery price:</b></td>
+                                                    <td id="product1Shop2DevPrice">11 zł</td>
+                                                    <td><b>Delivery Time:</b></td>
+                                                    <td id="product1Shop2DevTime">7dni</td>
+                                                    <td><b>Avaibility:</b></td>
+                                                    <td id="product1Shop2Ava">Yes</td>
+                                                    <td><button type="button" id="buyButtonProduct1Shop2" class="btn btn-success mt-2 me-3">Buy now for: 22zł</button></td>
+                                                </tr>
+                                            </table>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h5 id="product1ShopName3" class="float-start">Shop 3 name</h6>
+                                            <br>
+                                            <table class="table table-borderless"> 
+                                                <tr> <!-- TODO- wyrównane z przyciskiem-->
+                                                    <td style="text-align: center;"><b>Name</b></td>
+                                                    <td id="product1Shop3Name">test</td>
+                                                    <td><b>Price:</b></td>
+                                                    <td id="product1Shop3Price">11 zł</td>
+                                                    <td><b>Delivery price:</b></td>
+                                                    <td id="product1Shop3DevPrice">11 zł</td>
+                                                    <td><b>Delivery Time:</b></td>
+                                                    <td id="product1Shop3DevTime">7dni</td>
+                                                    <td><b>Avaibility:</b></td>
+                                                    <td id="product1Shop3Ava">Yes</td>
+                                                    <td><button type="button" id="buyButtonProduct1Shop3" class="btn btn-success mt-2 me-3">Buy now for: 22zł</button></td>
+                                                </tr>
+                                            </table>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <!-- TODO: sprawdzac czyniedokładne wyszukiwanie, w jinjy jesli tak to wtedy dopiero wyświetlać wybór obrazka-->                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingMain2">
+                                <button id="productName2" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMain2" aria-expanded="false" aria-controls="collapseMain2">
+                                    Niedokładne wyszukanie- product2
+                                </button>
+                            </h2>
+                            <div id="collapseMain2" class="accordion-collapse collapse" aria-labelledby="headingMain2" data-bs-parent="#accordionMain">
+                                <div class="accordion-body">
+                                    <h3 class="float-start">Did you mean...</h3>
+                                    <div id="specifyProductRadioButton1" class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1Product2" autocomplete="off" checked>
+                                        <label class="btn btn-outline-primary" for="btnradio1Product2">Product 2</label>
+                                      
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2Product2" autocomplete="off">
+                                        <label class="btn btn-outline-primary" for="btnradio2Product2">Product 3</label>
+                                      
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio3Product2" autocomplete="off">
+                                        <label class="btn btn-outline-primary" for="btnradio3Product2">Product 4</label>
+
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio4Product2" autocomplete="off">
+                                        <label class="btn btn-outline-primary" for="btnradio4Product2">Product 5</label>
+
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio5Product2" autocomplete="off">
+                                        <label class="btn btn-outline-primary" for="btnradio5Product2">Product 6</label>
+
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio6Product2" autocomplete="off">
+                                        <label class="btn btn-outline-primary" for="btnradio6Product2">Product 7</label>
+
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio7Product2" autocomplete="off">
+                                        <label class="btn btn-outline-primary" for="btnradio7Product2">Product 8</label>
+
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio8Product2" autocomplete="off">
+                                        <label class="btn btn-outline-primary" for="btnradio8Product2">Product 9</label>
+
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio9Product2" autocomplete="off">
+                                        <label class="btn btn-outline-primary" for="btnradio9Product2">Product 10</label>
+
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio10Product2" autocomplete="off">
+                                        <label class="btn btn-outline-primary" for="btnradio10Product2">Product 11</label>
+                                      </div>
+
+
+                                    <!-- TODO- resposywność tabeli-->
+                                    <table id="productTable2" class="table table-borderless">
+                                        <tbody>  
+                                            <tr>
+                                                <td id="productImg2">
+                                                    <img src="../static/img/Example_png.png" class="rounded float-start" style="max-width: 100px; max-height: 100px;">
+                                                </td>
+                                                <td id="productDetails2">
+                                                    <table class="table table-borderless">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="float-start"><b>Name</b></td>
+                                                                <td id="productName2">test</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="float-start"><b>Rating</b></td>
+                                                                <td id="productRating2">test</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="float-start"><b>Lowest price</b></td>
+                                                                <td id="productLowPrice2">test</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="float-start"><b>Shortest delivery time</b></td>
+                                                                <td id="productShorDevTime2">test</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="float-start"><b>Description</b></td>
+                                                                <td id="productDesc2" style="max-width: 500px">testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>   
+                                        </tbody>
+                                    </table>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <h5 id="product1ShopName2" class="float-start">Shop 1 name</h6>
+                                            <br>
+                                            <table class="table table-borderless"> 
+                                                <tr> <!-- TODO- wyrównane z przyciskiem-->
+                                                    <td style="text-align: center;"><b>Name</b></td>
+                                                    <td id="product2Shop1Name">test</td>
+                                                    <td><b>Price:</b></td>
+                                                    <td id="product2Shop1Price">11 zł</td>
+                                                    <td><b>Delivery price:</b></td>
+                                                    <td id="product2Shop1DevPrice">11 zł</td>
+                                                    <td><b>Delivery Time:</b></td>
+                                                    <td id="product2Shop1DevTime">7dni</td>
+                                                    <td><b>Avaibility:</b></td>
+                                                    <td id="product2Shop1Ava">Yes</td>
+                                                    <td><button type="button" id="buyButtonProduct2Shop1" class="btn btn-success mt-2 me-3">Buy now for: 22zł</button></td>
+                                                </tr>
+                                            </table>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h5 id="product2ShopName2" class="float-start">Shop 2 name</h6>
+                                            <br>
+                                            <table class="table table-borderless"> 
+                                                <tr> <!-- TODO- wyrównane z przyciskiem-->
+                                                    <td style="text-align: center;"><b>Name</b></td>
+                                                    <td id="product2Shop2Name">test</td>
+                                                    <td><b>Price:</b></td>
+                                                    <td id="product2Shop2Price">11 zł</td>
+                                                    <td><b>Delivery price:</b></td>
+                                                    <td id="product2Shop2DevPrice">11 zł</td>
+                                                    <td><b>Delivery Time:</b></td>
+                                                    <td id="product2Shop2DevTime">7dni</td>
+                                                    <td><b>Avaibility:</b></td>
+                                                    <td id="product2Shop2Ava">Yes</td>
+                                                    <td><button type="button" id="buyButtonProduct2Shop2" class="btn btn-success mt-2 me-3">Buy now for: 22zł</button></td>
+                                                </tr>
+                                            </table>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h5 id="product2ShopName3" class="float-start">Shop 3 name</h6>
+                                            <br>
+                                            <table class="table table-borderless"> 
+                                                <tr> <!-- TODO- wyrównane z przyciskiem-->
+                                                    <td style="text-align: center;"><b>Name</b></td>
+                                                    <td id="product2Shop3Name">test</td>
+                                                    <td><b>Price:</b></td>
+                                                    <td id="product2Shop3Price">11 zł</td>
+                                                    <td><b>Delivery price:</b></td>
+                                                    <td id="product2Shop3DevPrice">11 zł</td>
+                                                    <td><b>Delivery Time:</b></td>
+                                                    <td id="product2Shop3DevTime">7dni</td>
+                                                    <td><b>Avaibility:</b></td>
+                                                    <td id="product2Shop3Ava">Yes</td>
+                                                    <td><button type="button" id="buyButtonProduct2Shop3" class="btn btn-success mt-2 me-3">Buy now for: 22zł</button></td>
+                                                </tr>
+                                            </table>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- submit button-->
+                <div class="container" style="display:inline">
+                    <button type="button" id="saveButton" class="btn btn-success mt-2 me-3">Save</button>
+                    <button type="button" id="goBackButton" class="btn btn-danger mt-2">Return</button>
+                </div>
+        </div>
+
+        <div style="height: 15px;" class="card-footer"></div>
+
+    </div>
+
+</div>
+
 
 {% endblock %}
 

@@ -1,6 +1,8 @@
 // global variables
 let searchResult;
 
+//for test purposes
+/*
 // run code after loading the page
 $(function (){
     let token = window.location.pathname;
@@ -20,5 +22,5 @@ $(function (){
         }
     });
 });
-
+*/
 // functions
