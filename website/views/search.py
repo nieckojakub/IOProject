@@ -53,8 +53,8 @@ def search_add_get(token=None):
         ceneo_browser = CeneoBrowser()
         ceneo_search_result = ceneo_browser.search(product)
         if token not in search_results:
-            search_results[token] = {"ceneo": list(), "allegro": list()}
-        search_results[token]['ceneo'].append(ceneo_search_result)
+            search_results[token] = {"ceneo": dict(), "allegro": dict()}
+        search_results[token]['ceneo'][product] = ceneo_search_result
         return SUCCESS
     elif target == "allegro":
         return ALLEGRO_NOT_SUPPORTED
