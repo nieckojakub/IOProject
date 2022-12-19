@@ -381,3 +381,4 @@ function readFromFile(){
       });
 
 }
+//TODO- walidacja czy ktoś nie wpisał tego samego produktu
