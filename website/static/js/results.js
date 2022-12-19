@@ -20,8 +20,6 @@ $(function (){
         type: 'GET',
         success: function(data){
             searchResult = JSON.parse(data);
-            //do usuniecia
-            test = [searchResult["ceneo"]["domek"][0]];
             generateDOM();
         },
         error: function() {
@@ -231,8 +229,10 @@ function generateDOM() {
             tableImgDeta.appendChild(tableImgDetaBody);
             //attach table into accordion body
             accordionBody.appendChild(tableImgDeta);
+        
+        
         }else{
-        //unambigious search
+        ///////////////unambigious search///////////////////
             
             var tempData = ceneoData[userInput][0];
             console.log(tempData)
@@ -260,7 +260,8 @@ function generateDOM() {
                 inputRadioBtn.setAttribute("id", "btnradio"+(ind+1)+"1Product" + productsCounter);
                 inputRadioBtn.setAttribute("autocomplete", "off");
                 if(ind == 0){
-                    inputRadioBtn.setAttribute("checked", "");
+                    //inputRadioBtn.setAttribute("checked", "");
+                    inputRadioBtn.checked = true;
                 }
                 //radiobutton label
                 var labelRadioBtn = document.createElement("label");
