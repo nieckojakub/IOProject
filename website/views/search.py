@@ -1,11 +1,12 @@
-from flask import Blueprint, request, make_response
 import json
+from flask import Blueprint, request, make_response
 from flask_login import current_user, login_required
+from flask_wtf import FlaskForm
+from sqlalchemy import select
 from ..models import History, Product
 from ..search_engine.product import Product
 from ..search_engine.shop import Shop
 from ..search_engine.json_encoder import CustomEncoder
-from flask_wtf import FlaskForm
 from ..models import History, Shop as ShopModel, Product as ProductModel
 from ..app import db
 from ..search_engine.ceneo import CeneoBrowser
@@ -35,7 +36,7 @@ def delete_token(token):
         return False
 
 
-# search
+# add product to search results
 @search.route('/search/add/<token>', methods=['GET'])
 def search_add_get(token=None):
     # get params
@@ -62,6 +63,7 @@ def search_add_get(token=None):
         return INVALID_TARGET
 
 
+# DELETE search results with given token
 @search.route("/search/<token>", methods=['DELETE'])
 def search_delete(token=None):
     if delete_token(token):
@@ -70,6 +72,7 @@ def search_delete(token=None):
         return TOKEN_NOT_FOUND
 
 
+# GET search results with given token and delete
 @search.route('/search/<token>', methods=['GET'])
 def search_get(token=None):
     if token is None:
@@ -88,30 +91,19 @@ def search_get(token=None):
         return TOKEN_NOT_FOUND
 
 
-# search history
-@search.route('/history/<int:history_id>', methods=['GET'])
-@login_required
-def history_get(history_id):
-    history = History.query.get_or_404(history_id)
-    if history.user_id == current_user.id:
-        pass
-    else:
-        return '', 403
-    return 'History', 200
-
-
+# POST (add) history to database
 @search.route('/history', methods=['POST'])
 @login_required
 def history_post():
-    products_list = request.form['products']
-    products_list = json.loads(products_list)
+    products_dict = request.form['products']
+    products_dict = json.loads(products_dict)
     history = History(user_id=current_user.id)
     db.session.add(history)
     db.session.commit()
-    print(history.id)
-    for productJSON in products_list:
-        product_object = Product(**productJSON)
-        product = ProductModel(history_id=history.id, name=product_object.name, url=product_object.url,
+    for key in products_dict.keys():
+        product_json = products_dict[key]
+        product_object = Product(**product_json)
+        product = ProductModel(history_id=history.id, inaccurate_name=key, name=product_object.name, url=product_object.url,
                                img=product_object.img, description=product_object.description,
                                rating=product_object.rating)
         db.session.add(product)
@@ -126,6 +118,48 @@ def history_post():
     return SUCCESS
 
 
+# TODO
+# GET all history entries from logged user
+@search.route('/history', methods=['GET'])
+@login_required
+def history_get():
+    pass
+
+
+# GET history and connected products with given history ID
+@search.route('/history/<int:history_id>', methods=['GET'])
+# @login_required
+def history_get_id(history_id):
+    # get history entry
+    history = History.query.get_or_404(history_id)
+
+    # search list ini
+    results = dict()
+
+    # get all products and shops
+    stmt = select(ProductModel).where(ProductModel.history_id == history.id)
+    products_models = db.session.execute(stmt)
+
+    for product_model in products_models:
+        product_model = product_model[0]
+        product_object = Product(product_model.name, product_model.url, product_model.img,
+                                 list(), product_model.description, product_model.rating)
+        stmt = select(ShopModel).where(ShopModel.product_id == product_model.id)
+        shops_models = db.session.execute(stmt)
+        for shop_model in shops_models:
+            shop_model = shop_model[0]
+            shop_object = Shop(shop_model.name, shop_model.url, shop_model.price,
+                               shop_model.delivery_price, shop_model.availability,
+                               shop_model.delivery_time)
+            product_object.shop_list.append(shop_object)
+        results[product_model.inaccurate_name] = product_object
+    # jsonify
+    json_result = json.dumps(results, indent=4, cls=CustomEncoder, ensure_ascii=False)
+    return json_result, 200
+
+
+# TODO
+# DELETE history and connected products with given history ID
 @search.route('/history/<int:id>', methods=['DELETE'])
 @login_required
 def history_delete(id):

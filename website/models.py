@@ -65,6 +65,7 @@ class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
     history_id = db.Column(db.Integer(), db.ForeignKey('history.id'), nullable=False)
+    inaccurate_name = db.Column(db.String, nullable=False)
     name = db.Column(db.String, nullable=False)
     url = db.Column(db.String, nullable=False)
     img = db.Column(db.String, nullable=True)

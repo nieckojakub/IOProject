@@ -340,7 +340,7 @@ function generateDOM() {
 // save to history
 function saveToHistory(){
     // prepare data to save
-    let productsToSaveList = [];
+    let productsToSaveDict = {};
     Object.keys(searchResult['ceneo']).forEach(function (key, ind){
         let product_list = searchResult['ceneo'][key];
         let activeProductName = "#productName" + (ind + 1);
@@ -351,14 +351,14 @@ function saveToHistory(){
                 activeProduct = product;
             }
         });
-        productsToSaveList.push(activeProduct);
+        productsToSaveDict[key] = activeProduct;
     });
 
     $.ajax({
         type: "POST",
         url: "/history",
         data: {
-            'products': JSON.stringify(productsToSaveList)
+            'products': JSON.stringify(productsToSaveDict)
         },
         success: function (){
             // TODO
