@@ -136,9 +136,9 @@ function generateDOM() {
                 //radiobutton input
                 var inputRadioBtn = document.createElement("input");
                 inputRadioBtn.setAttribute("type", "radio");
-                inputRadioBtn.setAttribute("class", "btn-check");
+                inputRadioBtn.setAttribute("class", "btn-check triggerChangingDataFun");
                 inputRadioBtn.setAttribute("name", "btnradio" + productsCounter);
-                inputRadioBtn.setAttribute("id", "btnradio"+(ind+1)+"1Product" + productsCounter);
+                inputRadioBtn.setAttribute("id", "btnradio"+(ind+1)+"Product" + productsCounter);
                 inputRadioBtn.setAttribute("autocomplete", "off");
                 if(ind == 0){
                     inputRadioBtn.setAttribute("checked", "true");
@@ -414,10 +414,34 @@ function generateDOM() {
         accordionMain.appendChild(accordionItem)
         productsCounter++;
     });
+
+    //TODO
+    //onclick event handler
+    //changing presented data after checking another radiobutton
+    $(".triggerChangingDataFun").click(function(event){
+        //product number
+        var selectedProductNumber = parseInt(event.target.name.split("btnradio")[1]);
+        //radiobutton number
+        var selectedRadioButtonNumber = parseInt(event.target.id.split("btnradio")[1].split(("Product"+selectedProductNumber)));
+        //new data
+        refreshNewData(selectedProductNumber,selectedRadioButtonNumber);
+    });
 }
 
 
 //TODO
 function saveToHistory(){
     alert("Not implemented yet!")
+}
+
+//TODO
+//sorting shops function
+function sortResults(){
+
+}
+
+function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
+    console.log("product"+selectedProductNumber + " radiobutton"+selectedRadioButtonNumber);
+
+
 }
