@@ -39,6 +39,7 @@ id parametrs:
 @radiobuttonsgroups -> "specifyProductRadioButtonX";
 @radiobutton -> "btnradioYProductX"; 
 @image of product -> "productImgX"; returns <td> element with <img> children inside;
+@user input -> productNameACX;
 @table with basic info of product -> "productDetailsX"; returns <td> element with <table> with product details inside;
 @basic info of a product:   @products name -> "productNameX"
                             @products raiting -> "productRatingX"
@@ -83,7 +84,7 @@ function generateDOM() {
         accordionHeader.setAttribute("class", "accordion-header");
         //accordion button-display
         var accordionButton = document.createElement("button");
-        accordionButton.setAttribute("id", "productName" + productsCounter);
+        accordionButton.setAttribute("id", "productNameAC" + productsCounter);
         if(productsCounter == 1){
             accordionButton.setAttribute("aria-expanded", "true");  
             accordionButton.setAttribute("class", "accordion-button");
@@ -441,7 +442,14 @@ function sortResults(){
 }
 
 function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
-    console.log("product"+selectedProductNumber + " radiobutton"+selectedRadioButtonNumber);
+    
+    //user input
+    var userInput = document.getElementById("productNameAC"+selectedProductNumber);
+    //selected, new product 
+    var newProductData = searchResult["ceneo"][userInput][selectedRadioButtonNumber-1]; //-1 bo tablica od 0 
 
+    //refreshig data:
+    //img
+    document.getElementById()
 
 }
