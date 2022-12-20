@@ -47,9 +47,9 @@
                 <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}"><img src="./../static/img/icons8-home-32.png"><br>Home</a>
                 {% if current_user.is_authenticated %}
                 <a class="nav-item nav-link" id="account" href="{{ url_for('auth.account') }}"><img src="./../static/img/icons8-user-male-32.png"><br>Account</a>
-                <a class="nav-item nav-link" id="logout" href="{{ url_for('auth.logout') }}" ><img src="./../static/img/icons8-close-32.png"><br>Logout</a>
+                <a class="nav-item nav-link" id="logout" href="{{ url_for('auth.logout') }}" ><img src="./../static/img/icons8-close-32.png"><br>Log out</a>
                 {% else %}
-                <a class="nav-item nav-link" id="login" href="{{ url_for('auth.login') }}" ><img src="./../static/img/icons8-check-all-32.png"><br>Login</a>
+                <a class="nav-item nav-link" id="login" href="{{ url_for('auth.login') }}" ><img src="./../static/img/icons8-check-all-32.png"><br>Log in</a>
                 <a class="nav-item nav-link" id="signUp" href="{{ url_for('auth.signup') }}" ><img src="./../static/img/icons8-key-32.png"><br>Sign Up</a>
                 {% endif %}
 

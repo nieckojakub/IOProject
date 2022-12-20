@@ -248,7 +248,7 @@ function generateDOM() {
             var radioButGroupDiv = document.createElement("div");
             radioButGroupDiv.setAttribute("id", "specifyProductRadioButton" + productsCounter);
             radioButGroupDiv.setAttribute("class", "btn-group");
-            radioButGroupDiv.setAttribute("role", "group");
+            radioButGroupDiv.setAttribute("role", "group" + productsCounter);
             radioButGroupDiv.setAttribute("aria-label", "Basic radio toggle button group");
             //creating radiobuttons
             ceneoData[userInput].forEach(function(product, ind){
@@ -256,12 +256,11 @@ function generateDOM() {
                 var inputRadioBtn = document.createElement("input");
                 inputRadioBtn.setAttribute("type", "radio");
                 inputRadioBtn.setAttribute("class", "btn-check");
-                inputRadioBtn.setAttribute("name", "btnradio");
+                inputRadioBtn.setAttribute("name", "btnradio" + productsCounter);
                 inputRadioBtn.setAttribute("id", "btnradio"+(ind+1)+"1Product" + productsCounter);
                 inputRadioBtn.setAttribute("autocomplete", "off");
                 if(ind == 0){
-                    //inputRadioBtn.setAttribute("checked", "");
-                    inputRadioBtn.checked = true;
+                    inputRadioBtn.setAttribute("checked", "true");
                 }
                 //radiobutton label
                 var labelRadioBtn = document.createElement("label");
@@ -329,7 +328,7 @@ function generateDOM() {
                     ratingLable.innerHTML = "<b>Rating</b>";
                     var ratingValue = document.createElement("td");
                     ratingValue.setAttribute("id","productRating" + productsCounter );
-                    ratingValue.innerHTML = tempData["rating"];
+                    ratingValue.innerHTML = tempData["rating"] + "/5";
                     //attaching elements
                     ratingRow.appendChild(ratingLable);
                     ratingRow.appendChild(ratingValue);
