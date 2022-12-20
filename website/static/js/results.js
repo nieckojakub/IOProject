@@ -8,7 +8,6 @@ let searchResult;
 // ##################### DOM elems ##########################
 // ##########################################################
 var accordionMain = document.getElementById("accordionMain"); //main accordion
-var test;
 
 // run code after loading the page
 $(function (){
@@ -323,7 +322,6 @@ function generateDOM() {
         productsCounter++;
     });
 
-    //TODO
     //onclick event handler
     //changing presented data after checking another radiobutton
     $(".triggerChangingDataFun").click(function(event){
@@ -522,7 +520,7 @@ function generateShopListDOM(shopListUl,shopDic,ind,productsCounter){
     //buy now button
     var tdBuyButton = document.createElement("td");
     var buyNowButton = document.createElement("a");
-    buyNowButton.setAttribute("type", "button");
+    buyNowButton.setAttribute("role", "button");
     buyNowButton.setAttribute("href", shopDic["url"]);
     buyNowButton.setAttribute("target", "_blank");
     //TODO- repair display error

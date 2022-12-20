@@ -12,7 +12,3 @@ def home():
 def results(token):
     return render_template('results.html')
 
-##### testing purposes ####
-@views.route("/results")
-def results_no_token():
-    return render_template('results.html')
