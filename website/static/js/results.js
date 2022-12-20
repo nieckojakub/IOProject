@@ -33,11 +33,40 @@ $(function (){
 // ##################### functions ##########################
 // ##########################################################
 
-//generates DOM elements and fill them with data
-//TODO- najniższa cena i najkrótszy czas dostawy
+/*generates DOM elements and fill them with data
+id parametrs:
+
+@radiobuttonsgroups -> "specifyProductRadioButtonX";
+@radiobutton -> "btnradioYProductX"; 
+@image of product -> "productImgX"; returns <td> element with <img> children inside;
+@table with basic info of product -> "productDetailsX"; returns <td> element with <table> with product details inside;
+@basic info of a product:   @products name -> "productNameX"
+                            @products raiting -> "productRatingX"
+                            @products lowest price -> "productLowPriceX";
+                            @products shortest delivery time -> "productShortDevX"
+                            @products description -> "productDescX";
+                            retuns <td> element with data inside;
+@shop name in ul header -> "productXShopZName"; returns <h5> element with shop name inside;
+@shop parametrs:    @shop price -> "productXShopZPrice"
+                    @shop delivery price -> "productXShopZDevPrice"
+                    @shop delivery time -> "productXShopZDevTime"
+                    @shop availability -> "productXShopZAva";
+                    returns <td> element with data inside;
+@buy now button -> "buyButtonProductXShopZ"; returns <a> element with a "href" parametr targeting (_blank) to selected shop url, 
+                                             inside the data is shown in a following way: "Buy now for {if not null(delivery_price) + price}"
+@save button -> "saveButton"; returns <button> element with a 'onclick' attribute set on 'saveToHistory()' value;
+@home button -> "goBackButton"; returns <button> element
+
+where:
+*X indicates products (eg. "domek") number, starting from 1 
+*Y indicates number of a specific radiobutton in its group, starting from 1
+*Z indicates shop number for a specific product, starting from 1
+
+*/
+//TODO- najniższa cena i najkrótszy czas dostawy do ulepszenia
 function generateDOM() {
     var productsCounter = 1;
-    //for now only ceneo is implemented
+    //for now, only ceneo is implemented
     var ceneoData = searchResult["ceneo"];
     Object.keys(ceneoData).forEach(userInput => {
         
@@ -88,8 +117,7 @@ function generateDOM() {
         accordionBody.setAttribute("class","accordion-body");
 
         //unambigious search
-        if(!Object.keys(ceneoData[userInput]).length == 1){
-
+        if(!(Object.keys(ceneoData[userInput]).length == 1)){
             //create info disclamer
             var disclamer = document.createElement("h3");
             disclamer.setAttribute("class", "float-start");
@@ -118,7 +146,7 @@ function generateDOM() {
                 //radiobutton label
                 var labelRadioBtn = document.createElement("label");
                 labelRadioBtn.setAttribute("class", "btn btn-outline-primary");
-                labelRadioBtn.setAttribute("for", "btnradio"+(ind+1)+"1Product" + productsCounter);
+                labelRadioBtn.setAttribute("for", "btnradio"+(ind+1)+"Product" + productsCounter);
                 labelRadioBtn.innerHTML = (ind + 1) +". "+product["name"].slice(0,8) + "...";
 
                 //attaching input and label to radiButGroupDiv
@@ -222,7 +250,7 @@ function generateDOM() {
                 shorDevTimeLable.setAttribute("class", "float-start");
                 shorDevTimeLable.innerHTML = "<b>Shortest delivery time</b>";
                 var shorDevTimeValue = document.createElement("td");
-                shorDevTimeValue.setAttribute("id","productLowPrice" + productsCounter );
+                shorDevTimeValue.setAttribute("id","productShortDev" + productsCounter );
                 //searching shortest dev time
                 //TODO- to da sie lepiej zrobić
                 var minDevTime = 10000000000;
@@ -283,7 +311,7 @@ function generateDOM() {
             ind = ind + 1;
             //creating shop header with shops name in int
             var shopHeader = document.createElement("h5");
-            shopHeader.setAttribute("id", "product"+productsCounter+"ShopName2"+(ind));
+            shopHeader.setAttribute("id", "product"+productsCounter+"Shop"+(ind)+"Name");
             shopHeader.setAttribute("class", "float-start");
             shopHeader.innerHTML = shopDic["name"] + "<br>";
             //creating a table with shop details
