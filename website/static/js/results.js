@@ -116,6 +116,7 @@ function generateDOM() {
         //accordion body
         var accordionBody = document.createElement("div");
         accordionBody.setAttribute("class","accordion-body");
+        accordionBody.setAttribute("id","accordionBody"+productsCounter);
 
         //unambigious search
         if(!(Object.keys(ceneoData[userInput]).length == 1)){
@@ -305,104 +306,10 @@ function generateDOM() {
         //creating shops list
         var shopListUl = document.createElement("ul");
         shopListUl.setAttribute("class", "list-group");
+        shopListUl.setAttribute("id", "shopList");
         tempData["shop_list"].forEach((shopDic,ind) => {
-            //creating li element
-            var shopLiElement = document.createElement("li");
-            shopLiElement.setAttribute("class", "list-group-item");
-            ind = ind + 1;
-            //creating shop header with shops name in int
-            var shopHeader = document.createElement("h5");
-            shopHeader.setAttribute("id", "product"+productsCounter+"Shop"+(ind)+"Name");
-            shopHeader.setAttribute("class", "float-start");
-            shopHeader.innerHTML = shopDic["name"] + "<br>";
-            //creating a table with shop details
-            var shopDetTable = document.createElement("table");
-            shopDetTable.setAttribute("class", "table table-borderless");
-            //attaching header into lielement
-            shopLiElement.appendChild(shopHeader);
-            
-            //createing tr
-            var shopDetTableRow = document.createElement("tr");
-
-            //shop price:
-                var shopPriceLabel = document.createElement("td");
-                shopPriceLabel.innerHTML= "<b>Price: </b>";
-                var shopPriceValue = document.createElement("td");
-                shopPriceValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"Price");
-                shopPriceValue.innerHTML = shopDic["price"].toFixed(2) + " zł";
-            //attaching elements to tr
-            shopDetTableRow.appendChild(shopPriceLabel);
-            shopDetTableRow.appendChild(shopPriceValue);
-                
-            //shop delivery price:
-                var shopDeliveryPriceLabel = document.createElement("td");
-                shopDeliveryPriceLabel.innerHTML= "<b>Delivery price: </b>";
-                var shopDeliveryPriceValue = document.createElement("td");
-                shopDeliveryPriceValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"DevPrice");
-                if(shopDic["delivery_price"] !== null){
-                    shopDeliveryPriceValue.innerHTML = shopDic["delivery_price"].toFixed(2) + " zł";
-                }else{
-                    shopDeliveryPriceValue.innerHTML = "Not avaible";
-                }
-            //attaching elements to tr
-            shopDetTableRow.appendChild(shopDeliveryPriceLabel);
-            shopDetTableRow.appendChild(shopDeliveryPriceValue);
-
-            //shop delivery time:
-                var shopDeliveryTimeLabel = document.createElement("td");
-                shopDeliveryTimeLabel.innerHTML= "<b>Delivery time: </b>";
-                var shopDeliveryTimeValue = document.createElement("td");
-                shopDeliveryTimeValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"DevTime");
-                if(shopDic["delivery_time"] !== null){
-                    shopDeliveryTimeValue.innerHTML = shopDic["delivery_time"];
-                }else{
-                    shopDeliveryTimeValue.innerHTML = "Not avaible";
-                }
-            //attaching elements to tr
-            shopDetTableRow.appendChild(shopDeliveryTimeLabel);
-            shopDetTableRow.appendChild(shopDeliveryTimeValue);
-
-            //shop availability:
-                var shopAvailabilityLabel = document.createElement("td");
-                shopAvailabilityLabel.innerHTML= "<b>Availability: </b>";
-                var shopAvailabilityValue = document.createElement("td");
-                shopAvailabilityValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"Ava");
-                if(shopDic["availability"] !== null){
-                    shopAvailabilityValue.innerHTML = shopDic["availability"];
-                }else{
-                    shopAvailabilityValue.innerHTML = "Not avaible";
-                }
-            //attaching elements to tr
-            shopDetTableRow.appendChild(shopAvailabilityLabel);
-            shopDetTableRow.appendChild(shopAvailabilityValue);
-
-            //buy now button
-            var tdBuyButton = document.createElement("td");
-            var buyNowButton = document.createElement("a");
-            buyNowButton.setAttribute("type", "button");
-            buyNowButton.setAttribute("href", shopDic["url"]);
-            buyNowButton.setAttribute("target", "_blank");
-            //TODO- repair display error
-            buyNowButton.setAttribute("id", "buyButtonProduct"+productsCounter+"Shop"+ind);
-            buyNowButton.setAttribute("class", "btn btn-success mt-2 me-3");
-            if(shopDic["delivery_price"] !== null){
-                buyNowButton.innerHTML = "Buy now for " + (shopDic["delivery_price"] + shopDic["price"]).toFixed(2);
-            }else{
-                buyNowButton.innerHTML = "Buy now for " + (shopDic["price"]).toFixed(2);
-            }
-            //attaching button
-            tdBuyButton.appendChild(buyNowButton);
-            shopDetTableRow.appendChild(tdBuyButton);
-
-            //attaching all elements
-            //attaching shopDetTableRow into shopDetTable 
-            shopDetTable.appendChild(shopDetTableRow);
-            //attaching shopDetTable into shopLiElement
-            shopLiElement.appendChild(shopDetTable);
-            //attaching shopLiElement into Ul
-            shopListUl.appendChild(shopLiElement);
             //attaching shopListUl into accordionBody
-            accordionBody.appendChild(shopListUl);
+            accordionBody.appendChild(generateShopListDOM(shopListUl,shopDic,ind,productsCounter));
         })
      
     
@@ -441,7 +348,10 @@ function sortResults(){
 
 }
 
-//after user select radiobutton, refresh its data 
+//refresh currently shown data withe new one, indicated by a radiobutton selected by user
+//@param
+//selectedProductNumber- product number e.g. for user input-> ['X','Y','Z'] selectedProductNumber would be 1 for X, 2 for Y and 3 for Z;
+//selectedRadioButtonNumber- number of radio button selected by user in a specific radiobutton group- from 1 to 10
 function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
     
     //user input
@@ -449,13 +359,17 @@ function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
     //selected, new product 
     var newProductData = searchResult["ceneo"][userInput][selectedRadioButtonNumber-1]; //-1 bo tablica od 0 
 
-    //refreshig data:
+    //refreshig basic info data:
     //img
     document.getElementById("productImg" + selectedProductNumber).childNodes[0].src = newProductData["img"];
     //product name
     document.getElementById("productName" + selectedProductNumber).innerHTML = newProductData["name"];
     //product rating
-    document.getElementById("productRating" + selectedProductNumber).innerHTML = newProductData["rating"];
+    if(newProductData["rating"] !== null){
+        document.getElementById("productRating" + selectedProductNumber).innerHTML = newProductData["rating"] + "/5";
+    }else{
+        document.getElementById("productRating" + selectedProductNumber).innerHTML = "No data avaible";
+    }
     //product lowest price
      //TODO- to da sie lepiej zrobić
      var minTempPrice = 10000000000;
@@ -483,4 +397,124 @@ function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
     //product name
     document.getElementById("productDesc" + selectedProductNumber).innerHTML = newProductData["description"];
 
+    //refreshing shop list
+    //delete shops
+    document.getElementById("shopList").remove();
+    //new shop list
+    var newShopList = document.createElement("ul");
+    newShopList.setAttribute("class", "list-group");
+    newShopList.setAttribute("id", "shopList");
+    newProductData["shop_list"].forEach(function(shopDic,ind){
+        //attaching shopListUl into accordionBody
+        document.getElementById("accordionBody"+selectedProductNumber).appendChild(generateShopListDOM(newShopList,shopDic,ind,selectedProductNumber));
+    })
+    
+}
+
+//generates shop list consisting of HTML <ul> and <li> elements
+//@param
+//shopListUl- <ul> element into which <li> elements will be inserted
+//shopDic- dictionary consisting data about the shop
+//ind- index of shopDic in his ancestor
+//productsCounter- product number e.g. for user input-> ['X','Y','Z'] productsCounter would be 1 for X, 2 for Y and 3 for Z;
+//returns <ul> elements filled with data
+function generateShopListDOM(shopListUl,shopDic,ind,productsCounter){
+
+    //creating li element
+    var shopLiElement = document.createElement("li");
+    shopLiElement.setAttribute("class", "list-group-item");
+    ind = ind + 1;
+    //creating shop header with shops name in int
+    var shopHeader = document.createElement("h5");
+    shopHeader.setAttribute("id", "product"+productsCounter+"Shop"+(ind)+"Name");
+    shopHeader.setAttribute("class", "float-start");
+    shopHeader.innerHTML = shopDic["name"] + "<br>";
+    //creating a table with shop details
+    var shopDetTable = document.createElement("table");
+    shopDetTable.setAttribute("class", "table table-borderless");
+    //attaching header into lielement
+    shopLiElement.appendChild(shopHeader);
+    
+    //createing tr
+    var shopDetTableRow = document.createElement("tr");
+
+    //shop price:
+        var shopPriceLabel = document.createElement("td");
+        shopPriceLabel.innerHTML= "<b>Price: </b>";
+        var shopPriceValue = document.createElement("td");
+        shopPriceValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"Price");
+        shopPriceValue.innerHTML = shopDic["price"].toFixed(2) + " zł";
+    //attaching elements to tr
+    shopDetTableRow.appendChild(shopPriceLabel);
+    shopDetTableRow.appendChild(shopPriceValue);
+        
+    //shop delivery price:
+        var shopDeliveryPriceLabel = document.createElement("td");
+        shopDeliveryPriceLabel.innerHTML= "<b>Delivery price: </b>";
+        var shopDeliveryPriceValue = document.createElement("td");
+        shopDeliveryPriceValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"DevPrice");
+        if(shopDic["delivery_price"] !== null){
+            shopDeliveryPriceValue.innerHTML = shopDic["delivery_price"].toFixed(2) + " zł";
+        }else{
+            shopDeliveryPriceValue.innerHTML = "Not avaible";
+        }
+    //attaching elements to tr
+    shopDetTableRow.appendChild(shopDeliveryPriceLabel);
+    shopDetTableRow.appendChild(shopDeliveryPriceValue);
+
+    //shop delivery time:
+        var shopDeliveryTimeLabel = document.createElement("td");
+        shopDeliveryTimeLabel.innerHTML= "<b>Delivery time: </b>";
+        var shopDeliveryTimeValue = document.createElement("td");
+        shopDeliveryTimeValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"DevTime");
+        if(shopDic["delivery_time"] !== null){
+            shopDeliveryTimeValue.innerHTML = shopDic["delivery_time"];
+        }else{
+            shopDeliveryTimeValue.innerHTML = "Not avaible";
+        }
+    //attaching elements to tr
+    shopDetTableRow.appendChild(shopDeliveryTimeLabel);
+    shopDetTableRow.appendChild(shopDeliveryTimeValue);
+
+    //shop availability:
+        var shopAvailabilityLabel = document.createElement("td");
+        shopAvailabilityLabel.innerHTML= "<b>Availability: </b>";
+        var shopAvailabilityValue = document.createElement("td");
+        shopAvailabilityValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"Ava");
+        if(shopDic["availability"] !== null){
+            shopAvailabilityValue.innerHTML = shopDic["availability"];
+        }else{
+            shopAvailabilityValue.innerHTML = "Not avaible";
+        }
+    //attaching elements to tr
+    shopDetTableRow.appendChild(shopAvailabilityLabel);
+    shopDetTableRow.appendChild(shopAvailabilityValue);
+
+    //buy now button
+    var tdBuyButton = document.createElement("td");
+    var buyNowButton = document.createElement("a");
+    buyNowButton.setAttribute("type", "button");
+    buyNowButton.setAttribute("href", shopDic["url"]);
+    buyNowButton.setAttribute("target", "_blank");
+    //TODO- repair display error
+    buyNowButton.setAttribute("id", "buyButtonProduct"+productsCounter+"Shop"+ind);
+    buyNowButton.setAttribute("class", "btn btn-success mt-2 me-3");
+    if(shopDic["delivery_price"] !== null){
+        buyNowButton.innerHTML = "Buy now for " + (shopDic["delivery_price"] + shopDic["price"]).toFixed(2);
+    }else{
+        buyNowButton.innerHTML = "Buy now for " + (shopDic["price"]).toFixed(2);
+    }
+    //attaching button
+    tdBuyButton.appendChild(buyNowButton);
+    shopDetTableRow.appendChild(tdBuyButton);
+
+    //attaching all elements
+    //attaching shopDetTableRow into shopDetTable 
+    shopDetTable.appendChild(shopDetTableRow);
+    //attaching shopDetTable into shopLiElement
+    shopLiElement.appendChild(shopDetTable);
+    //attaching shopLiElement into Ul
+    shopListUl.appendChild(shopLiElement);
+
+    return shopListUl;
 }
