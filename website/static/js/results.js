@@ -143,7 +143,11 @@ function generateDOM() {
                     ratingLable.innerHTML = "<b>Rating</b>";
                     var ratingValue = document.createElement("td");
                     ratingValue.setAttribute("id","productRating" + productsCounter );
-                    ratingValue.innerHTML = tempData["rating"] + "/5";
+                    if(tempData["rating"] !== null){
+                        ratingValue.innerHTML = tempData["rating"] + "/5";
+                    }else{
+                        ratingValue.innerHTML = "Not avaible";
+                    }
                     //attaching elements
                     ratingRow.appendChild(ratingLable);
                     ratingRow.appendChild(ratingValue);
@@ -215,8 +219,7 @@ function generateDOM() {
                 //attaching DescRow into detaTableTbody
                 detaTableTbody.appendChild(DescRow);
 
-
-
+            //attaching elements
             //attaching detaTableTbody into dataTable
             detaTable.appendChild(detaTableTbody);
             //attaching details table into details collumn
@@ -229,7 +232,109 @@ function generateDOM() {
             tableImgDeta.appendChild(tableImgDetaBody);
             //attach table into accordion body
             accordionBody.appendChild(tableImgDeta);
-        
+
+            //creating shops list
+            var shopListUl = document.createElement("ul");
+            shopListUl.setAttribute("class", "list-group");
+            tempData["shop_list"].forEach((shopDic,ind) => {
+                //creating li element
+                var shopLiElement = document.createElement("li");
+                shopLiElement.setAttribute("class", "list-group-item");
+                ind = ind + 1;
+                //creating shop header with shops name in int
+                var shopHeader = document.createElement("h5");
+                shopHeader.setAttribute("id", "product"+productsCounter+"ShopName2"+(ind));
+                shopHeader.setAttribute("class", "float-start");
+                shopHeader.innerHTML = shopDic["name"] + "<br>";
+                //creating a table with shop details
+                var shopDetTable = document.createElement("table");
+                shopDetTable.setAttribute("class", "table table-borderless");
+                //attaching header into lielement
+                shopLiElement.appendChild(shopHeader);
+                
+                //createing tr
+                var shopDetTableRow = document.createElement("tr");
+
+                //shop price:
+                    var shopPriceLabel = document.createElement("td");
+                    shopPriceLabel.innerHTML= "<b>Price: </b>";
+                    var shopPriceValue = document.createElement("td");
+                    shopPriceValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"Price");
+                    shopPriceValue.innerHTML = shopDic["price"].toFixed(2) + " zł";
+                //attaching elements to tr
+                shopDetTableRow.appendChild(shopPriceLabel);
+                shopDetTableRow.appendChild(shopPriceValue);
+                    
+                //shop delivery price:
+                    var shopDeliveryPriceLabel = document.createElement("td");
+                    shopDeliveryPriceLabel.innerHTML= "<b>Delivery price: </b>";
+                    var shopDeliveryPriceValue = document.createElement("td");
+                    shopDeliveryPriceValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"DevPrice");
+                    if(shopDic["delivery_price"] !== null){
+                        shopDeliveryPriceValue.innerHTML = shopDic["delivery_price"].toFixed(2) + " zł";
+                    }else{
+                        shopDeliveryPriceValue.innerHTML = "Not avaible";
+                    }
+                //attaching elements to tr
+                shopDetTableRow.appendChild(shopDeliveryPriceLabel);
+                shopDetTableRow.appendChild(shopDeliveryPriceValue);
+
+                //shop delivery time:
+                    var shopDeliveryTimeLabel = document.createElement("td");
+                    shopDeliveryTimeLabel.innerHTML= "<b>Delivery time: </b>";
+                    var shopDeliveryTimeValue = document.createElement("td");
+                    shopDeliveryTimeValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"DevTime");
+                    if(shopDic["delivery_time"] !== null){
+                        shopDeliveryTimeValue.innerHTML = shopDic["delivery_time"];
+                    }else{
+                        shopDeliveryTimeValue.innerHTML = "Not avaible";
+                    }
+                //attaching elements to tr
+                shopDetTableRow.appendChild(shopDeliveryTimeLabel);
+                shopDetTableRow.appendChild(shopDeliveryTimeValue);
+
+                //shop availability:
+                    var shopAvailabilityLabel = document.createElement("td");
+                    shopAvailabilityLabel.innerHTML= "<b>Availability: </b>";
+                    var shopAvailabilityValue = document.createElement("td");
+                    shopAvailabilityValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"Ava");
+                    if(shopDic["availability"] !== null){
+                        shopAvailabilityValue.innerHTML = shopDic["availability"];
+                    }else{
+                        shopAvailabilityValue.innerHTML = "Not avaible";
+                    }
+                //attaching elements to tr
+                shopDetTableRow.appendChild(shopAvailabilityLabel);
+                shopDetTableRow.appendChild(shopAvailabilityValue);
+
+                //buy now button
+                var tdBuyButton = document.createElement("td");
+                var buyNowButton = document.createElement("a");
+                buyNowButton.setAttribute("type", "button");
+                buyNowButton.setAttribute("href", shopDic["url"]);
+                buyNowButton.setAttribute("target", "_blank");
+                buyNowButton.setAttribute("id", "buyButtonProduct"+productsCounter+"Shop"+ind);
+                buyNowButton.setAttribute("class", "btn btn-success mt-2 me-3");
+                if(shopDic["delivery_price"] !== null){
+                    buyNowButton.innerHTML = "Buy now for " + (shopDic["delivery_price"] + shopDic["price"]).toFixed(2);
+                }else{
+                    buyNowButton.innerHTML = "Buy now for " + (shopDic["price"]).toFixed(2);
+                }
+                //attaching button
+                tdBuyButton.appendChild(buyNowButton);
+                shopDetTableRow.appendChild(tdBuyButton);
+
+                //attaching all elements
+                //attaching shopDetTableRow into shopDetTable 
+                shopDetTable.appendChild(shopDetTableRow);
+                //attaching shopDetTable into shopLiElement
+                shopLiElement.appendChild(shopDetTable);
+                //attaching shopLiElement into Ul
+                shopListUl.appendChild(shopLiElement);
+                //attaching shopListUl into accordionBody
+                accordionBody.appendChild(shopListUl);
+            })
+     
         
         }else{
         ///////////////unambigious search///////////////////
@@ -328,7 +433,11 @@ function generateDOM() {
                     ratingLable.innerHTML = "<b>Rating</b>";
                     var ratingValue = document.createElement("td");
                     ratingValue.setAttribute("id","productRating" + productsCounter );
-                    ratingValue.innerHTML = tempData["rating"] + "/5";
+                    if(tempData["rating"] !== null){
+                        ratingValue.innerHTML = tempData["rating"] + "/5";
+                    }else{
+                        ratingValue.innerHTML = "Not avaible";
+                    }
                     //attaching elements
                     ratingRow.appendChild(ratingLable);
                     ratingRow.appendChild(ratingValue);
@@ -416,6 +525,109 @@ function generateDOM() {
             accordionBody.appendChild(tableImgDeta);
         }
 
+            //creating shops list
+            var shopListUl = document.createElement("ul");
+            shopListUl.setAttribute("class", "list-group");
+            tempData["shop_list"].forEach((shopDic,ind) => {
+                //creating li element
+                var shopLiElement = document.createElement("li");
+                shopLiElement.setAttribute("class", "list-group-item");
+                ind = ind + 1;
+                //creating shop header with shops name in int
+                var shopHeader = document.createElement("h5");
+                shopHeader.setAttribute("id", "product"+productsCounter+"ShopName2"+(ind));
+                shopHeader.setAttribute("class", "float-start");
+                shopHeader.innerHTML = shopDic["name"] + "<br>";
+                //creating a table with shop details
+                var shopDetTable = document.createElement("table");
+                shopDetTable.setAttribute("class", "table table-borderless");
+                //attaching header into lielement
+                shopLiElement.appendChild(shopHeader);
+                
+                //createing tr
+                var shopDetTableRow = document.createElement("tr");
+
+                //shop price:
+                    var shopPriceLabel = document.createElement("td");
+                    shopPriceLabel.innerHTML= "<b>Price: </b>";
+                    var shopPriceValue = document.createElement("td");
+                    shopPriceValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"Price");
+                    shopPriceValue.innerHTML = shopDic["price"].toFixed(2) + " zł";
+                //attaching elements to tr
+                shopDetTableRow.appendChild(shopPriceLabel);
+                shopDetTableRow.appendChild(shopPriceValue);
+                    
+                //shop delivery price:
+                    var shopDeliveryPriceLabel = document.createElement("td");
+                    shopDeliveryPriceLabel.innerHTML= "<b>Delivery price: </b>";
+                    var shopDeliveryPriceValue = document.createElement("td");
+                    shopDeliveryPriceValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"DevPrice");
+                    if(shopDic["delivery_price"] !== null){
+                        shopDeliveryPriceValue.innerHTML = shopDic["delivery_price"].toFixed(2) + " zł";
+                    }else{
+                        shopDeliveryPriceValue.innerHTML = "Not avaible";
+                    }
+                //attaching elements to tr
+                shopDetTableRow.appendChild(shopDeliveryPriceLabel);
+                shopDetTableRow.appendChild(shopDeliveryPriceValue);
+
+                //shop delivery time:
+                    var shopDeliveryTimeLabel = document.createElement("td");
+                    shopDeliveryTimeLabel.innerHTML= "<b>Delivery time: </b>";
+                    var shopDeliveryTimeValue = document.createElement("td");
+                    shopDeliveryTimeValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"DevTime");
+                    if(shopDic["delivery_time"] !== null){
+                        shopDeliveryTimeValue.innerHTML = shopDic["delivery_time"];
+                    }else{
+                        shopDeliveryTimeValue.innerHTML = "Not avaible";
+                    }
+                //attaching elements to tr
+                shopDetTableRow.appendChild(shopDeliveryTimeLabel);
+                shopDetTableRow.appendChild(shopDeliveryTimeValue);
+
+                //shop availability:
+                    var shopAvailabilityLabel = document.createElement("td");
+                    shopAvailabilityLabel.innerHTML= "<b>Availability: </b>";
+                    var shopAvailabilityValue = document.createElement("td");
+                    shopAvailabilityValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"Ava");
+                    if(shopDic["availability"] !== null){
+                        shopAvailabilityValue.innerHTML = shopDic["availability"];
+                    }else{
+                        shopAvailabilityValue.innerHTML = "Not avaible";
+                    }
+                //attaching elements to tr
+                shopDetTableRow.appendChild(shopAvailabilityLabel);
+                shopDetTableRow.appendChild(shopAvailabilityValue);
+                
+                //TODO- fix button display
+                //buy now button
+                var tdBuyButton = document.createElement("td");
+                var buyNowButton = document.createElement("a");
+                buyNowButton.setAttribute("type", "button");
+                buyNowButton.setAttribute("href", shopDic["url"]);
+                buyNowButton.setAttribute("target", "_blank");
+                buyNowButton.setAttribute("id", "buyButtonProduct"+productsCounter+"Shop"+ind);
+                buyNowButton.setAttribute("class", "btn btn-success mt-2 me-3");
+                if(shopDic["delivery_price"] !== null){
+                    buyNowButton.innerHTML = "Buy now for " + (shopDic["delivery_price"] + shopDic["price"]).toFixed(2);
+                }else{
+                    buyNowButton.innerHTML = "Buy now for " + (shopDic["price"]).toFixed(2);
+                }
+                //attaching button
+                tdBuyButton.appendChild(buyNowButton);
+                shopDetTableRow.appendChild(tdBuyButton);
+
+                //attaching all elements
+                //attaching shopDetTableRow into shopDetTable 
+                shopDetTable.appendChild(shopDetTableRow);
+                //attaching shopDetTable into shopLiElement
+                shopLiElement.appendChild(shopDetTable);
+                //attaching shopLiElement into Ul
+                shopListUl.appendChild(shopLiElement);
+                //attaching shopListUl into accordionBody
+                accordionBody.appendChild(shopListUl);
+            })
+            
 
 
         //accordionBody into accordionBodyDiv
