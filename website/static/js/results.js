@@ -39,7 +39,7 @@ id parametrs:
 @radiobuttonsgroups -> "specifyProductRadioButtonX";
 @radiobutton -> "btnradioYProductX"; 
 @image of product -> "productImgX"; returns <td> element with <img> children inside;
-@user input -> productNameACX;
+@user input -> "productNameACX";
 @table with basic info of product -> "productDetailsX"; returns <td> element with <table> with product details inside;
 @basic info of a product:   @products name -> "productNameX"
                             @products raiting -> "productRatingX"
@@ -441,15 +441,46 @@ function sortResults(){
 
 }
 
+//after user select radiobutton, refresh its data 
 function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
     
     //user input
-    var userInput = document.getElementById("productNameAC"+selectedProductNumber);
+    var userInput = document.getElementById("productNameAC"+selectedProductNumber).innerHTML;
     //selected, new product 
     var newProductData = searchResult["ceneo"][userInput][selectedRadioButtonNumber-1]; //-1 bo tablica od 0 
 
     //refreshig data:
     //img
-    document.getElementById()
+    document.getElementById("productImg" + selectedProductNumber).childNodes[0].src = newProductData["img"];
+    //product name
+    document.getElementById("productName" + selectedProductNumber).innerHTML = newProductData["name"];
+    //product rating
+    document.getElementById("productRating" + selectedProductNumber).innerHTML = newProductData["rating"];
+    //product lowest price
+     //TODO- to da sie lepiej zrobić
+     var minTempPrice = 10000000000;
+     newProductData["shop_list"].forEach((tempPrice) => {
+         if(tempPrice["price"] <= minTempPrice){
+             minTempPrice = tempPrice["price"];
+         }
+     })
+    document.getElementById("productLowPrice" + selectedProductNumber).innerHTML = minTempPrice + " zł";
+    //product shortest delivery time
+    var minDevTime = 10000000000;
+    newProductData["shop_list"].forEach((tempDevTime) => {
+        if(tempDevTime["delivery_time"] !== null){
+            if(tempDevTime["delivery_time"] <= minDevTime){
+                minDevTime = tempDevTime["delivery_time"];
+            }
+        }
+    })
+    if(minDevTime == 10000000000){
+        document.getElementById("productShortDev" + selectedProductNumber).innerHTML = "No data avaible";
+    }else{
+        //TODO- jaka jednostak czasu?
+        document.getElementById("productShortDev" + selectedProductNumber).innerHTML = minDevTime + "?TODO";
+    }
+    //product name
+    document.getElementById("productDesc" + selectedProductNumber).innerHTML = newProductData["description"];
 
 }
