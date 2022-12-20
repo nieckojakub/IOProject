@@ -103,24 +103,27 @@ def history_get(history_id):
 @search.route('/history', methods=['POST'])
 @login_required
 def history_post():
-    products_list = request.get_json()
+    products_list = request.form['products']
+    products_list = json.loads(products_list)
     history = History(user_id=current_user.id)
     db.session.add(history)
+    db.session.commit()
+    print(history.id)
     for productJSON in products_list:
-        print(productJSON)
         product_object = Product(**productJSON)
         product = ProductModel(history_id=history.id, name=product_object.name, url=product_object.url,
                                img=product_object.img, description=product_object.description,
                                rating=product_object.rating)
         db.session.add(product)
+        db.session.commit()
         for shopJSON in product_object.shop_list:
             shop_object = Shop(**shopJSON)
             shop = ShopModel(product_id=product.id, name=shop_object.name, url=shop_object.url,
                              price=shop_object.price, delivery_price=shop_object.delivery_price,
                              availability=shop_object.availability, delivery_time=shop_object.delivery_time)
             db.session.add(shop)
-    db.session.commit()
-    return '', 200
+        db.session.commit()
+    return SUCCESS
 
 
 @search.route('/history/<int:id>', methods=['DELETE'])

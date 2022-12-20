@@ -430,9 +430,38 @@ function generateDOM() {
 }
 
 
-//TODO
+// save to history
 function saveToHistory(){
-    alert("Not implemented yet!")
+    // prepare data to save
+    let productsToSaveList = [];
+    Object.keys(searchResult['ceneo']).forEach(function (key, ind){
+        let product_list = searchResult['ceneo'][key];
+        let activeProductName = "#productName" + (ind + 1);
+        activeProductName = $(activeProductName)[0].innerText;
+        let activeProduct;
+        product_list.forEach(function (product, ind){
+            if (product['name'] === activeProductName){
+                activeProduct = product;
+            }
+        });
+        productsToSaveList.push(activeProduct);
+    });
+
+    $.ajax({
+        type: "POST",
+        url: "/history",
+        data: {
+            'products': JSON.stringify(productsToSaveList)
+        },
+        success: function (){
+            // TODO
+            alert("Success");
+        },
+        error: function (){
+            // TODO
+            alert("Failed");
+        }
+    });
 }
 
 //TODO
