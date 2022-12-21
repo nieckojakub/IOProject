@@ -7,3 +7,4 @@ flask_bootstrap
 flask_wtf
 email_validator
 MechanicalSoup==1.2.0
+pytest==7.2.0
