@@ -2,7 +2,7 @@ import json
 from flask import Blueprint, request, make_response
 from flask_login import current_user, login_required
 from flask_wtf import FlaskForm
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from ..models import History, Product
 from ..search_engine.product import Product
 from ..search_engine.shop import Shop
@@ -16,15 +16,17 @@ search = Blueprint('search', __name__)
 search_results = dict()
 
 # messages and HTTP status codes
+SUCCESS = '', 200
+
 TOKEN_IS_NONE = "Token is none", 400
 PRODUCT_IS_NONE = "Product is none", 400
 ALLEGRO_NOT_SUPPORTED = "Allegro not supported", 400
 INVALID_TARGET = "Invalid target", 400
 
+FORBIDDEN = "You do not have access to this resource", 403
+
 TOKEN_NOT_FOUND = "Token not found", 404
 PRODUCT_NOT_FOUND = "Product not found", 404
-
-SUCCESS = '', 200
 
 
 # delete token from search results
@@ -160,7 +162,34 @@ def history_get_id(history_id):
 
 # TODO
 # DELETE history and connected products with given history ID
-@search.route('/history/<int:id>', methods=['DELETE'])
-@login_required
-def history_delete(id):
-    return id, 200
+@search.route('/history/<int:history_id>', methods=['DELETE'])
+#@login_required
+def history_delete(history_id):
+    # get history entry
+    history = History.query.get_or_404(history_id)
+
+    # check if logged user is history entry owner
+    #if history.user_id != current_user.id:
+    #    return FORBIDDEN
+
+    # get all products to delete shops connected with history entry
+    stmt = select(ProductModel).where(ProductModel.history_id == history.id)
+    products_models = db.session.execute(stmt)
+
+    for product_model in products_models:
+        product_model = product_model[0]
+
+        stmt = delete(ShopModel).where(ShopModel.product_id == product_model.id)
+        db.session.execute(stmt)
+
+    # delete all products connected with history entry
+    stmt = delete(ProductModel).where(ProductModel.history_id == history.id)
+    db.session.execute(stmt)
+
+    # delete history entry
+    stmt = delete(History).where(History.id == history_id)
+    db.session.execute(stmt)
+
+    db.session.commit()
+
+    return SUCCESS
