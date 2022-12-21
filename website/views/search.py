@@ -160,17 +160,16 @@ def history_get_id(history_id):
     return json_result, 200
 
 
-# TODO
 # DELETE history and connected products with given history ID
 @search.route('/history/<int:history_id>', methods=['DELETE'])
-#@login_required
+@login_required
 def history_delete(history_id):
     # get history entry
     history = History.query.get_or_404(history_id)
 
     # check if logged user is history entry owner
-    #if history.user_id != current_user.id:
-    #    return FORBIDDEN
+    if history.user_id != current_user.id:
+        return FORBIDDEN
 
     # get all products to delete shops connected with history entry
     stmt = select(ProductModel).where(ProductModel.history_id == history.id)
