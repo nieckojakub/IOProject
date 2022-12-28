@@ -282,6 +282,8 @@ class CeneoBrowser(Browser):
         Product objects (with a maximum length limited by the limit variable)
         is returned. Otherwise only one Product object is returned.
         """
+        # Sort by price url prefix
+        SORT_PREFIX = ';0112-0.htm'
         # Row layout
         PRODUCT_LIST_LAYOUT_SELECTOR = '.cat-prod-row'
         # Grid layout
@@ -297,10 +299,13 @@ class CeneoBrowser(Browser):
         search_results_page = self.submit(self.search_form, self.url)
         # Check if the url has changed 
         # - if not, something is wrong with the form
+        
         if search_results_page.url == self.url:
             # Throwing an error expected here
             return
-        # Success - we are now on the results page
+        # Sort products
+        sorted_results_page_url = search_results_page.url + SORT_PREFIX
+        search_results_page = self.get(sorted_results_page_url)
         # Retrive html code
         search_result_html = search_results_page.soup
         
