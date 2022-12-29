@@ -59,9 +59,9 @@ def scrapProductDescription(product_main_html):
     DESCRIPTION_DIV_SELECTOR = 'div[class="product-top__product-info__tags"]'
     product_description_div = product_main_html.select(DESCRIPTION_DIV_SELECTOR)
     if not product_description_div:
-        return None
+        return "No description found"
     product_description = product_description_div[0].string
     if not product_description:
-        return None
+        return "No description found"
     else:
         return product_description

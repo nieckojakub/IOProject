@@ -58,7 +58,7 @@ def scrapOfferPrice(product_offer):
         penny = penny_span[0].string.replace(' ', '').strip(",")
         penny = float(penny) / 100
     product_price = value + penny
-    return product_price
+    return round(product_price, 2)
 
 def scrapOfferDeliveryPrice(product_offer, product_price):
     DELIVERY_SPAN_SELECTOR = 'span.product-delivery-info'

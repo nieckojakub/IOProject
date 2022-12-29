@@ -105,7 +105,7 @@ class CeneoBrowser(Browser):
             product_rating,
         )
 
-    def search(self, search_query: str, limit=PRODUCT_LIMIT):
+    def search(self, search_query: str, limit=PRODUCT_LIMIT, sort=True):
         """Search for the given product.
 
         :param product_name: User-specified product name
@@ -137,8 +137,9 @@ class CeneoBrowser(Browser):
             # Throwing an error expected here
             return
         # Sort products
-        sorted_results_page_url = search_results_page.url + SORT_PREFIX
-        search_results_page = self.get(sorted_results_page_url)
+        if sort:
+            sorted_results_page_url = search_results_page.url + SORT_PREFIX
+            search_results_page = self.get(sorted_results_page_url)
         # Retrive html code
         search_result_html = search_results_page.soup
         
