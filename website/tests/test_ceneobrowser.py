@@ -44,7 +44,7 @@ class TestCeneoSearch:
             if product.rating is None:
                 assert True
             else:
-                assert product.rating >=0 and product.rating < 5,\
+                assert product.rating >=0 and product.rating <= 5,\
                     f'[ "Search Query for "{product_name}" gives the Product '\
                     f'object of name "{product.name}" with invalid value '\
                     'for rating ]'
