@@ -1,6 +1,8 @@
 from mechanicalsoup import Browser
 from ..product import Product
 from ..shop import Shop
+from . import scrap_offer
+from . import scrap_product
 import re
 
 
@@ -24,179 +26,6 @@ class CeneoBrowser(Browser):
         self.search_form = self.ceneo_html.select(self.FORM_SELECTOR)[0]
         self.search_input = self.search_form.select(self.FORM_INPUT_SELECTOR)[0]
 
-    def scrapProductName(self, product_main_html):
-        NAME_SELECTOR = '.product-top__product-info__name'
-        product_name_h1 = product_main_html.select(NAME_SELECTOR)
-        if product_name_h1:
-            return product_name_h1[0].string
-        else:
-            return None
-
-    def scrapProductImageUrl(self, product_main_html):
-        IMAGE_DIV_SELECTOR = 'div[class="gallery-carousel__item"]'
-        product_img_div = product_main_html.select(IMAGE_DIV_SELECTOR)
-        if not product_img_div:
-            return None
-        product_img = product_img_div[0].select('img')
-        if not product_img:
-            return None
-        product_img_src = product_img[0]['src']
-        if not product_img_src:
-            return None
-        else:
-            return 'https:' + product_img_src
-
-    def scrapProductRating(self, product_html, is_offer=False):
-        REVIEW_DIV_SELECTOR = 'div[class="product-review"]'
-        SCORE_SELECTOR = 'span[class="product-review__score"]'
-        OFFER_SCORE_SELECTOR = 'span[class="score-marker"]'
-        if is_offer:
-            # There is no Product rating in the ceneo product overview.
-            # Try to extract rating from the first product offer.
-            score_span = product_html.select(OFFER_SCORE_SELECTOR)
-            if not score_span:
-                return None
-            span_style = score_span[0]['style']
-            if not span_style:
-                return None
-            rating_procent = re.findall('([0-9]+|[0-9]+\.[0-9]+)%', span_style)
-            try:
-                rating_procent = float(rating_procent) / 100
-            except:
-                return None
-            else:
-                product_rating = round(rating_procent * 5, 2)
-                return product_rating
-        product_review_div = product_html.select(REVIEW_DIV_SELECTOR)
-        if not product_review_div:
-            return None
-        product_score_span = product_review_div[0].select(SCORE_SELECTOR)
-        if not product_score_span:
-            return False
-        product_rating = product_score_span[0]["content"]
-        if not product_rating:
-            return None
-        else:
-            return round(float(product_rating), 2)
-
-    def scrapProductDescription(self, product_main_html):
-        DESCRIPTION_DIV_SELECTOR = 'div[class="product-top__product-info__tags"]'
-        product_description_div = product_main_html.select(DESCRIPTION_DIV_SELECTOR)
-        if not product_description_div:
-            return None
-        product_description = product_description_div[0].string
-        if not product_description:
-            return None
-        else:
-            return product_description
-            
-    def scrapOfferShopName(self, product_offer):
-        OPINION_LI_SELECTOR='li[class="offer-shop-opinions"]'
-        PREFIX = 'Dane i opinie o '
-        shop_opinon_li = product_offer.select(OPINION_LI_SELECTOR)
-        if not shop_opinon_li:
-            return None
-        shop_opinion = shop_opinon_li[0].select("a")
-        if not shop_opinion:
-            return None
-        shop_name = shop_opinion[0].string.split(PREFIX)[-1].strip("\n")
-        if not shop_name:
-            return None
-        else:
-            return shop_name
-
-    def scrapOfferShopUrl(self, product_offer):
-        SHOP_DIV_SELECTOR = 'div[class="product-offer__store__logo"]'
-        OPINION_LI_SELECTOR='li[class="offer-shop-opinions"]'
-        INFO_SUFFIX = '#tab=info'
-        shop_logo_div = product_offer.select(SHOP_DIV_SELECTOR)
-        if not shop_logo_div:
-            return None
-        shop_logo_link = shop_logo_div[0].select('a')
-        if not shop_logo_link:
-            shop_logo_link = shop_logo_div[0].select('img')
-            if not shop_logo_link:
-                return None
-            else:
-                shop_opinon_li = product_offer.select(OPINION_LI_SELECTOR)
-                if not shop_opinon_li:
-                    return None
-                ceneo_shop_a_tag  = shop_opinon_li[0].select('a')
-                if not ceneo_shop_a_tag:
-                    return None
-                else:
-                    ceneo_shop_href = ceneo_shop_a_tag[0]['href']
-                    ceneo_shop_link = ceneo_shop_href.split(INFO_SUFFIX)[0]
-                    shop_url = self.URL + '/' + ceneo_shop_link
-        else: 
-            shop_url = self.URL + shop_logo_link[0]["href"]
-        return shop_url
-
-    def scrapOfferPrice(self, product_offer):
-        PRICE_SPAN_SELECTOR = 'span[class="price"]'
-        VALUE_SPAN_SELECTOR = 'span[class="value"]'
-        PENNY_SPAN_SELECTOR = 'span[class="penny"]'
-        price_span = product_offer.select(PRICE_SPAN_SELECTOR)
-        if not price_span:
-            return None
-        value_span = price_span[0].select(VALUE_SPAN_SELECTOR)
-        penny_span = price_span[0].select(PENNY_SPAN_SELECTOR)
-        if not value_span or not penny_span:
-            return None
-        else:
-            value = float(value_span[0].string.replace(' ', ''))
-            penny = penny_span[0].string.replace(' ', '').strip(",")
-            penny = float(penny) / 100
-        product_price = value + penny
-        return product_price
-
-    def scrapOfferDeliveryPrice(self, product_offer, product_price):
-        DELIVERY_SPAN_SELECTOR = 'span.product-delivery-info'
-        FREE_DELIVERY_SELECTOR = '.free-delivery-label'
-        delivery_price_span = product_offer.select(DELIVERY_SPAN_SELECTOR)
-        if not delivery_price_span:
-            return None
-        if delivery_price_span[0].select(FREE_DELIVERY_SELECTOR):
-            # Free delivery label found 
-            return 0
-        # Check if delivery is free
-        delivery_price_text = delivery_price_span[0].string
-        if delivery_price_text:
-            delivery_price = re.findall("[0-9]+,[0-9]{1,2}", delivery_price_text)
-            # Check whether the price pattern has been found
-            # if not, it is the allegro offer
-            if delivery_price:
-                delivery_price = (
-                    float(delivery_price[0].split(",")[0])
-                    + float(delivery_price[0].split(",")[1]) / 100
-                )
-                delivery_price = round(delivery_price - product_price, 2)
-            else:
-                # Allegro offer - price not displayed
-                delivery_price = None
-            return delivery_price
-        else:
-            return None
-
-    def scrapOfferAvailability(self, product_offer):
-        AVAIL_DIV_SELECTOR = 'div[class="product-availability"]'
-        product_availability_div = product_offer.select(AVAIL_DIV_SELECTOR)
-        if not product_availability_div:
-            return None
-        product_availability_span = product_availability_div[0].select("span")
-        if not product_availability_span:
-            return None
-        availabilty_message = product_availability_span[0].string
-        product_availability = re.findall("[0-9]+", availabilty_message)
-        if not product_availability:
-            product_availability = 0
-        else:
-            product_availability = int(product_availability[0])
-        return product_availability
-
-    def scrapOfferDeliveryTime(self, product_offer):
-        return None
-
     def scrapProductInfo(self, product_main_page_url):
         """Extract information about the product.
 
@@ -213,16 +42,16 @@ class CeneoBrowser(Browser):
         product_main_html = product_main_page.soup
 
         # Product name
-        product_name = self.scrapProductName(product_main_html)
+        product_name = scrap_product.scrapProductName(product_main_html)
         
         # Product image url
-        product_img_url = self.scrapProductImageUrl(product_main_html)
+        product_img_url = scrap_product.scrapProductImageUrl(product_main_html)
         
         # Product rating
-        product_rating = self.scrapProductRating(product_main_html)
+        product_rating = scrap_product.scrapProductRating(product_main_html)
 
         # Product description
-        product_description = self.scrapProductDescription(product_main_html)
+        product_description = scrap_product.scrapProductDescription(product_main_html)
         
         # Shop objects
         shop_list = list()
@@ -231,26 +60,30 @@ class CeneoBrowser(Browser):
         if not product_rating and product_offers:
             # There is no Product rating in the ceneo product overview.
             # Try to extract rating from the first product offer.
-            product_rating = self.scrapProductRating(
+            product_rating = scrap_product.scrapProductRating(
                                                     product_offers[0], 
                                                     is_offer=True
                                                     )
         for product_offer in product_offers:
             # Shop name
-            shop_name = self.scrapOfferShopName(product_offer)
+            shop_name = scrap_offer.scrapOfferShopName(product_offer)
             # Shop url
-            shop_url = self.scrapOfferShopUrl(product_offer)
+            shop_url = scrap_offer.scrapOfferShopUrl(product_offer, self.URL)
             # Product price
-            product_price = self.scrapOfferPrice(product_offer)
+            product_price = scrap_offer.scrapOfferPrice(product_offer)
             # Delivery price
-            delivery_price = self.scrapOfferDeliveryPrice(
+            delivery_price = scrap_offer.scrapOfferDeliveryPrice(
                                                         product_offer, 
                                                         product_price
                                                         )
             # Product availability
-            product_availability = self.scrapOfferAvailability(product_offer)
+            product_availability = scrap_offer.scrapOfferAvailability(
+                                                            product_offer
+                                                            )
             # Product delivery time
-            delivery_time = self.scrapOfferDeliveryTime(product_offer)
+            delivery_time = scrap_offer.scrapOfferDeliveryTime(
+                                                            product_offer
+                                                            )
             # Create Shop object and append it to the list
             shop_list.append(
                 Shop(

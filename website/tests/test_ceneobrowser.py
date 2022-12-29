@@ -17,7 +17,7 @@ for product_name in product_names:
                     browser.search(product_name)
                     ))
     
-class TestCenoSearch:
+class TestCeneoSearch:
 
     @pytest.mark.parametrize('product_name, product_objects', products)
     def test_product_name(self, product_name, product_objects):
