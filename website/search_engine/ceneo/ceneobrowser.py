@@ -98,7 +98,7 @@ class CeneoBrowser(Browser):
         # Return product object
         return Product(
             product_name,
-            self.URL,
+            product_main_page_url,
             product_img_url,
             shop_list,
             product_description,
