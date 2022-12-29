@@ -1,5 +1,5 @@
 import json
-from flask import Blueprint, request, make_response
+from flask import Blueprint, request, make_response, jsonify
 from flask_login import current_user, login_required
 from flask_wtf import FlaskForm
 from sqlalchemy import select, delete
@@ -120,12 +120,42 @@ def history_post():
     return SUCCESS
 
 
-# TODO
+# TODO: not tested, might not work
 # GET all history entries from logged user
 @search.route('/history', methods=['GET'])
 @login_required
 def history_get():
-    pass
+    # logged user id
+    user_id = current_user.get_id()
+
+    # search every history entry from logged user
+    stmt = select(History).where(History.user_id == user_id)
+    history_entries = db.session.execute(stmt)
+
+    result = list()
+
+    # loop for every history entry
+    for entry in history_entries:
+        entry = entry[0]
+        products_list = list()
+
+        # get all products from history entries
+        stmt = select(Product).where(Product.history_id == entry.id)
+        products = db.session.execute(stmt)
+
+        for product in products:
+            product = product[0]
+            products_list.append(product.name)
+
+        # add result
+        result.append({
+            "history_id": entry.id,
+            "search_date": entry.search_date,
+            "products_list": products_list
+        })
+
+    # return
+    return jsonify(result), 200
 
 
 # GET history and connected products with given history ID
