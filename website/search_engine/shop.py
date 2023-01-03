@@ -1,6 +1,16 @@
+from typing import Union
+
+
 class Shop:
-    def __init__(self, name: str, url: str,
-                 price: float, delivery_price: float, availability: int, delivery_time: float):
+    def __init__(
+        self,
+        name: Union[str, None],
+        url: Union[str, None],
+        price: Union[float, None],
+        delivery_price: Union[float, None],
+        availability: Union[int, None],
+        delivery_time: Union[float, None],
+    ):
         # shop name
         self.name = name
 
@@ -20,9 +30,8 @@ class Shop:
         self.delivery_time = delivery_time
 
     def __str__(self):
-        descr = "\tSHOP: {} PRICE: {}ZŁ\n". format(self.name, self.price)
+        descr = "\tSHOP: {} PRICE: {}ZŁ\n".format(self.name, self.price)
         descr += "\tDELIVERY PRICE: {}".format(self.delivery_price)
         descr += "\tAVAILABILIT WITHIN {} DAYS\n".format(self.availability)
         descr += "\tDELIVERY TIME: {}\n".format(self.delivery_time)
         return descr
-
