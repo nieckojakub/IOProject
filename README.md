@@ -1,7 +1,7 @@
 # IOProject
 
 Student project for software engineering class. Application under development.
-
+This project was made Scrum Methodology in Jira Software.
 
 ## Authors
 
