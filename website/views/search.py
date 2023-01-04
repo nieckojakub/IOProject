@@ -44,6 +44,7 @@ def search_add_get(token=None):
     # get params
     product = request.args.get('product')
     target = request.args.get('target')     # ceneo or allegro
+    amount = request.args.get('amount')     # default = 1
 
     # simple validation
     if product is None:
@@ -52,12 +53,17 @@ def search_add_get(token=None):
     if token is None:
         return TOKEN_IS_NONE
 
+    if amount is None:
+        amount = 1
+
+    # get results
     if target == "ceneo":
         ceneo_browser = CeneoBrowser()
         ceneo_search_result = ceneo_browser.search(product)
         if token not in search_results:
-            search_results[token] = {"ceneo": dict(), "allegro": dict()}
+            search_results[token] = {"ceneo": dict(), "allegro": dict(), "amount": dict()}
         search_results[token]['ceneo'][product] = ceneo_search_result
+        search_results[token]['amount'][product] = amount
         return SUCCESS
     elif target == "allegro":
         return ALLEGRO_NOT_SUPPORTED
