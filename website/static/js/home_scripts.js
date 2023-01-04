@@ -5,7 +5,7 @@
 // list of products {name: '', status: ''} to send to serv
 let listToReturn = [];
 
-let productsFromFile = [];
+//let productsFromFile = "";
 let productsCounter = 0;
 let token = Math.floor(Math.random() * (1000000000));
 const INITIAL_SEARCH_HELP = "Enter what You are looking for."
@@ -348,37 +348,33 @@ function goToResults(){
 
 
 //read .txt file with a list of products and load them to the listOfProducts DOM element
-//@input .txt file, each product in new line
-function readFromFile(){
+//@input event from changing input element, input must be text element, separted by new line, ',' or ' '
+function readFromFile(event){
     //catch input element
-    let fileInput = document.getElementById("addFromFileInput");
+    var fileInput = event.target;
+    var productsFromFile = [];
     //trigger input and then after the file was chosen catch a file
-    fileInput.click();
-    fileInput.addEventListener('change', (event) => {
-        let reader = new FileReader();
-        //translate to String
-        reader.readAsText(event.target.files[0]);
-        reader.onload = function() {
-            productsFromFile = reader.result;
-            //split after new line, optionally split after ',' or ' '
-            if( productsFromFile.includes("\r\n")){
-                productsFromFile = productsFromFile.split("\r\n");
-            }else if(productsFromFile.includes(",")){
-                productsFromFile = productsFromFile.split(",");
-            }else if(productsFromFile.includes(" ")){
-                productsFromFile = productsFromFile.split(" ");
-            }
-            //process data from user
-            productsFromFile.forEach(function(toAdd){
+    var reader = new FileReader();
+    reader.onload = function(){
+        productsFromFile = reader.result;
+        //split after new line, optionally split after ',' or ' '
+        if( productsFromFile.includes("\r\n")){
+            productsFromFile = productsFromFile.split("\r\n");
+        }else if(productsFromFile.includes(",")){
+            productsFromFile = productsFromFile.split(",");
+        }else if(productsFromFile.includes(" ")){
+            productsFromFile = productsFromFile.split(" ");
+        }
+        for (toAdd of productsFromFile){    
+            if(productsCounter >=  10){
+                alert("You cannot add more than 10 items!");
+                break;
+            }else{
                 addProductFromFile(toAdd);
-            })
-          };
-
-        //TODO- alert user about errors & and ensure whether file type is .txt and 10 products limit is not exceeded
-        reader.onerror = function() {
-            console.log(reader.error);
-          };
-      });
+            }
+        }
+    };
+    reader.readAsText(fileInput.files[0]);
 
 }
 //TODO- walidacja czy ktoś nie wpisał tego samego produktu

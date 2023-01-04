@@ -2,13 +2,14 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">Your search overview</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="staticBackdropLabel">Your search overview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div id="progresbarDiv" style="width:100%;">
@@ -47,81 +48,86 @@
             </div>
             -->
         </div>
-        </div>
     </div>
+</div>
 
 
-    <div class="container-sm text-center" style="color: #FFFFFF; width: 85%; margin-top: 2vh">
+<div class="container-sm text-center" style="color: #FFFFFF; width: 85%; margin-top: 2vh">
 
-        <!-- login card-->
-        <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px;">
+    <!-- login card-->
+    <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px;">
 
-            <!-- card header-->
-            <div class="card-body ">
-                {% if current_user.is_authenticated %}
-                <b> CenAll </b>
-                    <h4 class="card-title">Hello {{ current_user.firstName }}, we are happy to see You!</h4>
-                {% else %}
-                    <h4 class="card-title">Good luck searching!</h4>
-                {% endif %}
-            </div>
+        <!-- card header-->
+        <div class="card-body ">
+            {% if current_user.is_authenticated %}
+            <b> CenAll </b>
+            <h4 class="card-title">Hello {{ current_user.firstName }}, we are happy to see You!</h4>
+            {% else %}
+            <h4 class="card-title">Good luck searching!</h4>
+            {% endif %}
+        </div>
 
 
-            <!-- card body-->
-            <div class="card-body">
-                <!-- Button trigger modal -->
-                <button id="trigerProgresBar" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="display:none">
-                </button>
-                <form>
-                    <!-- check boxes-->
-                    <h6 style="display: inline">Please, select the source of Your search:</h6>
-                    <!-- Allegro-->
-                    <div style="display: inline; margin-left: 20px">
-                        <input class="form-check-input" type="checkbox" id="AllegroCheckbox" value="Allegro">
-                        <label class="form-check-label" for="AllegroCheckbox">Allegro</label>
+        <!-- card body-->
+        <div class="card-body">
+            <!-- Button trigger modal -->
+            <button id="trigerProgresBar" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop" style="display:none">
+            </button>
+            <form>
+                <!-- check boxes-->
+                <h6 style="display: inline">Please, select the source of Your search:</h6>
+                <!-- Allegro-->
+                <div style="display: inline; margin-left: 20px">
+                    <input class="form-check-input" type="checkbox" id="AllegroCheckbox" value="Allegro">
+                    <label class="form-check-label" for="AllegroCheckbox">Allegro</label>
+                </div>
+                <!-- Ceneo-->
+                <div style="display: inline; margin-left: 20px">
+                    <input class="form-check-input" type="checkbox" id="CeneoCheckbox" value="Ceneo" checked>
+                    <label class="form-check-label" for="CeneoCheckbox">Ceneo</label>
+                </div>
+                <!-- Search input + add button-->
+                <div class="mb-3 row">
+                    <div class="col">
+                        <input type="text" class="form-control mt-2" id="SearchInput" aria-describedby="SearchHelp">
                     </div>
-                    <!-- Ceneo-->
-                    <div style="display: inline; margin-left: 20px">
-                        <input class="form-check-input" type="checkbox" id="CeneoCheckbox" value="Ceneo" checked>
-                        <label class="form-check-label" for="CeneoCheckbox">Ceneo</label>
+                    <div class="col-auto">
+                        <button type="button" id="AddButton" class="btn btn-primary mt-2"
+                            onclick="addProduct()">Add</button>
                     </div>
-                    <!-- Search input + add button-->
-                    <div class="mb-3 row">
-                        <div class="col">
-                            <input type="text" class="form-control mt-2" id="SearchInput" aria-describedby="SearchHelp">
-                        </div>
-                        <div class="col-auto">
-                            <button type="button" id="AddButton" class="btn btn-primary mt-2" onclick="addProduct()">Add</button>
-                        </div>
-                        <div class="col-auto">
-                            <input type="file" id="addFromFileInput" accept=".txt" style="display: none;"></input>
-                            <button type="button" id="addFromFileButton" class="btn btn-primary mt-2" onclick="readFromFile()">From File</button>
-                        </div>
-                        <div id="SearchHelp" class="form-text" style="color: white;"></div>
-
+                    <div class="col-auto">
+                        <form>
+                            <input type="file" id="addFromFileInput" accept="text/plain" style="display: none;" onchange="return readFromFile(event);"></input>
+                            <button type="button" id="addFromFileButton" class="btn btn-primary mt-2"
+                                onclick="document.getElementById('addFromFileInput').click()">From File</button>
+                        </form>
                     </div>
+                    <div id="SearchHelp" class="form-text" style="color: white;"></div>
 
-                </form>
-                
-                <!-- list of products-->
-                <div class="card rounded-lg" id="divListOfProducts" style="background-color:#ffffff; border-radius: 25px;">
-                    <div id="ListOfProducts" class="card-body" style="color:#000000;">
-
-                    </div>
                 </div>
 
-                <!-- submit button-->
-                    <div class="container" style="display:inline">
-                        <button type="button" id="SubmitBtn" class="btn btn-success mt-2" onclick="showModal();">Submit</button>
-                    </div>
+            </form>
+
+            <!-- list of products-->
+            <div class="card rounded-lg" id="divListOfProducts" style="background-color:#ffffff; border-radius: 25px;">
+                <div id="ListOfProducts" class="card-body" style="color:#000000;">
+
+                </div>
             </div>
 
-            <div style="height: 15px;" class="card-footer"></div>
-
+            <!-- submit button-->
+            <div class="container" style="display:inline">
+                <button type="button" id="SubmitBtn" class="btn btn-success mt-2" onclick="showModal();">Submit</button>
+            </div>
         </div>
+
+        <div style="height: 15px;" class="card-footer"></div>
 
     </div>
 
-    <script src="../static/js/home_scripts.js"></script>
+</div>
+
+<script src="../static/js/home_scripts.js"></script>
 
 {% endblock %}
