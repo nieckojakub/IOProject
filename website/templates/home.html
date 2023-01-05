@@ -87,10 +87,20 @@
                     <input class="form-check-input" type="checkbox" id="CeneoCheckbox" value="Ceneo" checked>
                     <label class="form-check-label" for="CeneoCheckbox">Ceneo</label>
                 </div>
-                <!-- Search input + add button-->
+                <!-- Search input + add button + quantity form + read from file -->
                 <div class="mb-3 row">
-                    <div class="col">
+                    <div class="col-8">
                         <input type="text" class="form-control mt-2" id="SearchInput" aria-describedby="SearchHelp">
+                    </div>
+                    <div class="col-auto mt-2">
+
+                        <div class="input-group" style="max-width: 127px;">
+                            <button id="minusButtonMain" class="btn btn-danger" type="button" style="display:inline" onclick="return mainMinusBtn();" >-</button>
+                            <input id="amountMain" type="text" class="form-control" value="1" min="1" max="10"
+                                style="display:inline; max-width: 45px;" onchange="return validateMainAmount();">
+                            <button id="plusButtonMain" class="btn btn-success" type="button" style="display:inline" onclick="return mainPlusBtn();" >+</button>
+                        </div>
+
                     </div>
                     <div class="col-auto">
                         <button type="button" id="AddButton" class="btn btn-primary mt-2"
@@ -98,14 +108,15 @@
                     </div>
                     <div class="col-auto">
                         <form>
-                            <input type="file" id="addFromFileInput" accept="text/plain" style="display: none;" onchange="return readFromFile(event);"></input>
+                            <input type="file" id="addFromFileInput" accept="text/plain" style="display: none;"
+                                onchange="return readFromFile(event);"></input>
                             <button type="button" id="addFromFileButton" class="btn btn-primary mt-2"
                                 onclick="document.getElementById('addFromFileInput').click()">From File</button>
                         </form>
                     </div>
-                    <div id="SearchHelp" class="form-text" style="color: white;"></div>
 
                 </div>
+                <div id="SearchHelp" class="form-text" style="color: white;"></div>
 
             </form>
 

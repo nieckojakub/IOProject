@@ -99,7 +99,7 @@ function addProduct(){
     productsCounter++;
 
     //checking if there is max 10 items on the list and disableing addButton
-    if(productsCounter == 10){
+    if(productsCounter >= 10){
         document.getElementById("AddButton").setAttribute("disabled", "true");
         document.getElementById("SearchHelp").innerHTML = PRODUCTS_NUMBER_EXCEDED;
     }
@@ -163,7 +163,7 @@ function deleteProductFromList(element){
     })
 
     //turn on addButton after products counter is no longer equal to limit
-    if(productsCounter == 10){
+    if(productsCounter >= 10){
         document.getElementById("AddButton").removeAttribute("disabled");
         document.getElementById("SearchHelp").innerHTML = INITIAL_SEARCH_HELP;
     }
@@ -378,3 +378,41 @@ function readFromFile(event){
 
 }
 //TODO- walidacja czy ktoś nie wpisał tego samego produktu
+
+//validates and decrement product amount in main input element- onclick minus
+function mainMinusBtn(){
+    var val = document.getElementById("amountMain");
+    if(val.value == 1){
+        alert("Minimum amount is 1.");
+        return null;
+    }else{
+        val.value--;
+    }
+}
+//validates and increment product amount in main input element- onclick plus
+function mainPlusBtn(){
+    var val = document.getElementById("amountMain");
+    if(val.value == 10){
+        alert("Maximum amount is 10.");
+        return null;
+    }else{
+        val.value++;
+    }
+}
+//validates product amount in main input element- onchange input
+function validateMainAmount(){
+    var val = document.getElementById("amountMain");
+    if(!(Number.isInteger(val.value))){
+        alert("You must enter number from 1 to 10!");
+        val.value = 1;
+        return null;
+    }else if(val.value > 10){
+        alert("Maximum amount is 10.");
+        val.value = 10;
+        return null;
+    }else if(val.value < 1){
+        alert("Minimum amount is 1.");
+        val.value = 1;
+        return null;
+    }
+}
