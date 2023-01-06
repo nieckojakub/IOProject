@@ -65,7 +65,7 @@ function addProduct(){
     }
 
     //adding product name to the listToReturn
-    listToReturn.push({name: searchInput.value, status: SearchStatus.NOT_SEARCHED}); //name
+    listToReturn.push({name: searchInput.value, status: SearchStatus.NOT_SEARCHED, amount: document.getElementById("amountMain").value}); //name
 
     //creating html elements
     var newProduct = document.createElement("div");
@@ -97,7 +97,7 @@ function addProduct(){
     inputGroupAmountDiv.style.maxWidth = '140px';
     inputAmount.setAttribute('type','text');
     inputAmount.setAttribute('class','form-control');
-    inputAmount.setAttribute('value',document.getElementById("amountMain").value);
+    inputAmount.setAttribute('value', document.getElementById("amountMain").value);
     inputAmount.setAttribute('min','1');
     inputAmount.setAttribute('max','10');
     inputAmount.setAttribute('onchange','return validateAmount(this);');
@@ -113,7 +113,6 @@ function addProduct(){
     plusButton.setAttribute('onclick','return plusBtn(this);');
     plusButton.innerHTML = '+';
     
-
 
     //connecting elements
     nameDiv.appendChild(name);
@@ -148,7 +147,7 @@ function addProductFromFile(fileFromText){
     }
 
     //adding product name to the listToReturn
-    listToReturn.push({name: fileFromText, status: SearchStatus.NOT_SEARCHED}); //name
+    listToReturn.push({name: fileFromText, status: SearchStatus.NOT_SEARCHED, amount: 1}); //TODO: zczytywanie ilosci z pliku
 
     //creating html elements
     var newProduct = document.createElement("div");
@@ -346,7 +345,7 @@ function sendOneProduct(product){
         async: true,
         type: 'GET',
         url: url,
-        data: {target: 'ceneo', product: product['name']},
+        data: {target: 'ceneo', product: product['name'], amount: product["amount"]},
         success: function (data, status){
             product['status'] = SearchStatus.SEARCH_SUCCESS;
             searchedProductsCounter += 1;
