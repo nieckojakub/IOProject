@@ -349,6 +349,7 @@ function saveToHistory(){
                 activeProduct = product;
             }
         });
+        activeProduct['amount'] = searchResult['amount'][key]
         productsToSaveDict[key] = activeProduct;
     });
 

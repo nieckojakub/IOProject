@@ -116,10 +116,12 @@ def history_post():
     db.session.commit()
     for key in products_dict.keys():
         product_json = products_dict[key]
+        amount = product_json['amount']
+        del product_json['amount']
         product_object = Product(**product_json)
         product = ProductModel(history_id=history.id, inaccurate_name=key, name=product_object.name, url=product_object.url,
                                img=product_object.img, description=product_object.description,
-                               rating=product_object.rating)
+                               rating=product_object.rating, amount=amount)
         db.session.add(product)
         db.session.commit()
         for shopJSON in product_object.shop_list:
