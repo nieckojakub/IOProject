@@ -95,10 +95,10 @@
                     <div class="col-auto mt-2">
 
                         <div class="input-group" style="max-width: 127px;">
-                            <button id="minusButtonMain" class="btn btn-danger" type="button" style="display:inline" onclick="return mainMinusBtn();" >-</button>
+                            <button id="minusButtonMain" class="btn btn-danger" type="button" style="display:inline" onclick="return minusBtn(this);" >-</button>
                             <input id="amountMain" type="text" class="form-control" value="1" min="1" max="10"
-                                style="display:inline; max-width: 45px;" onchange="return validateMainAmount();">
-                            <button id="plusButtonMain" class="btn btn-success" type="button" style="display:inline" onclick="return mainPlusBtn();" >+</button>
+                                style="display:inline; max-width: 45px;" onchange="return validateAmount(this);">
+                            <button id="plusButtonMain" class="btn btn-success" type="button" style="display:inline" onclick="return plusBtn(this);" >+</button>
                         </div>
 
                     </div>
