@@ -71,6 +71,7 @@ class Product(db.Model):
     img = db.Column(db.String, nullable=True)
     description = db.Column(db.String, nullable=True)
     rating = db.Column(db.Float, nullable=True)
+    amount = db.Column(db.Integer, default=1)
 
 
 class Shop(db.Model):
