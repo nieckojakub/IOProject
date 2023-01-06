@@ -65,14 +65,20 @@ function addProduct(){
     }
 
     //adding product name to the listToReturn
-    listToReturn.push({name: searchInput.value, status: SearchStatus.NOT_SEARCHED}); //name
+    listToReturn.push({name: searchInput.value, status: SearchStatus.NOT_SEARCHED, amount: document.getElementById("amountMain").value}); //name
 
     //creating html elements
     var newProduct = document.createElement("div");
     var nameDiv = document.createElement("div");
+    var amountDiv = document.createElement("div");
     var delateBtnDiv = document.createElement("div");
     var name = document.createElement('h6');
     var delBtn = document.createElement('button');
+    var inputGroupAmountDiv = document.createElement("div");
+    var inputAmount = document.createElement("input");
+    var minusButton = document.createElement("button");
+    var plusButton = document.createElement("button");
+
 
     //setting attributes
     newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
@@ -81,25 +87,51 @@ function addProduct(){
     name.style.marginTop= "10px";
     name.innerHTML = searchInput.value;
     nameDiv.setAttribute("class", "col");
+    amountDiv.setAttribute("class", "col"); 
     delateBtnDiv.setAttribute("class", "col-auto");
     delBtn.setAttribute("class", "btn btn-danger");
     delBtn.setAttribute("type", "button");
     delBtn.setAttribute("onClick", "deleteProductFromList(this)");
     delBtn.innerHTML = "Delete";
+    inputGroupAmountDiv.setAttribute('class', 'input-group');
+    inputGroupAmountDiv.style.maxWidth = '140px';
+    inputAmount.setAttribute('type','text');
+    inputAmount.setAttribute('class','form-control');
+    inputAmount.setAttribute('value', document.getElementById("amountMain").value);
+    inputAmount.setAttribute('min','1');
+    inputAmount.setAttribute('max','10');
+    inputAmount.setAttribute('onchange','return validateAmount(this);');
+    inputAmount.setAttribute('style', 'display:inline; max-width: 60px;');
+    minusButton.setAttribute('class','btn btn-danger');
+    minusButton.setAttribute('type','button');
+    minusButton.setAttribute('style','display:inline');
+    minusButton.setAttribute('onclick','return minusBtn(this);');
+    minusButton.innerHTML = '-';
+    plusButton.setAttribute('class','btn btn-success');
+    plusButton.setAttribute('type','button');
+    plusButton.setAttribute('style','display:inline');
+    plusButton.setAttribute('onclick','return plusBtn(this);');
+    plusButton.innerHTML = '+';
+    
 
     //connecting elements
     nameDiv.appendChild(name);
     delateBtnDiv.appendChild(delBtn);
+    inputGroupAmountDiv.appendChild(minusButton);
+    inputGroupAmountDiv.appendChild(inputAmount);
+    inputGroupAmountDiv.appendChild(plusButton);
     newProduct.appendChild(nameDiv);
+    newProduct.appendChild(inputGroupAmountDiv);
     newProduct.appendChild(delateBtnDiv);
 
     //adding new product to the list
     listOfProducts.appendChild(newProduct);
     searchInput.value = "";
+    document.getElementById("amountMain").value = 1;
     productsCounter++;
 
     //checking if there is max 10 items on the list and disableing addButton
-    if(productsCounter == 10){
+    if(productsCounter >= 10){
         document.getElementById("AddButton").setAttribute("disabled", "true");
         document.getElementById("SearchHelp").innerHTML = PRODUCTS_NUMBER_EXCEDED;
     }
@@ -115,7 +147,7 @@ function addProductFromFile(fileFromText){
     }
 
     //adding product name to the listToReturn
-    listToReturn.push({name: fileFromText, status: SearchStatus.NOT_SEARCHED}); //name
+    listToReturn.push({name: fileFromText, status: SearchStatus.NOT_SEARCHED, amount: 1}); //TODO: zczytywanie ilosci z pliku
 
     //creating html elements
     var newProduct = document.createElement("div");
@@ -163,7 +195,7 @@ function deleteProductFromList(element){
     })
 
     //turn on addButton after products counter is no longer equal to limit
-    if(productsCounter == 10){
+    if(productsCounter >= 10){
         document.getElementById("AddButton").removeAttribute("disabled");
         document.getElementById("SearchHelp").innerHTML = INITIAL_SEARCH_HELP;
     }
@@ -313,7 +345,7 @@ function sendOneProduct(product){
         async: true,
         type: 'GET',
         url: url,
-        data: {target: 'ceneo', product: product['name']},
+        data: {target: 'ceneo', product: product['name'], amount: product["amount"]},
         success: function (data, status){
             product['status'] = SearchStatus.SEARCH_SUCCESS;
             searchedProductsCounter += 1;
@@ -348,7 +380,7 @@ function goToResults(){
 
 
 //read .txt file with a list of products and load them to the listOfProducts DOM element
-//@input event from changing input element, input must be text element, separted by new line, ',' or ' '
+//@param: event from changing input element, input must be text element, separted by new line, ',' or ' '
 function readFromFile(event){
     //catch input element
     var fileInput = event.target;
@@ -378,3 +410,49 @@ function readFromFile(event){
 
 }
 //TODO- walidacja czy ktoś nie wpisał tego samego produktu
+
+//functions handling plus/minus products counter
+//@param: selected element e.g. minus button, amount input 
+//validates product amount in products list element- onchange input
+function validateAmount(element){
+
+    if(!(Number.isInteger(element.value))){
+        alert("You must enter number from 1 to 10!");
+        element.value = 1;
+        return null;
+    }else if(element.value > 10){
+        alert("Maximum amount is 10.");
+        element.value = 10;
+        return null;
+    }else if(element.value < 1){
+        alert("Minimum amount is 1.");
+        element.value = 1;
+        return null;
+    }
+
+}
+//validates and decrement product amount in main input element- onclick minus
+function minusBtn(element){
+
+    var counter = element.parentNode.children[1];
+    if(counter.value == 1){
+        alert("Minimum amount is 1.");
+        return null;
+    }else{
+        counter.value--;
+    }
+
+}
+
+//validates and increment product amount in main input element- onclick plus
+function plusBtn(element){
+
+    var counter = element.parentNode.children[1];
+    if(counter.value == 10){
+        alert("Maximum amount is 10.");
+        return null;
+    }else{
+        counter.value++;
+    }
+
+}
