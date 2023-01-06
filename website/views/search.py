@@ -23,6 +23,8 @@ PRODUCT_IS_NONE = "Product is none", 400
 ALLEGRO_NOT_SUPPORTED = "Allegro not supported", 400
 INVALID_TARGET = "Invalid target", 400
 
+UNAUTHORIZED = "You're not logged in", 401
+
 FORBIDDEN = "You do not have access to this resource", 403
 
 TOKEN_NOT_FOUND = "Token not found", 404
@@ -101,8 +103,12 @@ def search_get(token=None):
 
 # POST (add) history to database
 @search.route('/history', methods=['POST'])
-@login_required
 def history_post():
+    # check if user is logged in
+    if not current_user.is_authenticated:
+        return UNAUTHORIZED
+
+    # add to history
     products_dict = request.form['products']
     products_dict = json.loads(products_dict)
     history = History(user_id=current_user.id)
@@ -129,8 +135,11 @@ def history_post():
 # TODO: not tested, might not work
 # GET all history entries from logged user
 @search.route('/history', methods=['GET'])
-@login_required
 def history_get():
+    # check if user is logged in
+    if not current_user.is_authenticated:
+        return UNAUTHORIZED
+
     # logged user id
     user_id = current_user.get_id()
 
