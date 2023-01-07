@@ -21,10 +21,9 @@ class TestCeneoSearch:
         product_allegro_fixture,
     ):
         for product in product_list_fixture:
-            assert product.name is not None, (
-                f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                "object with no name ]"
-            )
+            assert (
+                product.name is not None
+            ), f'[ "QUERY: "{product_name_fixture}" ]'
 
     def test_product_url(
         self,
@@ -36,14 +35,12 @@ class TestCeneoSearch:
     ):
         for product in product_list_fixture:
             assert product.url is not None, (
-                f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                f'object of name "{product.name}" with no ceneo offer'
-                " url ]"
+                f'[ "QUERY: "{product_name_fixture}",'
+                f' PRODUCT: "{product.name}" ]'
             )
             assert re.match("https://www.ceneo.pl/[0-9]+", product.url), (
-                f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                f'object of name "{product.name}" with invalid ceneo '
-                "offer url ]"
+                f'[ "QUERY: "{product_name_fixture}",'
+                f' PRODUCT: "{product.name}" ]'
             )
 
     def test_product_rating(
@@ -59,9 +56,8 @@ class TestCeneoSearch:
                 assert True
             else:
                 assert product.rating >= 0 and product.rating <= 5, (
-                    f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                    f'object of name "{product.name}" with invalid value '
-                    "for rating ]"
+                    f'[ "QUERY: "{product_name_fixture}",'
+                    f' PRODUCT: "{product.name}" ]'
                 )
 
     def test_product_img_url(
@@ -74,16 +70,15 @@ class TestCeneoSearch:
     ):
         for product in product_list_fixture:
             assert product.img is not None, (
-                f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                f'object of name "{product.name}" with no ceneo img url ]'
+                f'[ "QUERY: "{product_name_fixture}",'
+                f' PRODUCT: "{product.name}" ]'
             )
             assert re.match(
                 "https://image.ceneostatic.pl/data/products/[0-9]+/.*",
                 product.img,
             ), (
-                f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                f'object of name "{product.name}" with invalid ceneo '
-                "img url ]"
+                f'[ "QUERY: "{product_name_fixture}",'
+                f' PRODUCT: "{product.name}" ]'
             )
 
     def test_product_description(
@@ -96,9 +91,8 @@ class TestCeneoSearch:
     ):
         for product in product_list_fixture:
             assert isinstance(product.description, str), (
-                f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                f'object of name "{product.name}" with invalid product '
-                "description ]"
+                f'[ "QUERY: "{product_name_fixture}",'
+                f' PRODUCT: "{product.name}" ]'
             )
 
     def test_product_shop_list(
@@ -111,8 +105,8 @@ class TestCeneoSearch:
     ):
         for product in product_list_fixture:
             assert product.shop_list, (
-                f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                f'object of name "{product.name}" with no shop list ]'
+                f'[ "QUERY: "{product_name_fixture}",'
+                f' PRODUCT: "{product.name}" ]'
             )
 
     def test_shop_name(
@@ -126,8 +120,8 @@ class TestCeneoSearch:
         for product in product_list_fixture:
             for shop in product.shop_list:
                 assert shop.name is not None, (
-                    f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                    f'object of name "{product.name}" with shop of no name ]'
+                    f'[ "QUERY: "{product_name_fixture}",'
+                    f' PRODUCT: "{product.name}" ]'
                 )
 
     def test_shop_price(
@@ -141,22 +135,22 @@ class TestCeneoSearch:
         for product in product_list_fixture:
             for shop in product.shop_list:
                 assert shop.price is not None, (
-                    f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                    f'object of name "{product.name}" with shop offer of'
-                    f' "{shop.name}" with no price ]'
+                    f'[ "QUERY: "{product_name_fixture}",'
+                    f' PRODUCT: "{product.name}",'
+                    f' SHOP: "{shop.name}" ]'
                 )
                 assert shop.price > 0, (
-                    f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                    f'object of name "{product.name}" with shop offer of'
-                    f' "{shop.name}" with nonpositive price ]'
+                    f'[ "QUERY: "{product_name_fixture}",'
+                    f' PRODUCT: "{product.name}",'
+                    f' SHOP: "{shop.name}" ]'
                 )
                 decimal_position = (
                     decimal.Decimal(str(shop.price)).as_tuple().exponent
                 )
                 assert decimal_position == -1 or decimal_position == -2, (
-                    f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                    f'object of name "{product.name}" with shop offer of'
-                    f' "{shop.name}" with invalid price format ]'
+                    f'[ "QUERY: "{product_name_fixture}",'
+                    f' PRODUCT: "{product.name}",'
+                    f' SHOP: "{shop.name}" ]'
                 )
 
     def test_shop_url(
@@ -170,9 +164,9 @@ class TestCeneoSearch:
         for product in product_list_fixture:
             for shop in product.shop_list:
                 assert re.match("https://www.ceneo.pl/.*", shop.url), (
-                    f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                    f'object of name "{product.name}" with shop offer of'
-                    f' "{shop.name}" with invalid url ]'
+                    f'[ "QUERY: "{product_name_fixture}",'
+                    f' PRODUCT: "{product.name}",'
+                    f' SHOP: "{shop.name}" ]'
                 )
 
     def test_shop_delivery_price(
@@ -186,9 +180,9 @@ class TestCeneoSearch:
         for product in product_list_fixture:
             for shop in product.shop_list:
                 assert shop.delivery_price is not None, (
-                    f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                    f'object of name "{product.name}" with shop offer of'
-                    f' "{shop.name}" with no delivery price ]'
+                    f'[ "QUERY: "{product_name_fixture}",'
+                    f' PRODUCT: "{product.name}",'
+                    f' SHOP: "{shop.name}" ]'
                 )
 
     def test_shop_availability(
@@ -202,9 +196,9 @@ class TestCeneoSearch:
         for product in product_list_fixture:
             for shop in product.shop_list:
                 assert shop.availability is not None, (
-                    f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                    f'object of name "{product.name}" with shop offer of'
-                    f' "{shop.name}" with no availability info ]'
+                    f'[ "QUERY: "{product_name_fixture}",'
+                    f' PRODUCT: "{product.name}",'
+                    f' SHOP: "{shop.name}" ]'
                 )
 
     def test_shop_delivery_time(
@@ -218,9 +212,9 @@ class TestCeneoSearch:
         for product in product_list_fixture:
             for shop in product.shop_list:
                 assert shop.delivery_time is not None, (
-                    f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                    f'object of name "{product.name}" with shop offer of'
-                    f' "{shop.name}" with no delivery time info ]'
+                    f'[ "QUERY: "{product_name_fixture}",'
+                    f' PRODUCT: "{product.name}",'
+                    f' SHOP: "{shop.name}" ]'
                 )
 
     def test_price_sort(
@@ -235,9 +229,8 @@ class TestCeneoSearch:
         for product in product_list_fixture:
             next_offer_price = min(shop.price for shop in product.shop_list)
             assert prev_offer_price <= next_offer_price, (
-                f'[ "Search Query for "{product_name_fixture}" gives the Product '
-                f'object of name "{product.name}" with not working price '
-                "sorting ]"
+                f'[ "QUERY: "{product_name_fixture}",'
+                f' PRODUCT: "{product.name}" ]'
             )
             prev_offer_price = next_offer_price
 
@@ -253,18 +246,14 @@ class TestCeneoSearch:
         for product in product_list_fixture:
             for shop in product.shop_list:
                 if is_allegro_specific:
-                    assert shop.name == 'allegro.pl',(
+                    assert shop.name == "allegro.pl", (
                         f'[ "QUERY: "{product_name_fixture}",'
                         f' PRODUCT: "{product.name}",'
-                        f' SHOP: "{shop.name}",'
-                        f' ALLEGRO SPECIFIC: {is_allegro_specific},'
-                        f' SHOP NAME: "{shop.name}" ]'
+                        f" ALLEGRO SPECIFIC: {is_allegro_specific} ]"
                     )
                 else:
-                    assert shop.name != 'allegro.pl',(
+                    assert shop.name != "allegro.pl", (
                         f'[ "QUERY: "{product_name_fixture}",'
                         f' PRODUCT: "{product.name}",'
-                        f' SHOP: "{shop.name}",'
-                        f' ALLEGRO SPECIFIC: {is_allegro_specific},'
-                        f' SHOP NAME: "{shop.name}" ]'
+                        f" ALLEGRO SPECIFIC: {is_allegro_specific}, ]"
                     )
