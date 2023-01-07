@@ -69,16 +69,30 @@ class CeneoBrowser(Browser):
             )
             if is_allegro_specific and shop_name == 'allegro.pl':
                 # Prepare html
-                product_allegro_page = self.get(shop_url + ALLEGRO_SHIPPING_SUFFIX)
-                product_allegro_html = product_allegro_page.soup
+                product_allegro_redirect = self.get(shop_url)
+                product_allegro_redirect_html = product_allegro_redirect.soup
+                script_tags = product_allegro_redirect_html.select('script')
+                allegro_offer_url = ""
+                for script_tag in script_tags:
+                    script_tag_content = script_tag.text
+                    allegro_offer_link = re.search('"https://allegro.pl/oferta/\S+"', script_tag_content)
+                    if allegro_offer_link:
+                        allegro_offer_url = allegro_offer_link[0].strip('"')
+                        break
+                if allegro_offer_url == "":
+                    continue
+                # product_allegro_page = self.get(allegro_offer_url)
+                # product_allegro_html = product_allegro_page.soup
                 # Allegro delivery price
-                delivery_price = scrap_allegro_offer.scrapOfferDeliveryPrice(
-                    product_allegro_html
-                )
+                delivery_price = None
+                # delivery_price = scrap_allegro_offer.scrapOfferDeliveryPrice(
+                #     product_allegro_html
+                # )
                 # Allegro product delivery time
-                delivery_time = scrap_allegro_offer.scrapOfferDeliveryTime(product_allegro_html)
+                delivery_time = None
+                # delivery_time = scrap_allegro_offer.scrapOfferDeliveryTime(product_allegro_html)
                 # Create Shop object and append it to the list
-            elif shop_name == 'allegro.pl':
+            elif is_allegro_specific or shop_name == 'allegro.pl':
                 continue
             else:
                 # Delivery price
@@ -236,16 +250,13 @@ class CeneoBrowser(Browser):
                     # Create the full product main page url
                     product_main_page_url = self.URL + a_tag["href"]
                     product_obj = self.scrapProductInfo(product_main_page_url, is_allegro_specific)
-                    if product_obj is None:
-                        # Product with no shop list
-                        limit -= 1
-                    else:
+                    if product_obj is not None:
                         product_list.append(
                             self.scrapProductInfo(
                                 product_main_page_url, is_allegro_specific
                             )
                         )
-                        break
+                    break
             if len(product_list) == limit:
                 break
 
