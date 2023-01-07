@@ -2,6 +2,7 @@ from mechanicalsoup import Browser
 from ..product import Product
 from ..shop import Shop
 from . import scrap_offer
+from . import scrap_allegro_offer
 from . import scrap_product
 from typing import List, Optional
 import re
@@ -27,7 +28,9 @@ class CeneoBrowser(Browser):
         self.search_form = self.ceneo_html.select(self.FORM_SELECTOR)[0]
         self.search_input = self.search_form.select(self.FORM_INPUT_SELECTOR)[0]
 
-    def scrapProductInfo(self, product_main_page_url: str) -> Product:
+    def scrapProductInfo(
+        self, product_main_page_url: str, is_allegro_specific: bool = False
+    ) -> Product:
         """Extract information about the product.
 
         This method is used by the search() method.
@@ -35,13 +38,69 @@ class CeneoBrowser(Browser):
         :param product_main_page_url: Link to ceneo page with product offer.
         :return: Product object is returned.
         """
-
+        ALLEGRO_SHIPPING_SUFFIX = "#shipping-info"
         SHOP_OFFER_SELECTOR = ".product-offers__list__item"
 
         # Prepare html
         product_main_page = self.get(product_main_page_url)
         product_main_html = product_main_page.soup
+        
+        # Shop objects
+        shop_list = list()
 
+        shop_offers_html = product_main_html.select(SHOP_OFFER_SELECTOR)
+        # if not product_rating and shop_offers_html:
+        #     # There is no Product rating in the ceneo product overview.
+        #     # Try to extract rating from the first shop offer.
+        #     product_rating = scrap_product.scrapProductRating(
+        #         shop_offers_html[0], is_shop_offer=True
+        #     )
+
+        for shop_offer_html in shop_offers_html:
+            # Shop name
+            shop_name = scrap_offer.scrapOfferShopName(shop_offer_html)
+            # Shop url
+            shop_url = scrap_offer.scrapOfferShopUrl(shop_offer_html, self.URL)
+            # Product price
+            product_price = scrap_offer.scrapOfferPrice(shop_offer_html)
+            # Product availability
+            product_availability = scrap_offer.scrapOfferAvailability(
+                shop_offer_html
+            )
+            if is_allegro_specific and shop_name == 'allegro.pl':
+                # Prepare html
+                product_allegro_page = self.get(shop_url + ALLEGRO_SHIPPING_SUFFIX)
+                product_allegro_html = product_allegro_page.soup
+                # Allegro delivery price
+                delivery_price = scrap_allegro_offer.scrapOfferDeliveryPrice(
+                    product_allegro_html
+                )
+                # Allegro product delivery time
+                delivery_time = scrap_allegro_offer.scrapOfferDeliveryTime(product_allegro_html)
+                # Create Shop object and append it to the list
+            elif shop_name == 'allegro.pl':
+                continue
+            else:
+                # Delivery price
+                delivery_price = scrap_offer.scrapOfferDeliveryPrice(
+                    shop_offer_html, product_price
+                )
+                # Product delivery time
+                delivery_time = scrap_offer.scrapOfferDeliveryTime(shop_offer_html)
+                # Create Shop object and append it to the list
+
+            shop_list.append(
+                Shop(
+                    shop_name,
+                    shop_url,
+                    product_price,
+                    delivery_price,
+                    product_availability,
+                    delivery_time,
+                )
+            )
+        if len(shop_list) == 0:
+            return None
         # Product name
         product_name = scrap_product.scrapProductName(product_main_html)
 
@@ -56,44 +115,8 @@ class CeneoBrowser(Browser):
             product_main_html
         )
 
-        # Shop objects
-        shop_list = list()
 
-        shop_offers_html = product_main_html.select(SHOP_OFFER_SELECTOR)
-        if not product_rating and shop_offers_html:
-            # There is no Product rating in the ceneo product overview.
-            # Try to extract rating from the first shop offer.
-            product_rating = scrap_product.scrapProductRating(
-                shop_offers_html[0], is_shop_offer=True
-            )
-        for shop_offer_html in shop_offers_html:
-            # Shop name
-            shop_name = scrap_offer.scrapOfferShopName(shop_offer_html)
-            # Shop url
-            shop_url = scrap_offer.scrapOfferShopUrl(shop_offer_html, self.URL)
-            # Product price
-            product_price = scrap_offer.scrapOfferPrice(shop_offer_html)
-            # Delivery price
-            delivery_price = scrap_offer.scrapOfferDeliveryPrice(
-                shop_offer_html, product_price
-            )
-            # Product availability
-            product_availability = scrap_offer.scrapOfferAvailability(
-                shop_offer_html
-            )
-            # Product delivery time
-            delivery_time = scrap_offer.scrapOfferDeliveryTime(shop_offer_html)
-            # Create Shop object and append it to the list
-            shop_list.append(
-                Shop(
-                    shop_name,
-                    shop_url,
-                    product_price,
-                    delivery_price,
-                    product_availability,
-                    delivery_time,
-                )
-            )
+
         # Return product object
         return Product(
             product_name,
@@ -105,7 +128,11 @@ class CeneoBrowser(Browser):
         )
 
     def search(
-        self, search_query: str, limit: int = PRODUCT_LIMIT, sort: bool = True
+        self,
+        search_query: str,
+        limit: int = PRODUCT_LIMIT,
+        sort: bool = True,
+        is_allegro_specific: bool = False,
     ) -> List[Product]:
         """Search for the given product.
 
@@ -117,7 +144,7 @@ class CeneoBrowser(Browser):
         is returned. Otherwise only one Product object is returned.
         """
         # Sort by price url prefix
-        SORT_PREFIX = ";0112-0.htm"
+        SORT_SUFFIX = ";0112-0.htm"
         # Row layout
         PRODUCT_LIST_LAYOUT_SELECTOR = ".cat-prod-row"
         # Grid layout
@@ -139,7 +166,7 @@ class CeneoBrowser(Browser):
             return []
         # Sort products
         if sort:
-            sorted_results_page_url = search_results_page.url + SORT_PREFIX
+            sorted_results_page_url = search_results_page.url + SORT_SUFFIX
             search_results_page = self.get(sorted_results_page_url)
         # Retrive html code
         search_result_html = search_results_page.soup
@@ -196,20 +223,30 @@ class CeneoBrowser(Browser):
         # of each product. Then invoke scrapProductInfo() method with each url
         # to create Product object. When its done simply return the list of
         # Product objects.
-        for i in range(0, limit):
+        # for i in range(0, limit):
+        for product_container in product_containers:
             # Prepare the regex to match the product main page link
             product_link_regex = re.compile("/[0-9]+")
             # Get every <a> tag associated with the product container
-            a_tags = product_containers[i].find_all("a")
+            a_tags = product_container.find_all("a")
             # Iterate over <a> tags and find the one that matches the regex
             for a_tag in a_tags:
                 regex_result = product_link_regex.match(a_tag["href"])
                 if regex_result is not None:
                     # Create the full product main page url
                     product_main_page_url = self.URL + a_tag["href"]
-                    product_list.append(
-                        self.scrapProductInfo(product_main_page_url)
-                    )
-                    break
+                    product_obj = self.scrapProductInfo(product_main_page_url, is_allegro_specific)
+                    if product_obj is None:
+                        # Product with no shop list
+                        limit -= 1
+                    else:
+                        product_list.append(
+                            self.scrapProductInfo(
+                                product_main_page_url, is_allegro_specific
+                            )
+                        )
+                        break
+            if len(product_list) == limit:
+                break
 
         return product_list
