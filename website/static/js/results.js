@@ -11,11 +11,23 @@ var accordionMain = document.getElementById("accordionMain"); //main accordion
 
 // run code after loading the page
 $(function (){
-    let token = window.location.pathname;
-    token = token.replace('/results/', '');
+    // establish data source (url)
+    let pathname = window.location.pathname;
+    pathname = pathname.split('/')
+    let url = '';
+    if (pathname[1] === 'results_db'){
+        let history_id = pathname[2];
+        url = "/history/" + history_id;
+    }else if (pathname[1] === 'results'){
+        token = pathname[2];
+        url = "/search/" + token;
+    }else {
+        window.location.replace(window.location.origin);
+    }
 
+    // request data
     $.ajax({
-        url: "/search/" + token,
+        url: url,
         type: 'GET',
         success: function(data){
             searchResult = JSON.parse(data);
@@ -26,6 +38,7 @@ $(function (){
             window.location.replace(window.location.origin);
         }
     });
+
 });
 
 // ##########################################################

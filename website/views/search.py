@@ -63,7 +63,7 @@ def search_add_get(token=None):
         ceneo_browser = CeneoBrowser()
         ceneo_search_result = ceneo_browser.search(product)
         if token not in search_results:
-            search_results[token] = {"ceneo": dict(), "allegro": dict(), "amount": dict()}
+            search_results[token] = {"ceneo": dict(), "amount": dict()}
         search_results[token]['ceneo'][product] = ceneo_search_result
         search_results[token]['amount'][product] = amount
         return SUCCESS
@@ -183,7 +183,7 @@ def history_get_id(history_id):
     history = History.query.get_or_404(history_id)
 
     # search list ini
-    results = dict()
+    results = {"ceneo": dict(), "amount": dict()}
 
     # get all products and shops
     stmt = select(ProductModel).where(ProductModel.history_id == history.id)
@@ -201,7 +201,8 @@ def history_get_id(history_id):
                                shop_model.delivery_price, shop_model.availability,
                                shop_model.delivery_time)
             product_object.shop_list.append(shop_object)
-        results[product_model.inaccurate_name] = product_object
+        results['ceneo'][product_model.inaccurate_name] = [product_object]
+        results['amount'][product_model.inaccurate_name] = product_model.amount
     # jsonify
     json_result = json.dumps(results, indent=4, cls=CustomEncoder, ensure_ascii=False)
     return json_result, 200
