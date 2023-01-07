@@ -3,12 +3,15 @@ from .conftest import get_product_data_tuple
 
 
 @pytest.mark.parametrize(
-    "product_name_fixture, product_list_fixture, product_limit_fixture, product_sort_fixture, product_allegro_fixture",
+    "product_name_fixture, "
+    + "product_list_fixture,"
+    + "product_limit_fixture, "
+    + "product_sort_fixture, "
+    + "product_allegro_fixture",
     get_product_data_tuple(),
     indirect=True,
 )
 class TestCeneoSearch:
- 
     def test_product_name(
         self,
         product_name_fixture,
@@ -112,7 +115,7 @@ class TestCeneoSearch:
                 f'object of name "{product.name}" with no shop list ]'
             )
 
-    def test_shop_names(
+    def test_shop_name(
         self,
         product_name_fixture,
         product_list_fixture,
@@ -246,4 +249,22 @@ class TestCeneoSearch:
         product_sort_fixture,
         product_allegro_fixture,
     ):
-        pass
+        is_allegro_specific = product_allegro_fixture
+        for product in product_list_fixture:
+            for shop in product.shop_list:
+                if is_allegro_specific:
+                    assert shop.name == 'allegro.pl',(
+                        f'[ "QUERY: "{product_name_fixture}",'
+                        f' PRODUCT: "{product.name}",'
+                        f' SHOP: "{shop.name}",'
+                        f' ALLEGRO SPECIFIC: {is_allegro_specific},'
+                        f' SHOP NAME: "{shop.name}" ]'
+                    )
+                else:
+                    assert shop.name != 'allegro.pl',(
+                        f'[ "QUERY: "{product_name_fixture}",'
+                        f' PRODUCT: "{product.name}",'
+                        f' SHOP: "{shop.name}",'
+                        f' ALLEGRO SPECIFIC: {is_allegro_specific},'
+                        f' SHOP NAME: "{shop.name}" ]'
+                    )

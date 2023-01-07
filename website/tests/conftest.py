@@ -88,7 +88,8 @@ def get_product_data_tuple():
         sort_option_flag_value = sort_option_flag[-1].split(" ")[-1].split("=")[-1]
         sort = True if sort_option_flag_value == "TRUE" else False
     else:
-        sort = DEFAULT_PRODUCT_SORT_OPTION
+        default_sort_option_bool = True if DEFAULT_PRODUCT_SORT_OPTION == 'TRUE' else False
+        sort = default_sort_option_bool
     allegro_option_flag = re.findall("--ALLEGRO(?:=|\s)\S+", arg_line)
     if allegro_option_flag:
         allegro_option_flag_value = (
@@ -96,7 +97,8 @@ def get_product_data_tuple():
         )
         is_allegro_specific = True if allegro_option_flag_value == "TRUE" else False
     else:
-        is_allegro_specific = DEFAULT_ALLEGRO_OPTION
+        default_allegro_option_bool = True if DEFAULT_ALLEGRO_OPTION == 'TRUE' else False
+        is_allegro_specific = default_allegro_option_bool
     script_dir = os.path.dirname(__file__)
     path = os.path.join(script_dir, file_name)
     with open(path, "r") as f:
