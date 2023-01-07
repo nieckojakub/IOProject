@@ -1,21 +1,36 @@
 import pytest, os, re, decimal
-from .conftest import get_product_names_tuple
+from .conftest import get_product_data_tuple
 
 
 @pytest.mark.parametrize(
-    "product_name_fixture, product_list_fixture",
-    get_product_names_tuple(),
+    "product_name_fixture, product_list_fixture, product_limit_fixture, product_sort_fixture, product_allegro_fixture",
+    get_product_data_tuple(),
     indirect=True,
 )
 class TestCeneoSearch:
-    def test_product_name(self, product_name_fixture, product_list_fixture):
+ 
+    def test_product_name(
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
+    ):
         for product in product_list_fixture:
             assert product.name is not None, (
                 f'[ "Search Query for "{product_name_fixture}" gives the Product '
                 "object with no name ]"
             )
 
-    def test_product_url(self, product_name_fixture, product_list_fixture):
+    def test_product_url(
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
+    ):
         for product in product_list_fixture:
             assert product.url is not None, (
                 f'[ "Search Query for "{product_name_fixture}" gives the Product '
@@ -28,7 +43,14 @@ class TestCeneoSearch:
                 "offer url ]"
             )
 
-    def test_product_rating(self, product_name_fixture, product_list_fixture):
+    def test_product_rating(
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
+    ):
         for product in product_list_fixture:
             if product.rating is None:
                 assert True
@@ -39,7 +61,14 @@ class TestCeneoSearch:
                     "for rating ]"
                 )
 
-    def test_product_img_url(self, product_name_fixture, product_list_fixture):
+    def test_product_img_url(
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
+    ):
         for product in product_list_fixture:
             assert product.img is not None, (
                 f'[ "Search Query for "{product_name_fixture}" gives the Product '
@@ -55,7 +84,12 @@ class TestCeneoSearch:
             )
 
     def test_product_description(
-        self, product_name_fixture, product_list_fixture
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
     ):
         for product in product_list_fixture:
             assert isinstance(product.description, str), (
@@ -65,7 +99,12 @@ class TestCeneoSearch:
             )
 
     def test_product_shop_list(
-        self, product_name_fixture, product_list_fixture
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
     ):
         for product in product_list_fixture:
             assert product.shop_list, (
@@ -73,7 +112,14 @@ class TestCeneoSearch:
                 f'object of name "{product.name}" with no shop list ]'
             )
 
-    def test_shop_names(self, product_name_fixture, product_list_fixture):
+    def test_shop_names(
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
+    ):
         for product in product_list_fixture:
             for shop in product.shop_list:
                 assert shop.name is not None, (
@@ -81,7 +127,14 @@ class TestCeneoSearch:
                     f'object of name "{product.name}" with shop of no name ]'
                 )
 
-    def test_shop_price(self, product_name_fixture, product_list_fixture):
+    def test_shop_price(
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
+    ):
         for product in product_list_fixture:
             for shop in product.shop_list:
                 assert shop.price is not None, (
@@ -103,7 +156,14 @@ class TestCeneoSearch:
                     f' "{shop.name}" with invalid price format ]'
                 )
 
-    def test_shop_url(self, product_name_fixture, product_list_fixture):
+    def test_shop_url(
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
+    ):
         for product in product_list_fixture:
             for shop in product.shop_list:
                 assert re.match("https://www.ceneo.pl/.*", shop.url), (
@@ -113,7 +173,12 @@ class TestCeneoSearch:
                 )
 
     def test_shop_delivery_price(
-        self, product_name_fixture, product_list_fixture
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -124,7 +189,12 @@ class TestCeneoSearch:
                 )
 
     def test_shop_availability(
-        self, product_name_fixture, product_list_fixture
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -135,7 +205,12 @@ class TestCeneoSearch:
                 )
 
     def test_shop_delivery_time(
-        self, product_name_fixture, product_list_fixture
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -145,7 +220,14 @@ class TestCeneoSearch:
                     f' "{shop.name}" with no delivery time info ]'
                 )
 
-    def test_price_sort(self, product_name_fixture, product_list_fixture):
+    def test_price_sort(
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
+    ):
         prev_offer_price = 0
         for product in product_list_fixture:
             next_offer_price = min(shop.price for shop in product.shop_list)
@@ -155,3 +237,13 @@ class TestCeneoSearch:
                 "sorting ]"
             )
             prev_offer_price = next_offer_price
+
+    def test_allegro_filter(
+        self,
+        product_name_fixture,
+        product_list_fixture,
+        product_limit_fixture,
+        product_sort_fixture,
+        product_allegro_fixture,
+    ):
+        pass

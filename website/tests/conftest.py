@@ -1,6 +1,7 @@
 import pytest
 import sys
 import os
+import re
 from website.search_engine.ceneo import CeneoBrowser
 
 
@@ -17,6 +18,17 @@ ceneo_browser = CeneoBrowser()
 def product_name_fixture(request):
     return request.param
 
+@pytest.fixture(scope="class")
+def product_limit_fixture(request):
+    return request.param
+
+@pytest.fixture(scope="class")
+def product_sort_fixture(request):
+    return request.param
+
+@pytest.fixture(scope="class")
+def product_allegro_fixture(request):
+    return request.param
 
 @pytest.fixture(scope="class")
 def product_list_fixture(pytestconfig, request):
@@ -26,7 +38,7 @@ def product_list_fixture(pytestconfig, request):
         is_allegro_specific = False
 
     try:
-        limit = pytestconfig.getoption("limit")
+        limit = int(pytestconfig.getoption("limit"))
     except ValueError:
         sys.exit("ValueError: invalid literal for --limit")
 
@@ -34,7 +46,12 @@ def product_list_fixture(pytestconfig, request):
         sort = True
     else:
         sort = False
-    return ceneo_browser.search(request.param)
+    return ceneo_browser.search(
+        request.param,
+        limit=limit,
+        sort=sort,
+        is_allegro_specific=is_allegro_specific,
+    )
 
 
 def pytest_addoption(parser):
@@ -50,16 +67,51 @@ def pytest_addoption(parser):
     )
 
 
-def get_product_names_tuple():
+def get_product_data_tuple():
+    arg_line = " ".join(sys.argv).upper()
+    file_option = re.findall("--FILE(?:=|\s)\S+", arg_line)
+    if file_option:
+        file_name = file_option[-1].split(" ")[-1].split("=")[-1]
+    else:
+        file_name = DEFAULT_FILE_OPTION
+    limit_option = re.findall("--LIMIT(?:=|\s)\S+", arg_line)
+    if limit_option:
+        limit_option_value = limit_option[-1].split(" ")[-1].split("=")[-1]
+        try:
+            limit = int(limit_option_value)
+        except ValueError:
+            sys.exit("ValueError: invalid literal for --limit")
+    else:
+        limit = DEFAULT_PRODUCT_LIMIT_OPTION
+    sort_option_flag = re.findall("--SORT(?:=|\s)\S+", arg_line)
+    if sort_option_flag:
+        sort_option_flag_value = sort_option_flag[-1].split(" ")[-1].split("=")[-1]
+        sort = True if sort_option_flag_value == "TRUE" else False
+    else:
+        sort = DEFAULT_PRODUCT_SORT_OPTION
+    allegro_option_flag = re.findall("--ALLEGRO(?:=|\s)\S+", arg_line)
+    if allegro_option_flag:
+        allegro_option_flag_value = (
+            allegro_option_flag[-1].split(" ")[-1].split("=")[-1]
+        )
+        is_allegro_specific = True if allegro_option_flag_value == "TRUE" else False
+    else:
+        is_allegro_specific = DEFAULT_ALLEGRO_OPTION
     script_dir = os.path.dirname(__file__)
-    path = os.path.join(script_dir, DEFAULT_FILE_OPTION)
+    path = os.path.join(script_dir, file_name)
     with open(path, "r") as f:
         product_names = f.read().split("\n")
     product_names_tuples = list()
     for product_name in product_names:
         try:
             if product_name[0] != "#":
-                product_names_tuples.append((product_name, product_name))
+                product_names_tuples.append((
+                    product_name, 
+                    product_name, 
+                    limit, 
+                    sort, 
+                    is_allegro_specific
+                ))
             else:
                 continue
         except:
