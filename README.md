@@ -9,6 +9,7 @@ This project was made Scrum Methodology in Jira Software.
 - [@JakubSzcz](https://www.github.com/JakubSzcz)
 - [@marwyp](https://www.github.com/marwyp)
 - [@hbiros](https://www.github.com/hbiros)
+- [@miloszjaneczek](https://www.github.com/miloszjaneczek)
 
 ### Materials used in project
 Icons by [Icons8](https://icons8.com)
