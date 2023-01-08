@@ -50,7 +50,7 @@ id parametrs:
 
 @radiobuttonsgroups -> "specifyProductRadioButtonX";
 @radiobutton -> "btnradioYProductX"; 
-@image of product -> "productImgX"; returns <td> element with <img> children inside;
+@image of the product -> "productImgX"; returns <td> element with <img> children inside;
 @user input -> "productNameACX";
 @table with basic info of product -> "productDetailsX"; returns <td> element with <table> with product details inside;
 @basic info of a product:   @products name -> "productNameX"
@@ -58,7 +58,10 @@ id parametrs:
                             @products lowest price -> "productLowPriceX";
                             @products shortest delivery time -> "productShortDevX"
                             @products description -> "productDescX";
+                            @products result link -> "productLinkX"
+                            @requested amount -> "productAmountX"
                             retuns <td> element with data inside;
+@shop list in ul element -> "shopListX"; retuns <ul> element with list of shops avaible for a inside;
 @shop name in ul header -> "productXShopZName"; returns <h5> element with shop name inside;
 @shop parametrs:    @shop price -> "productXShopZPrice"
                     @shop delivery price -> "productXShopZDevPrice"
@@ -600,7 +603,6 @@ function generateShopListDOM(shopListUl,shopDic,ind,productsCounter){
     buyNowButton.setAttribute("role", "button");
     buyNowButton.setAttribute("href", shopDic["url"]);
     buyNowButton.setAttribute("target", "_blank");
-    //TODO- repair display error
     buyNowButton.setAttribute("id", "buyButtonProduct"+productsCounter+"Shop"+ind);
     buyNowButton.setAttribute("class", "btn btn-success me-3");
     if(shopDic["delivery_price"] !== null){
