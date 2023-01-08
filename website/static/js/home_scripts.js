@@ -362,7 +362,7 @@ function sendOneProduct(product){
     }else{
         target = 'both'
     }
-    console.log(target)
+
     // send data
     $.ajax({
         async: true,
