@@ -225,10 +225,12 @@ function generateDOM() {
                 ratingLable.innerHTML = "<b>Rating</b>";
                 var ratingValue = document.createElement("td");
                 ratingValue.setAttribute("id","productRating" + productsCounter );
-                if(tempData["rating"] !== null){
+                if(tempData["rating"] === false ){
+                    ratingValue.innerHTML = "No data avaible";
+                }else if(tempData["rating"] !== null){
                     ratingValue.innerHTML = tempData["rating"] + "/5";
                 }else{
-                    ratingValue.innerHTML = "Not avaible";
+                    ratingValue.innerHTML = "No data avaible";
                 }
                 //attaching elements
                 ratingRow.appendChild(ratingLable);
@@ -300,6 +302,24 @@ function generateDOM() {
                 DescRow.appendChild(DescValue);
             //attaching DescRow into detaTableTbody
             detaTableTbody.appendChild(DescRow);
+
+            //results link
+            var linkRow = document.createElement("tr");
+                var linkLable = document.createElement("td");
+                linkLable.setAttribute("class", "float-start");
+                linkLable.innerHTML = "<b>Results link</b>";
+                var linkValue = document.createElement("td");
+                linkValue.setAttribute("id","productLink" + productsCounter );
+                var link = document.createElement("a");
+                link.innerHTML = "Go to page.";
+                link.setAttribute("target","_blank");
+                link.setAttribute("href",tempData["url"]);
+                //attaching elements
+                linkValue.appendChild(link);
+                linkRow.appendChild(linkLable);
+                linkRow.appendChild(linkValue);
+            //attaching linkRow into detaTableTbody;
+            detaTableTbody.appendChild(linkRow);
 
         //attaching elements
         //attaching detaTableTbody into dataTable
@@ -406,7 +426,9 @@ function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
     //product name
     document.getElementById("productName" + selectedProductNumber).innerHTML = newProductData["name"];
     //product rating
-    if(newProductData["rating"] !== null){
+    if(newProductData["rating"] === false){
+        document.getElementById("productRating" + selectedProductNumber).innerHTML = "No data avaible";
+    }else if(newProductData["rating"] !== null){
         document.getElementById("productRating" + selectedProductNumber).innerHTML = newProductData["rating"] + "/5";
     }else{
         document.getElementById("productRating" + selectedProductNumber).innerHTML = "No data avaible";
@@ -435,8 +457,10 @@ function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
         //TODO- jaka jednostak czasu?
         document.getElementById("productShortDev" + selectedProductNumber).innerHTML = minDevTime + "?TODO";
     }
-    //product name
+    //product desc
     document.getElementById("productDesc" + selectedProductNumber).innerHTML = newProductData["description"];
+    //product link
+    document.getElementById("productLink" + selectedProductNumber).firstChild.setAttribute("href",newProductData["url"]);
 
     //refreshing shop list
     //delete shops
@@ -523,7 +547,11 @@ function generateShopListDOM(shopListUl,shopDic,ind,productsCounter){
         var shopAvailabilityValue = document.createElement("td");
         shopAvailabilityValue.setAttribute("id", "product"+productsCounter+"Shop"+ind+"Ava");
         if(shopDic["availability"] !== null){
-            shopAvailabilityValue.innerHTML = shopDic["availability"];
+            if(shopDic["availability"] == 0 ){
+                shopAvailabilityValue.innerHTML = "In stock"; 
+            }else{
+                shopAvailabilityValue.innerHTML = "Avaible in " + shopDic["availability"] + " days."; 
+            }
         }else{
             shopAvailabilityValue.innerHTML = "Not avaible";
         }
