@@ -280,8 +280,7 @@ function generateDOM() {
                 if(minDevTime == 10000000000){
                     shorDevTimeValue.innerHTML = "No data avaible";
                 }else{
-                    //TODO- jaka jednostak czasu?
-                    shorDevTimeValue.innerHTML = minDevTime + "?TODO";
+                    shorDevTimeValue.innerHTML = minDevTime + "dni.";
                 }
                 //attaching elements
                 shorDevTimeRow.appendChild(shorDevTimeLable);
@@ -338,7 +337,7 @@ function generateDOM() {
         //creating shops list
         var shopListUl = document.createElement("ul");
         shopListUl.setAttribute("class", "list-group");
-        shopListUl.setAttribute("id", "shopList");
+        shopListUl.setAttribute("id", "shopList" + productsCounter);
         tempData["shop_list"].forEach((shopDic,ind) => {
             //attaching shopListUl into accordionBody
             accordionBody.appendChild(generateShopListDOM(shopListUl,shopDic,ind,productsCounter));
@@ -365,6 +364,25 @@ function generateDOM() {
         //new data
         refreshNewData(selectedProductNumber,selectedRadioButtonNumber);
     });
+
+    //changing presented data after choseing another accordion
+    $(".accordion-button").click(function(event){
+        //product number
+        var selectedProductNumber = parseInt(event.target.id.split("productNameAC")[1]);
+        //radiobutton number
+        var selectedRadioButtonNumber = 1;
+        var productLink_ = document.getElementById("productLink" + selectedProductNumber).firstChild.href;
+        var tempCounter = 1;
+        for(let cos of searchResult["ceneo"][document.getElementById("productNameAC" + selectedProductNumber).innerHTML]){
+            if(cos["url"] === productLink_){
+                selectedRadioButtonNumber = tempCounter;
+                break;
+            }else{
+                tempCounter++; 
+            }
+        }
+        refreshNewData(selectedProductNumber,selectedRadioButtonNumber);
+    });  
 }
 
 
@@ -418,7 +436,7 @@ function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
     //user input
     var userInput = document.getElementById("productNameAC"+selectedProductNumber).innerHTML;
     //selected, new product 
-    var newProductData = searchResult["ceneo"][userInput][selectedRadioButtonNumber-1]; //-1 bo tablica od 0 
+    var newProductData = searchResult["ceneo"][userInput][selectedRadioButtonNumber-1]; //-1 for table index starts from 0 
 
     //refreshig basic info data:
     //img
@@ -454,8 +472,7 @@ function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
     if(minDevTime == 10000000000){
         document.getElementById("productShortDev" + selectedProductNumber).innerHTML = "No data avaible";
     }else{
-        //TODO- jaka jednostak czasu?
-        document.getElementById("productShortDev" + selectedProductNumber).innerHTML = minDevTime + "?TODO";
+        document.getElementById("productShortDev" + selectedProductNumber).innerHTML = minDevTime + "dni.";
     }
     //product desc
     document.getElementById("productDesc" + selectedProductNumber).innerHTML = newProductData["description"];
@@ -464,11 +481,12 @@ function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
 
     //refreshing shop list
     //delete shops
-    document.getElementById("shopList").remove();
+    document.getElementById("shopList" + selectedProductNumber).remove();
+    
     //new shop list
     var newShopList = document.createElement("ul");
     newShopList.setAttribute("class", "list-group");
-    newShopList.setAttribute("id", "shopList");
+    newShopList.setAttribute("id", "shopList" + selectedProductNumber);
     newProductData["shop_list"].forEach(function(shopDic,ind){
         //attaching shopListUl into accordionBody
         document.getElementById("accordionBody"+selectedProductNumber).appendChild(generateShopListDOM(newShopList,shopDic,ind,selectedProductNumber));

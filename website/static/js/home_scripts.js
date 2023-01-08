@@ -152,9 +152,14 @@ function addProductFromFile(fileFromText){
     //creating html elements
     var newProduct = document.createElement("div");
     var nameDiv = document.createElement("div");
+    var amountDiv = document.createElement("div");
     var delateBtnDiv = document.createElement("div");
     var name = document.createElement('h6');
     var delBtn = document.createElement('button');
+    var inputGroupAmountDiv = document.createElement("div");
+    var inputAmount = document.createElement("input");
+    var minusButton = document.createElement("button");
+    var plusButton = document.createElement("button");
 
     //setting attributes
     newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
@@ -162,17 +167,41 @@ function addProductFromFile(fileFromText){
     name.style.float = "left";
     name.style.marginTop= "10px";
     name.innerHTML = fileFromText;
+    amountDiv.setAttribute("class", "col"); 
     nameDiv.setAttribute("class", "col");
     delateBtnDiv.setAttribute("class", "col-auto");
     delBtn.setAttribute("class", "btn btn-danger");
     delBtn.setAttribute("type", "button");
     delBtn.setAttribute("onClick", "deleteProductFromList(this)");
     delBtn.innerHTML = "Delete";
+    inputGroupAmountDiv.setAttribute('class', 'input-group');
+    inputGroupAmountDiv.style.maxWidth = '140px';
+    inputAmount.setAttribute('type','text');
+    inputAmount.setAttribute('class','form-control');
+    inputAmount.setAttribute('value', document.getElementById("amountMain").value);
+    inputAmount.setAttribute('min','1');
+    inputAmount.setAttribute('max','10');
+    inputAmount.setAttribute('onchange','return validateAmount(this);');
+    inputAmount.setAttribute('style', 'display:inline; max-width: 60px;');
+    minusButton.setAttribute('class','btn btn-danger');
+    minusButton.setAttribute('type','button');
+    minusButton.setAttribute('style','display:inline');
+    minusButton.setAttribute('onclick','return minusBtn(this);');
+    minusButton.innerHTML = '-';
+    plusButton.setAttribute('class','btn btn-success');
+    plusButton.setAttribute('type','button');
+    plusButton.setAttribute('style','display:inline');
+    plusButton.setAttribute('onclick','return plusBtn(this);');
+    plusButton.innerHTML = '+';
 
     //connecting elements
     nameDiv.appendChild(name);
     delateBtnDiv.appendChild(delBtn);
+    inputGroupAmountDiv.appendChild(minusButton);
+    inputGroupAmountDiv.appendChild(inputAmount);
+    inputGroupAmountDiv.appendChild(plusButton);
     newProduct.appendChild(nameDiv);
+    newProduct.appendChild(inputGroupAmountDiv);
     newProduct.appendChild(delateBtnDiv);
 
     //adding new product to the list
@@ -442,6 +471,16 @@ function minusBtn(element){
         counter.value--;
     }
 
+    //update amount dic
+    if(element.parentNode.parentNode.parentNode.id === "ListOfProducts"){
+        for(let temp of listToReturn){
+            if(temp["name"] === element.parentNode.parentNode.firstChild.firstChild.innerHTML){
+                temp["amount"] = parseInt(counter.value);
+                break;
+            }
+        }
+    }
+
 }
 
 //validates and increment product amount in main input element- onclick plus
@@ -453,6 +492,16 @@ function plusBtn(element){
         return null;
     }else{
         counter.value++;
+    }
+
+    //update amount dic
+    if(element.parentNode.parentNode.parentNode.id === "ListOfProducts"){
+        for(let temp of listToReturn){
+            if(temp["name"] === element.parentNode.parentNode.firstChild.firstChild.innerHTML){
+                temp["amount"] = parseInt(counter.value);
+                break;
+            }
+        }
     }
 
 }
