@@ -579,20 +579,22 @@ function generateShopListDOM(shopListUl,shopDic,ind,productsCounter){
 
     //buy now button
     var tdBuyButton = document.createElement("td");
+    var buttonDiv = document.createElement("div");
     var buyNowButton = document.createElement("a");
     buyNowButton.setAttribute("role", "button");
     buyNowButton.setAttribute("href", shopDic["url"]);
     buyNowButton.setAttribute("target", "_blank");
     //TODO- repair display error
     buyNowButton.setAttribute("id", "buyButtonProduct"+productsCounter+"Shop"+ind);
-    buyNowButton.setAttribute("class", "btn btn-success mt-2 me-3");
+    buyNowButton.setAttribute("class", "btn btn-success me-3");
     if(shopDic["delivery_price"] !== null){
-        buyNowButton.innerHTML = "Buy now for " + (shopDic["delivery_price"] + shopDic["price"]).toFixed(2);
+        buyNowButton.innerHTML = "Buy now for " + (shopDic["delivery_price"] + shopDic["price"]).toFixed(2) + " zł.";
     }else{
-        buyNowButton.innerHTML = "Buy now for " + (shopDic["price"]).toFixed(2);
+        buyNowButton.innerHTML = "Buy now for " + (shopDic["price"]).toFixed(2)  + " zł.";
     }
     //attaching button
-    tdBuyButton.appendChild(buyNowButton);
+    buttonDiv.appendChild(buyNowButton)
+    tdBuyButton.appendChild(buttonDiv);
     shopDetTableRow.appendChild(tdBuyButton);
 
     //attaching all elements

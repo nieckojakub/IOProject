@@ -104,12 +104,12 @@ function addProduct(){
     inputAmount.setAttribute('style', 'display:inline; max-width: 60px;');
     minusButton.setAttribute('class','btn btn-danger');
     minusButton.setAttribute('type','button');
-    minusButton.setAttribute('style','display:inline');
+    minusButton.setAttribute('style','display:inline; z-index: 0');
     minusButton.setAttribute('onclick','return minusBtn(this);');
     minusButton.innerHTML = '-';
     plusButton.setAttribute('class','btn btn-success');
     plusButton.setAttribute('type','button');
-    plusButton.setAttribute('style','display:inline');
+    plusButton.setAttribute('style','display:inline; z-index: 0');
     plusButton.setAttribute('onclick','return plusBtn(this);');
     plusButton.innerHTML = '+';
     
@@ -185,12 +185,12 @@ function addProductFromFile(fileFromText){
     inputAmount.setAttribute('style', 'display:inline; max-width: 60px;');
     minusButton.setAttribute('class','btn btn-danger');
     minusButton.setAttribute('type','button');
-    minusButton.setAttribute('style','display:inline');
+    minusButton.setAttribute('style','display:inline; z-index: 0');
     minusButton.setAttribute('onclick','return minusBtn(this);');
     minusButton.innerHTML = '-';
     plusButton.setAttribute('class','btn btn-success');
     plusButton.setAttribute('type','button');
-    plusButton.setAttribute('style','display:inline');
+    plusButton.setAttribute('style','display:inline; z-index: 0');
     plusButton.setAttribute('onclick','return plusBtn(this);');
     plusButton.innerHTML = '+';
 
