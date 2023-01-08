@@ -34,7 +34,6 @@ var addButton = document.getElementById("AddButton");
 var searchInput = document.getElementById("SearchInput");
 var allegroCheckbox = document.getElementById("AllegroCheckbox");
 var ceneoCheckbox = document.getElementById("CeneoCheckbox");
-var bothCheckbox = document.getElementById("BothCheckbox");
 
 let bar = document.getElementById("progressbar");
 let modalSearchOverviewTableBody =
@@ -265,7 +264,7 @@ function refreshModalTable(){
 function showModal(){
     // validation
     if(!(allegroCheckbox.checked || ceneoCheckbox.checked )){
-        alert("Please, chose source of your search first.")
+        alert("Please, choose source of your search first.")
         return 0;
     }
 
@@ -320,31 +319,17 @@ function sendProducts(){
     $("#modalSearchText").show();
 
     //progressbar var
-    if(ceneoCheckbox.checked){
-        max_progres_counter = listToReturn.length;
-    }
-
-    if(allegroCheckbox.checked){
-        max_progres_counter += listToReturn.length;
-    }
+    max_progres_counter = listToReturn.length;
 
     //max_progress_counter == 100% progress,
     // progress_step = 1/max_progress_counter*100%
     progress_step = 1/max_progres_counter*100;
     current_progres = 0;
 
-    //if allegro is checked
-    if(allegroCheckbox.checked){
-       alert("Allegro not supported");
-       return 0;
-    }
-
-    //if ceneo is checked
-    if(ceneoCheckbox.checked){
-        listToReturn.forEach((element, ind) => {
-            sendOneProduct(element);
-        })
-    }
+    // send all products to backend
+    listToReturn.forEach((element, ind) => {
+        sendOneProduct(element);
+    })
 }
 
 // extend progress bar after progress is made
@@ -369,12 +354,21 @@ function progressbarExtend(){
 function sendOneProduct(product){
     // sending data via GET headers to /search/add/<token>
     let url = "/search/add/" + token;
+    let target;
+    if (!allegroCheckbox.checked && ceneoCheckbox.checked){
+        target = 'ceneo';
+    }else if (allegroCheckbox.checked && !ceneoCheckbox.checked){
+        target = 'allegro'
+    }else{
+        target = 'both'
+    }
+
     // send data
     $.ajax({
         async: true,
         type: 'GET',
         url: url,
-        data: {target: 'ceneo', product: product['name'], amount: product["amount"]},
+        data: {target: target, product: product['name'], amount: product["amount"]},
         success: function (data, status){
             product['status'] = SearchStatus.SEARCH_SUCCESS;
             searchedProductsCounter += 1;

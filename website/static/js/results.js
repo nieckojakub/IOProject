@@ -83,7 +83,7 @@ function generateDOM() {
     var ceneoData = searchResult["ceneo"];
     Object.keys(ceneoData).forEach(userInput => {
         
-        //dictionray content, using first element to fullfil data
+        // dictionray content, using first element to fullfil data
         var tempData = ceneoData[userInput][0];
         //accordion item
         var accordionItem = document.createElement("div");
@@ -320,6 +320,22 @@ function generateDOM() {
             //attaching linkRow into detaTableTbody;
             detaTableTbody.appendChild(linkRow);
 
+            // amount
+            var amountRow = document.createElement("tr");
+                let amountLable = document.createElement("td");
+                amountLable.setAttribute("class", "float-start");
+                amountLable.innerHTML = "<b>Requested amount</b>";
+                let amountValue = document.createElement("td");
+                amountValue.setAttribute("id","productAmount" + productsCounter );
+                let amount = document.createElement("span");
+                amount.innerHTML = searchResult['amount'][userInput];
+                //attaching elements
+                amountValue.appendChild(amount);
+                amountRow.appendChild(amountLable);
+                amountRow.appendChild(amountValue);
+            //attaching amountRow into detaTableTbody;
+            detaTableTbody.appendChild(amountRow);
+
         //attaching elements
         //attaching detaTableTbody into dataTable
         detaTable.appendChild(detaTableTbody);
@@ -436,7 +452,7 @@ function refreshNewData(selectedProductNumber,selectedRadioButtonNumber){
     //user input
     var userInput = document.getElementById("productNameAC"+selectedProductNumber).innerHTML;
     //selected, new product 
-    var newProductData = searchResult["ceneo"][userInput][selectedRadioButtonNumber-1]; //-1 for table index starts from 0 
+    var newProductData = searchResult["ceneo"][userInput][selectedRadioButtonNumber-1]; //-1 for table index starts from 0;
 
     //refreshig basic info data:
     //img
