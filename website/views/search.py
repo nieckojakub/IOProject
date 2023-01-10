@@ -58,19 +58,19 @@ def search_add_get(token=None):
     if amount is None:
         amount = 1
 
-    # get results
-    if target == "ceneo":
-        ceneo_browser = CeneoBrowser()
-        ceneo_search_result = ceneo_browser.search(product)
-        if token not in search_results:
-            search_results[token] = {"ceneo": dict(), "amount": dict()}
-        search_results[token]['ceneo'][product] = ceneo_search_result
-        search_results[token]['amount'][product] = amount
-        return SUCCESS
-    elif target == "allegro":
-        return ALLEGRO_NOT_SUPPORTED
-    else:
+    if target == "both":
+        target = None
+    elif target != "allegro" and target != "ceneo":
         return INVALID_TARGET
+
+    # get results
+    ceneo_browser = CeneoBrowser()
+    ceneo_search_result = ceneo_browser.search(product, target=target)
+    if token not in search_results:
+        search_results[token] = {"ceneo": dict(), "amount": dict()}
+    search_results[token]['ceneo'][product] = ceneo_search_result
+    search_results[token]['amount'][product] = amount
+    return SUCCESS
 
 
 # DELETE search results with given token
