@@ -19,6 +19,8 @@ class CeneoBrowser(Browser):
     FORM_SELECTOR = 'form[action="/search"]'
     FORM_INPUT_SELECTOR = "#form-head-search-q"
     PRODUCT_LIMIT = 10
+    ALLEGRO_TARGET = "ALLEGRO"
+    CENEO_TARGET = "CENEO"
 
     def __init__(self, url: str = URL) -> None:
         Browser.__init__(self)
@@ -29,7 +31,7 @@ class CeneoBrowser(Browser):
         self.search_input = self.search_form.select(self.FORM_INPUT_SELECTOR)[0]
 
     def scrapProductInfo(
-        self, product_main_page_url: str, is_allegro_specific: bool = False
+        self, product_main_page_url: str, target: str = "allegro"
     ) -> Product:
         """Extract information about the product.
 
@@ -44,7 +46,7 @@ class CeneoBrowser(Browser):
         # Prepare html
         product_main_page = self.get(product_main_page_url)
         product_main_html = product_main_page.soup
-        
+
         # Shop objects
         shop_list = list()
 
@@ -67,20 +69,22 @@ class CeneoBrowser(Browser):
             product_availability = scrap_offer.scrapOfferAvailability(
                 shop_offer_html
             )
-            if is_allegro_specific and shop_name == 'allegro.pl':
+            if target == self.ALLEGRO_TARGET and shop_name == "allegro.pl":
                 # Prepare html
                 product_allegro_redirect = self.get(shop_url)
                 product_allegro_redirect_html = product_allegro_redirect.soup
-                script_tags = product_allegro_redirect_html.select('script')
+                script_tags = product_allegro_redirect_html.select("script")
                 allegro_offer_url = ""
-                for script_tag in script_tags:
-                    script_tag_content = script_tag.text
-                    allegro_offer_link = re.search('"https://allegro.pl/oferta/\S+"', script_tag_content)
-                    if allegro_offer_link:
-                        allegro_offer_url = allegro_offer_link[0].strip('"')
-                        break
-                if allegro_offer_url == "":
-                    continue
+                # for script_tag in script_tags:
+                #     script_tag_content = script_tag.text
+                #     allegro_offer_link = re.search(
+                #         '"https://allegro.pl/oferta/\S+"', script_tag_content
+                #     )
+                #     if allegro_offer_link:
+                #         allegro_offer_url = allegro_offer_link[0].strip('"')
+                #         break
+                # if allegro_offer_url == "":
+                #     continue
                 # product_allegro_page = self.get(allegro_offer_url)
                 # product_allegro_html = product_allegro_page.soup
                 # Allegro delivery price
@@ -91,18 +95,20 @@ class CeneoBrowser(Browser):
                 # Allegro product delivery time
                 delivery_time = None
                 # delivery_time = scrap_allegro_offer.scrapOfferDeliveryTime(product_allegro_html)
-                # Create Shop object and append it to the list
-            elif is_allegro_specific or shop_name == 'allegro.pl':
-                continue
-            else:
+            elif target == self.CENEO_TARGET and shop_name != "allegro.pl" or target is None:
                 # Delivery price
                 delivery_price = scrap_offer.scrapOfferDeliveryPrice(
                     shop_offer_html, product_price
                 )
                 # Product delivery time
-                delivery_time = scrap_offer.scrapOfferDeliveryTime(shop_offer_html)
+                delivery_time = scrap_offer.scrapOfferDeliveryTime(
+                    shop_offer_html
+                )
                 # Create Shop object and append it to the list
-
+            else:
+                continue
+            
+            # Create Shop object and append it to the list
             shop_list.append(
                 Shop(
                     shop_name,
@@ -129,8 +135,6 @@ class CeneoBrowser(Browser):
             product_main_html
         )
 
-
-
         # Return product object
         return Product(
             product_name,
@@ -146,7 +150,7 @@ class CeneoBrowser(Browser):
         search_query: str,
         limit: int = PRODUCT_LIMIT,
         sort: bool = True,
-        is_allegro_specific: bool = False,
+        target: str = 'allegro',
     ) -> List[Product]:
         """Search for the given product.
 
@@ -167,6 +171,16 @@ class CeneoBrowser(Browser):
         PRODUCT_GRID_LAYOUT_SELECTOR_2 = ".cat-prod-box__body"
         # Product main page
         PRODUCT_MAIN_LAYOUT_SELECTOR = ".product-top__wrapper"
+        print('-----HALLO -----')
+        # Validate target input
+        if target == None:
+            pass
+        elif target.upper() == self.ALLEGRO_TARGET:
+            target = self.ALLEGRO_TARGET
+        elif target.upper() == self.CENEO_TARGET:
+            target = self.CENEO_TARGET
+        else:
+            target = None
 
         # Fill in the search form with the given search query
         self.search_input["value"] = search_query
@@ -249,11 +263,15 @@ class CeneoBrowser(Browser):
                 if regex_result is not None:
                     # Create the full product main page url
                     product_main_page_url = self.URL + a_tag["href"]
-                    product_obj = self.scrapProductInfo(product_main_page_url, is_allegro_specific)
+                    product_obj = self.scrapProductInfo(
+                        product_main_page_url=product_main_page_url,
+                        target=target,
+                    )
                     if product_obj is not None:
                         product_list.append(
                             self.scrapProductInfo(
-                                product_main_page_url, is_allegro_specific
+                                product_main_page_url=product_main_page_url,
+                                target=target,
                             )
                         )
                     break
