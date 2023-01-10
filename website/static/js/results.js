@@ -2,6 +2,11 @@
 // ##################### variables ##########################
 // ##########################################################
 let searchResult;
+let selectedProducts = {};
+
+let modalSearchOverviewTableBody =
+        document.getElementById('modalSearchOverviewTable').
+        getElementsByTagName('tbody')[0];
 
 
 // ##########################################################
@@ -31,6 +36,9 @@ $(function (){
         type: 'GET',
         success: function(data){
             searchResult = JSON.parse(data);
+                for(let i = 0; i < Object.keys(searchResult["ceneo"]).length; i++){
+                    selectedProducts[Object.keys(searchResult["ceneo"])[i]] = 1;
+                }
             generateDOM();
         },
         error: function() {
@@ -382,6 +390,7 @@ function generateDOM() {
         var selectedRadioButtonNumber = parseInt(event.target.id.split("btnradio")[1].split(("Product"+selectedProductNumber)));
         //new data
         refreshNewData(selectedProductNumber,selectedRadioButtonNumber);
+        selectedProducts[Object.keys(searchResult["ceneo"])[selectedProductNumber-1]] = selectedRadioButtonNumber;
     });
 
     //changing presented data after choseing another accordion
@@ -445,6 +454,42 @@ function saveToHistory(){
 function sortResults(){
 
 }
+
+function showResultsModal(isOptimizedForStorecount){
+
+    // clear table with products
+    modalSearchOverviewTableBody.innerHTML = "";
+
+
+     // show search button
+    $("#modalSaveButton").show();
+    $("#modalGoBackButton").show();
+
+
+    // optimize results
+    let ind = 0;
+    for(var key in selectedProducts){
+        let row = modalSearchOverviewTableBody.insertRow(ind);
+        ind = ind + 1;
+        let nrSklepu = 0;
+        let name = row.insertCell(0);
+        name.innerHTML = searchResult["ceneo"][key][selectedProducts[key]-1]["name"];
+        let price = row.insertCell(1);
+        price.innerHTML = searchResult["ceneo"][key][selectedProducts[key]-1]["shop_list"][nrSklepu]["price"];
+        let amount = row.insertCell(2);
+        amount.innerHTML = searchResult["amount"][key];
+        let link = row.insertCell(3);
+        link.innerHTML = searchResult["ceneo"][key][selectedProducts[key]-1]["shop_list"][nrSklepu]["url"];
+        console.log(key, selectedProducts[key]);
+    }
+
+    //refreshModalTable();
+
+    // show modal
+    $('#staticBackdrop').modal('show');
+}
+
+
 
 //refresh currently shown data withe new one, indicated by a radiobutton selected by user
 //@param

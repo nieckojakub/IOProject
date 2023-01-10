@@ -2,6 +2,47 @@
 {% block title %}Results{% endblock %}
 {% block content %}
 
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Your final results</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <table id="modalSearchOverviewTable">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Full Price</th>
+                                <th>Requested Amount</th>
+                                <th>Store Link</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="container" style="display:inline">
+                    <button type="button" id="modalSaveButton" class="btn btn-success mt-2 me-3" onclick="saveToHistory()">Save</button>
+                    <a href="home.html" type="button" id="modalGoBackButton" class="btn btn-danger mt-2">Home</a>
+                </div>
+                
+
+
+            </div>
+
+            <!---
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Understood</button>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
 
 <!-- results card-->
 <div class="container-sm text-center" style="color: #FFFFFF; width: 100%; margin-top: 0vh">
@@ -32,6 +73,8 @@
 
             <!-- save and home button-->
                 <div class="container" style="display:inline">
+                    <button type="button" id="storecountButton" class="btn btn-success mt-2 me-3" onclick="showResultsModal(true)">Optimize for store count</button>
+                    <button type="button" id="priceButton" class="btn btn-success mt-2 me-3" onclick="showResultsModal(false)">Optimize for lowest price</button>
                     <button type="button" id="saveButton" class="btn btn-success mt-2 me-3" onclick="saveToHistory()">Save</button>
                     <a href="home.html" type="button" id="goBackButton" class="btn btn-danger mt-2">Home</a>
                 </div>
