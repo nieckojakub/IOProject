@@ -171,7 +171,6 @@ class CeneoBrowser(Browser):
         PRODUCT_GRID_LAYOUT_SELECTOR_2 = ".cat-prod-box__body"
         # Product main page
         PRODUCT_MAIN_LAYOUT_SELECTOR = ".product-top__wrapper"
-        print('-----HALLO -----')
         # Validate target input
         if target == None:
             pass

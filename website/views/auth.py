@@ -7,6 +7,7 @@ from website.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from website.app import bcrypt, login_manager
 from website.email import send_reset_email, send_mail_confirmation
+from .search import history_get
 
 auth = Blueprint('auth', __name__)
 
@@ -55,7 +56,9 @@ def signup():
 @auth.route('/account')
 @login_required
 def account():
-    return render_template('account.html')
+    history_data, _ = history_get()
+    history_data = history_data.get_json()
+    return render_template('account.html',history_data=history_data)
 
 @auth.route('/reset_password', methods=['GET','POST'])
 def reset_request():

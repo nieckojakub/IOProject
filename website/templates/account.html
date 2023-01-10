@@ -2,6 +2,39 @@
 {% block title %}Account{% endblock %}
 {% block content %}
 
-Account
-<h1>{{ current_user.firstName }}</h1>
+<div class="container-sm text-center" style="color: #FFFFFF; width: 85%; margin-top: 2vh">
+    <!-- login card-->
+    <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px;">
+        <!-- card header-->
+        <div class="card-body ">
+            <b>Search History For User</b>
+            <h2 class="card-title">{{ current_user.firstName }}</h2>
+        </div>
+        <!-- card body-->
+        <div class="card-body">
+            <!-- list of products-->
+            <div class="card rounded-lg" id="divListOfProducts" style="background-color:#ffffff; border-radius: 25px;">
+                <div id="ListOfProducts" class="card-body" style="color:#000000;">
+                    <ul class="list-group">
+                        {% for product_history in history_data %}
+                        <li class="list-group-item">
+                            <div class="container">
+                            <div class="row">
+                            <div class="col">
+                                {{ product_history['products_list'] }}
+                                {{ product_history['search_date'] }}
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-danger" type="button">Delete</button>
+                            </div>
+                        </div>
+                        </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

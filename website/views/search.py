@@ -157,7 +157,7 @@ def history_get():
         products_list = list()
 
         # get all products from history entries
-        stmt = select(Product).where(Product.history_id == entry.id)
+        stmt = select(ProductModel).where(ProductModel.history_id == entry.id)
         products = db.session.execute(stmt)
 
         for product in products:
