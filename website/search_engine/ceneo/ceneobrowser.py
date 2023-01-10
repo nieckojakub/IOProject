@@ -31,7 +31,7 @@ class CeneoBrowser(Browser):
         self.search_input = self.search_form.select(self.FORM_INPUT_SELECTOR)[0]
 
     def scrapProductInfo(
-        self, product_main_page_url: str, target: str = "allegro"
+        self, product_main_page_url: str, target: str = None
     ) -> Product:
         """Extract information about the product.
 
@@ -150,7 +150,7 @@ class CeneoBrowser(Browser):
         search_query: str,
         limit: int = PRODUCT_LIMIT,
         sort: bool = True,
-        target: str = 'allegro',
+        target: str = None,
     ) -> List[Product]:
         """Search for the given product.
 
