@@ -1,4 +1,5 @@
 import json
+import datetime
 from flask import Blueprint, request, make_response, jsonify
 from flask_login import current_user, login_required
 from flask_wtf import FlaskForm
@@ -43,6 +44,13 @@ def delete_token(token):
         return False
 
 
+# delete unused tokens
+def delete_unused_tokens():
+    for token in search_results.keys():
+        if search_results[token]['creation_date'] - datetime.datetime.now() > datetime.timedelta(hours=1):
+            delete_token(token)
+
+
 # add token to search results
 @search.route('/search/token/<token>', methods=['GET'])
 def search_token_get(token=None):
@@ -60,7 +68,8 @@ def search_token_get(token=None):
             "amount": dict(),
             "length": length,
             "counter": 0,
-            "blocked": False
+            "blocked": False,
+            "creation_date": datetime.datetime.now()
         }
         return SUCCESS
     else:
@@ -106,6 +115,7 @@ def search_add_get(token=None):
 # DELETE search results with given token
 @search.route("/search/<token>", methods=['DELETE'])
 def search_delete(token=None):
+    delete_unused_tokens()
     if delete_token(token):
         return SUCCESS
     else:
