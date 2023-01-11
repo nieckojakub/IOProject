@@ -19,7 +19,7 @@ search_results = dict()
 SUCCESS = '', 200
 
 TOKEN_IS_NONE = "Token is none", 400
-LIST_LENGTH_ERROR = '', 400
+LIST_LENGTH_ERROR = 'List length error', 400
 PRODUCT_IS_NONE = "Product is none", 400
 ALLEGRO_NOT_SUPPORTED = "Allegro not supported", 400
 INVALID_TARGET = "Invalid target", 400
@@ -98,7 +98,7 @@ def search_add_get(token=None):
         search_results[token]['amount'][product] = amount
     search_results[token]['counter'] += 1
     if search_results[token]['blocked'] is True:
-        if search_results[token]['counter'] == search_results[token]['length']:
+        if int(search_results[token]['counter']) == int(search_results[token]['length']):
             delete_token(token)
     return SUCCESS
 
@@ -121,7 +121,7 @@ def search_get(token=None):
     if token in search_results:
         # get result from results dict
         results = search_results[token]
-        if results['counter'] == results['length']:
+        if int(results['counter']) == int(results['length']):
             delete_token(token)
         else:
             search_results[token]['blocked'] = True
