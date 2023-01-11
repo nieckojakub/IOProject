@@ -30,14 +30,30 @@
                     <button type="button" class="btn btn-success
                     mt-2" onclick="sendProducts();" style="width: 100%">Search</button>
                 </div>
-                <div id="modalResultsBtn" style="display: none">
+                <div id="modalResultsBtn" style="display: none; text-align: center;">
                     <button type="button" class="btn btn-success
                     mt-2" onclick="goToResults();" style="width: 100%">Show Results</button>
+                    <h5 style="display: inline;">Your search took: <h5 style="display: inline;" id="timeSummar"></h5></h5>
                 </div>
 
                 <div id="modalSearchText" style="display: none; width: 100%">
                     Searching...
+                    <p id="timer" style="display: inline; float: right;"></p>
                 </div>
+
+                <div id="modalPartialResultsBtn" style="display: none;">
+                    <button type="button" class="btn btn-success
+                    mt-2" onclick="ensurePartialResults();" style="width: 100%">Show partial results</button>
+                </div>
+
+                <div id="ensureDiv" style="display: none; width: 100%">
+                    <b>Are you sure You want to see only partial results?</b>
+                    <button type="button" class="btn btn-success
+                    mt-2" onclick="goToResults();" style="display: inline; " id="ensurePositive">Go to results page</button>
+                    <button type="button" class="btn btn-danger
+                    mt-2" onclick="negativeEnsure();" style="display: inline; " id="ensureNegative">Continue searching</button>
+                </div>
+
 
             </div>
 

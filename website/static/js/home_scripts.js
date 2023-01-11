@@ -36,7 +36,7 @@ var ceneoCheckbox = document.getElementById("CeneoCheckbox");
 
 let bar = document.getElementById("progressbar");
 let modalSearchOverviewTableBody =
-        document.getElementById('modalSearchOverviewTable').
+    document.getElementById('modalSearchOverviewTable').
         getElementsByTagName('tbody')[0];
 //list
 var listOfProducts = document.getElementById("ListOfProducts");
@@ -50,20 +50,20 @@ document.getElementById("SearchHelp").innerHTML = INITIAL_SEARCH_HELP;
 // ##########################################################
 
 //adding name of the product to the listToReturn and creating DOM element with the product name in the listOfProducts
-function addProduct(){
+function addProduct() {
 
     //checking if input is nonempty
-    if(searchInput.value == ""){
+    if (searchInput.value == "") {
         alert("Please, enter your product first");
         return 0;
     }
     //showing submit button
-    if(productsCounter == 0){
+    if (productsCounter == 0) {
         displaySubmitBtn(1);
     }
 
     //adding product name to the listToReturn
-    listToReturn.push({name: searchInput.value, status: SearchStatus.NOT_SEARCHED, amount: document.getElementById("amountMain").value}); //name
+    listToReturn.push({ name: searchInput.value, status: SearchStatus.NOT_SEARCHED, amount: document.getElementById("amountMain").value }); //name
 
     //creating html elements
     var newProduct = document.createElement("div");
@@ -80,12 +80,12 @@ function addProduct(){
 
     //setting attributes
     newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
-    newProduct.setAttribute("id",  Math.floor(Math.random() * (1000000000 - 0) + 0));
+    newProduct.setAttribute("id", Math.floor(Math.random() * (1000000000 - 0) + 0));
     name.style.float = "left";
-    name.style.marginTop= "10px";
+    name.style.marginTop = "10px";
     name.innerHTML = searchInput.value;
     nameDiv.setAttribute("class", "col");
-    amountDiv.setAttribute("class", "col"); 
+    amountDiv.setAttribute("class", "col");
     delateBtnDiv.setAttribute("class", "col-auto");
     delBtn.setAttribute("class", "btn btn-danger");
     delBtn.setAttribute("type", "button");
@@ -93,24 +93,24 @@ function addProduct(){
     delBtn.innerHTML = "Delete";
     inputGroupAmountDiv.setAttribute('class', 'input-group');
     inputGroupAmountDiv.style.maxWidth = '140px';
-    inputAmount.setAttribute('type','text');
-    inputAmount.setAttribute('class','form-control');
+    inputAmount.setAttribute('type', 'text');
+    inputAmount.setAttribute('class', 'form-control');
     inputAmount.setAttribute('value', document.getElementById("amountMain").value);
-    inputAmount.setAttribute('min','1');
-    inputAmount.setAttribute('max','10');
-    inputAmount.setAttribute('onchange','return validateAmount(this);');
+    inputAmount.setAttribute('min', '1');
+    inputAmount.setAttribute('max', '10');
+    inputAmount.setAttribute('onchange', 'return validateAmount(this);');
     inputAmount.setAttribute('style', 'display:inline; max-width: 60px;');
-    minusButton.setAttribute('class','btn btn-danger');
-    minusButton.setAttribute('type','button');
-    minusButton.setAttribute('style','display:inline; z-index: 0');
-    minusButton.setAttribute('onclick','return minusBtn(this);');
+    minusButton.setAttribute('class', 'btn btn-danger');
+    minusButton.setAttribute('type', 'button');
+    minusButton.setAttribute('style', 'display:inline; z-index: 0');
+    minusButton.setAttribute('onclick', 'return minusBtn(this);');
     minusButton.innerHTML = '-';
-    plusButton.setAttribute('class','btn btn-success');
-    plusButton.setAttribute('type','button');
-    plusButton.setAttribute('style','display:inline; z-index: 0');
-    plusButton.setAttribute('onclick','return plusBtn(this);');
+    plusButton.setAttribute('class', 'btn btn-success');
+    plusButton.setAttribute('type', 'button');
+    plusButton.setAttribute('style', 'display:inline; z-index: 0');
+    plusButton.setAttribute('onclick', 'return plusBtn(this);');
     plusButton.innerHTML = '+';
-    
+
 
     //connecting elements
     nameDiv.appendChild(name);
@@ -129,23 +129,23 @@ function addProduct(){
     productsCounter++;
 
     //checking if there is max 10 items on the list and disableing addButton
-    if(productsCounter >= 10){
+    if (productsCounter >= 10) {
         document.getElementById("AddButton").setAttribute("disabled", "true");
         document.getElementById("SearchHelp").innerHTML = PRODUCTS_NUMBER_EXCEDED;
     }
-    
+
 }
 
 //adding name of the product to the listToReturn and creating DOM element with the product name in the listOfProducts
-function addProductFromFile(fileFromText){
+function addProductFromFile(fileFromText) {
 
     //showing submit button
-    if(productsCounter == 0){
+    if (productsCounter == 0) {
         displaySubmitBtn(1);
     }
 
     //adding product name to the listToReturn
-    listToReturn.push({name: fileFromText, status: SearchStatus.NOT_SEARCHED, amount: 1}); //TODO: zczytywanie ilosci z pliku
+    listToReturn.push({ name: fileFromText, status: SearchStatus.NOT_SEARCHED, amount: 1 }); //TODO: zczytywanie ilosci z pliku
 
     //creating html elements
     var newProduct = document.createElement("div");
@@ -161,11 +161,11 @@ function addProductFromFile(fileFromText){
 
     //setting attributes
     newProduct.setAttribute("class", "row mb-2 border-bottom border-top border-3");
-    newProduct.setAttribute("id",  Math.floor(Math.random() * (1000000000)));
+    newProduct.setAttribute("id", Math.floor(Math.random() * (1000000000)));
     name.style.float = "left";
-    name.style.marginTop= "10px";
+    name.style.marginTop = "10px";
     name.innerHTML = fileFromText;
-    amountDiv.setAttribute("class", "col"); 
+    amountDiv.setAttribute("class", "col");
     nameDiv.setAttribute("class", "col");
     delateBtnDiv.setAttribute("class", "col-auto");
     delBtn.setAttribute("class", "btn btn-danger");
@@ -174,22 +174,22 @@ function addProductFromFile(fileFromText){
     delBtn.innerHTML = "Delete";
     inputGroupAmountDiv.setAttribute('class', 'input-group');
     inputGroupAmountDiv.style.maxWidth = '140px';
-    inputAmount.setAttribute('type','text');
-    inputAmount.setAttribute('class','form-control');
+    inputAmount.setAttribute('type', 'text');
+    inputAmount.setAttribute('class', 'form-control');
     inputAmount.setAttribute('value', document.getElementById("amountMain").value);
-    inputAmount.setAttribute('min','1');
-    inputAmount.setAttribute('max','10');
-    inputAmount.setAttribute('onchange','return validateAmount(this);');
+    inputAmount.setAttribute('min', '1');
+    inputAmount.setAttribute('max', '10');
+    inputAmount.setAttribute('onchange', 'return validateAmount(this);');
     inputAmount.setAttribute('style', 'display:inline; max-width: 60px;');
-    minusButton.setAttribute('class','btn btn-danger');
-    minusButton.setAttribute('type','button');
-    minusButton.setAttribute('style','display:inline; z-index: 0');
-    minusButton.setAttribute('onclick','return minusBtn(this);');
+    minusButton.setAttribute('class', 'btn btn-danger');
+    minusButton.setAttribute('type', 'button');
+    minusButton.setAttribute('style', 'display:inline; z-index: 0');
+    minusButton.setAttribute('onclick', 'return minusBtn(this);');
     minusButton.innerHTML = '-';
-    plusButton.setAttribute('class','btn btn-success');
-    plusButton.setAttribute('type','button');
-    plusButton.setAttribute('style','display:inline; z-index: 0');
-    plusButton.setAttribute('onclick','return plusBtn(this);');
+    plusButton.setAttribute('class', 'btn btn-success');
+    plusButton.setAttribute('type', 'button');
+    plusButton.setAttribute('style', 'display:inline; z-index: 0');
+    plusButton.setAttribute('onclick', 'return plusBtn(this);');
     plusButton.innerHTML = '+';
 
     //connecting elements
@@ -205,31 +205,31 @@ function addProductFromFile(fileFromText){
     //adding new product to the list
     listOfProducts.appendChild(newProduct);
     productsCounter++;
-    
+
 }
 
 //deleting product from the listToReturn and removing DOM element for listOfProducts
 //@param- HTML element containing Delete Button
-function deleteProductFromList(element){
-    
+function deleteProductFromList(element) {
+
     //delete element from DOM
     document.getElementById(element.parentNode.parentNode.id).remove();
     //delete from listToReturn
-    listToReturn.forEach(function(elementToRemove){
-        if(elementToRemove["name"] === element.parentNode.parentNode.children[0].children[0].innerHTML){
+    listToReturn.forEach(function (elementToRemove) {
+        if (elementToRemove["name"] === element.parentNode.parentNode.children[0].children[0].innerHTML) {
             listToReturn = listToReturn.filter(item => item !== elementToRemove)
         }
     })
 
     //turn on addButton after products counter is no longer equal to limit
-    if(productsCounter >= 10){
+    if (productsCounter >= 10) {
         document.getElementById("AddButton").removeAttribute("disabled");
         document.getElementById("SearchHelp").innerHTML = INITIAL_SEARCH_HELP;
     }
 
     //hide submit button if there is no product listed
     productsCounter--;
-    if(productsCounter == 0){
+    if (productsCounter == 0) {
         displaySubmitBtn(0);
     }
 
@@ -237,32 +237,32 @@ function deleteProductFromList(element){
 
 //show/hide Submit button 
 //@param boolean flag: 1 => show button; 0 => hide button
-function displaySubmitBtn(showFlag){
-    if(showFlag == 1){//show
+function displaySubmitBtn(showFlag) {
+    if (showFlag == 1) {//show
         document.getElementById("SubmitBtn").style.display = "inline";
-    }else if(showFlag == 0){//hide
+    } else if (showFlag == 0) {//hide
         document.getElementById("SubmitBtn").style.display = "none";
     }
 
 }
 
 // refresh modal table
-function refreshModalTable(){
-    for (let i = 0; i < modalSearchOverviewTableBody.rows.length; i++){
-        let row =  modalSearchOverviewTableBody.rows[i];
-         row.cells[1].innerHTML= listToReturn[i]['status'];
-         if (row.cells[1].innerHTML === SearchStatus.SEARCH_SUCCESS){
-             row.cells[1].style.color = "green";
-         }else{
-             row.cells[1].style.color = "red";
-         }
+function refreshModalTable() {
+    for (let i = 0; i < modalSearchOverviewTableBody.rows.length; i++) {
+        let row = modalSearchOverviewTableBody.rows[i];
+        row.cells[1].innerHTML = listToReturn[i]['status'];
+        if (row.cells[1].innerHTML === SearchStatus.SEARCH_SUCCESS) {
+            row.cells[1].style.color = "green";
+        } else {
+            row.cells[1].style.color = "red";
+        }
     }
 }
 
 // shows modal with product list
-function showModal(){
+function showModal() {
     // validation
-    if(!(allegroCheckbox.checked || ceneoCheckbox.checked )){
+    if (!(allegroCheckbox.checked || ceneoCheckbox.checked)) {
         alert("Please, choose source of your search first.")
         return 0;
     }
@@ -273,7 +273,7 @@ function showModal(){
     // clear progressbar
     bar.style.width = 0;
 
-     // show search button
+    // show search button
     $("#modalSearchBtn").show();
     $("#modalSearchText").hide();
     $("#modalResultsBtn").hide();
@@ -311,17 +311,43 @@ function showModal(){
     $('#staticBackdrop').modal('show');
 }
 
+//flag to stop and restart counter
+var stopTimer = false;
+//count up from 0m 0s
+function couuntTime() {
+    var countUpDate = new Date();
+    //timer
+    var x = setInterval(function () {
+        var now = new Date();
+        var timeDiff = now - countUpDate;
+
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        console.log(seconds)
+
+        document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s";
+        //if flag, stop timer 
+        if (stopTimer) {
+            clearInterval(x);
+            stopTimer = false;
+        }
+    }, 1000);
+
+}
+
 //send data to the server
-function sendProducts(){
+function sendProducts() {
     // hide search button
     $("#modalSearchBtn").hide();
     $("#modalSearchText").show();
+
+    couuntTime();
 
     //progressbar var
     //max_progress_counter == 100% progress,
     max_progres_counter = listToReturn.length;
 
-    progress_step = 1/max_progres_counter*100;
+    progress_step = 1 / max_progres_counter * 100;
     current_progres = 0;
 
     //send token
@@ -330,14 +356,14 @@ function sendProducts(){
         async: false,
         type: 'GET',
         url: url,
-        data: {length: listToReturn.length},
-        success: function (data, status){
+        data: { length: listToReturn.length },
+        success: function (data, status) {
             // send all products to backend
             listToReturn.forEach((element) => {
                 sendOneProduct(element);
             })
         },
-        error: function (data, status){
+        error: function (data, status) {
 
         }
     });
@@ -345,8 +371,8 @@ function sendProducts(){
 }
 
 // extend progress bar after progress is made
-function progressbarExtend(current_wid){
-    if(parseFloat(bar.style.width) < 100 ){
+function progressbarExtend(current_wid) {
+    if (parseFloat(bar.style.width) < 100) {
         //TODO 
         var width = current_wid;
         var id = setInterval(frame, 10);
@@ -363,15 +389,15 @@ function progressbarExtend(current_wid){
 }
 
 // send one product to search
-function sendOneProduct(product){
+function sendOneProduct(product) {
     // sending data via GET headers to /search/add/<token>
     let url = "/search/add/" + token;
     let target;
-    if (!allegroCheckbox.checked && ceneoCheckbox.checked){
+    if (!allegroCheckbox.checked && ceneoCheckbox.checked) {
         target = 'ceneo';
-    }else if (allegroCheckbox.checked && !ceneoCheckbox.checked){
+    } else if (allegroCheckbox.checked && !ceneoCheckbox.checked) {
         target = 'allegro'
-    }else{
+    } else {
         target = 'both'
     }
 
@@ -380,24 +406,32 @@ function sendOneProduct(product){
         async: true,
         type: 'GET',
         url: url,
-        data: {target: target, product: product['name'], amount: product["amount"]},
-        success: function (data, status){
+        data: { target: target, product: product['name'], amount: product["amount"] },
+        success: function (data, status) {
             product['status'] = SearchStatus.SEARCH_SUCCESS;
             searchedProductsCounter += 1;
             refreshModalTable();
             progressbarExtend(parseFloat(bar.style.width));
-            if (searchedProductsCounter === listToReturn.length){
+            if (searchedProductsCounter === listToReturn.length) {
                 // show results button
-                $("#modalSearchText").hide()
+                $("#modalSearchText").hide();
                 $("#modalResultsBtn").show();
+                $("#modalPartialResultsBtn").hide();
+                document.getElementById("timeSummar").innerHTML = document.getElementById("timer").innerHTML;
+                document.getElementById("timer").innerHTML = "";
+                negativeEnsure();
+                stopTimer = true;
+
+            } else if (searchedProductsCounter > 0) {
+                $("#modalPartialResultsBtn").show();
             }
         },
-        error: function (data, status){
+        error: function (data, status) {
             product['status'] = SearchStatus.SERVER_ERROR;
             searchedProductsCounter += 1;
             refreshModalTable();
             progressbarExtend();
-            if (searchedProductsCounter === listToReturn.length){
+            if (searchedProductsCounter === listToReturn.length) {
                 // show results button
                 $("#modalSearchText").hide()
                 $("#modalResultsBtn").show();
@@ -406,8 +440,19 @@ function sendOneProduct(product){
     });
 }
 
+//confirm user choice 
+function ensurePartialResults() {
+    $("#ensureDiv").show()
+
+}
+
+//continue searching 
+function negativeEnsure() {
+    $("#ensureDiv").hide()
+}
+
 // redirect to results page
-function goToResults(){
+function goToResults() {
     // redirect
     url = window.location.origin + "/results/" + token;
     window.location.replace(url);
@@ -416,27 +461,27 @@ function goToResults(){
 
 //read .txt file with a list of products and load them to the listOfProducts DOM element
 //@param: event from changing input element, input must be text element, separted by new line, ',' or ' '
-function readFromFile(event){
+function readFromFile(event) {
     //catch input element
     var fileInput = event.target;
     var productsFromFile = [];
     //trigger input and then after the file was chosen catch a file
     var reader = new FileReader();
-    reader.onload = function(){
+    reader.onload = function () {
         productsFromFile = reader.result;
         //split after new line, optionally split after ',' or ' '
-        if( productsFromFile.includes("\r\n")){
+        if (productsFromFile.includes("\r\n")) {
             productsFromFile = productsFromFile.split("\r\n");
-        }else if(productsFromFile.includes(",")){
+        } else if (productsFromFile.includes(",")) {
             productsFromFile = productsFromFile.split(",");
-        }else if(productsFromFile.includes(" ")){
+        } else if (productsFromFile.includes(" ")) {
             productsFromFile = productsFromFile.split(" ");
         }
-        for (toAdd of productsFromFile){    
-            if(productsCounter >=  10){
+        for (toAdd of productsFromFile) {
+            if (productsCounter >= 10) {
                 alert("You cannot add more than 10 items!");
                 break;
-            }else{
+            } else {
                 addProductFromFile(toAdd);
             }
         }
@@ -449,25 +494,25 @@ function readFromFile(event){
 //functions handling plus/minus products counter
 //@param: selected element e.g. minus button, amount input 
 //validates product amount in products list element- onchange input
-function validateAmount(element){
+function validateAmount(element) {
 
-    if(!(Number.isInteger(parseInt(element.value)))){
+    if (!(Number.isInteger(parseInt(element.value)))) {
         alert("You must enter number from 1 to 10!");
         element.value = 1;
         return null;
-    }else if(element.value > 10){
+    } else if (element.value > 10) {
         alert("Maximum amount is 10.");
         element.value = 10;
         return null;
-    }else if(element.value < 1){
+    } else if (element.value < 1) {
         alert("Minimum amount is 1.");
         element.value = 1;
         return null;
     }
 
-    if(element.parentNode.parentNode.parentNode.id === "ListOfProducts"){
-        for(let temp of listToReturn){
-            if(temp["name"] === element.parentNode.parentNode.firstChild.firstChild.innerHTML){
+    if (element.parentNode.parentNode.parentNode.id === "ListOfProducts") {
+        for (let temp of listToReturn) {
+            if (temp["name"] === element.parentNode.parentNode.firstChild.firstChild.innerHTML) {
                 temp["amount"] = parseInt(element.value);
                 break;
             }
@@ -476,20 +521,20 @@ function validateAmount(element){
 
 }
 //validates and decrement product amount in main input element- onclick minus
-function minusBtn(element){
+function minusBtn(element) {
 
     var counter = element.parentNode.children[1];
-    if(counter.value == 1){
+    if (counter.value == 1) {
         alert("Minimum amount is 1.");
         return null;
-    }else{
+    } else {
         counter.value--;
     }
 
     //update amount dic
-    if(element.parentNode.parentNode.parentNode.id === "ListOfProducts"){
-        for(let temp of listToReturn){
-            if(temp["name"] === element.parentNode.parentNode.firstChild.firstChild.innerHTML){
+    if (element.parentNode.parentNode.parentNode.id === "ListOfProducts") {
+        for (let temp of listToReturn) {
+            if (temp["name"] === element.parentNode.parentNode.firstChild.firstChild.innerHTML) {
                 temp["amount"] = parseInt(counter.value);
                 break;
             }
@@ -499,20 +544,20 @@ function minusBtn(element){
 }
 
 //validates and increment product amount in main input element- onclick plus
-function plusBtn(element){
+function plusBtn(element) {
 
     var counter = element.parentNode.children[1];
-    if(counter.value == 10){
+    if (counter.value == 10) {
         alert("Maximum amount is 10.");
         return null;
-    }else{
+    } else {
         counter.value++;
     }
 
     //update amount dic
-    if(element.parentNode.parentNode.parentNode.id === "ListOfProducts"){
-        for(let temp of listToReturn){
-            if(temp["name"] === element.parentNode.parentNode.firstChild.firstChild.innerHTML){
+    if (element.parentNode.parentNode.parentNode.id === "ListOfProducts") {
+        for (let temp of listToReturn) {
+            if (temp["name"] === element.parentNode.parentNode.firstChild.firstChild.innerHTML) {
                 temp["amount"] = parseInt(counter.value);
                 break;
             }
