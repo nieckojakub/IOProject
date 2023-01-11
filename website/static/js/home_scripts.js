@@ -324,10 +324,24 @@ function sendProducts(){
     progress_step = 1/max_progres_counter*100;
     current_progres = 0;
 
-    // send all products to backend
-    listToReturn.forEach((element) => {
-        sendOneProduct(element);
-    })
+    //send token
+    let url = "/search/token/" + token;
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: url,
+        data: {length: listToReturn.length},
+        success: function (data, status){
+            // send all products to backend
+            listToReturn.forEach((element) => {
+                sendOneProduct(element);
+            })
+        },
+        error: function (data, status){
+
+        }
+    });
+
 }
 
 // extend progress bar after progress is made
