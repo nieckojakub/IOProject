@@ -323,7 +323,6 @@ function couuntTime() {
 
         var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-        console.log(seconds)
 
         document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s";
         //if flag, stop timer 
