@@ -164,18 +164,22 @@ def history_post():
         product_json = products_dict[key]
         amount = product_json['amount']
         del product_json['amount']
-        product_object = Product(**product_json)
+        if 'name' in product_json.keys():
+            product_object = Product(**product_json)
+        else:
+            product_object = Product(None, None, None, None, None, None)
         product = ProductModel(history_id=history.id, inaccurate_name=key, name=product_object.name, url=product_object.url,
                                img=product_object.img, description=product_object.description,
                                rating=product_object.rating, amount=amount)
         db.session.add(product)
         db.session.commit()
-        for shopJSON in product_object.shop_list:
-            shop_object = Shop(**shopJSON)
-            shop = ShopModel(product_id=product.id, name=shop_object.name, url=shop_object.url,
-                             price=shop_object.price, delivery_price=shop_object.delivery_price,
-                             availability=shop_object.availability, delivery_time=shop_object.delivery_time)
-            db.session.add(shop)
+        if product_object.shop_list is not None:
+            for shopJSON in product_object.shop_list:
+                shop_object = Shop(**shopJSON)
+                shop = ShopModel(product_id=product.id, name=shop_object.name, url=shop_object.url,
+                                 price=shop_object.price, delivery_price=shop_object.delivery_price,
+                                 availability=shop_object.availability, delivery_time=shop_object.delivery_time)
+                db.session.add(shop)
         db.session.commit()
     return SUCCESS
 
@@ -208,7 +212,13 @@ def history_get():
 
         for product in products:
             product = product[0]
-            products_list.append(product.name)
+            if product.name is not None:
+                if product.inaccurate_name != product.name:
+                    products_list.append(product.inaccurate_name + ": " + product.name)
+                else:
+                    products_list.append(product.name)
+            else:
+                products_list.append(product.inaccurate_name + ": Not found")
 
         # add result
         result.append({
@@ -237,17 +247,20 @@ def history_get_id(history_id):
 
     for product_model in products_models:
         product_model = product_model[0]
-        product_object = Product(product_model.name, product_model.url, product_model.img,
-                                 list(), product_model.description, product_model.rating)
-        stmt = select(ShopModel).where(ShopModel.product_id == product_model.id)
-        shops_models = db.session.execute(stmt)
-        for shop_model in shops_models:
-            shop_model = shop_model[0]
-            shop_object = Shop(shop_model.name, shop_model.url, shop_model.price,
-                               shop_model.delivery_price, shop_model.availability,
-                               shop_model.delivery_time)
-            product_object.shop_list.append(shop_object)
-        results['ceneo'][product_model.inaccurate_name] = [product_object]
+        if product_model.name is not None:
+            product_object = Product(product_model.name, product_model.url, product_model.img,
+                                     list(), product_model.description, product_model.rating)
+            stmt = select(ShopModel).where(ShopModel.product_id == product_model.id)
+            shops_models = db.session.execute(stmt)
+            for shop_model in shops_models:
+                shop_model = shop_model[0]
+                shop_object = Shop(shop_model.name, shop_model.url, shop_model.price,
+                                   shop_model.delivery_price, shop_model.availability,
+                                   shop_model.delivery_time)
+                product_object.shop_list.append(shop_object)
+            results['ceneo'][product_model.inaccurate_name] = [product_object]
+        else:
+            results['ceneo'][product_model.inaccurate_name] = list()
         results['amount'][product_model.inaccurate_name] = product_model.amount
     # jsonify
     json_result = json.dumps(results, indent=4, cls=CustomEncoder, ensure_ascii=False)

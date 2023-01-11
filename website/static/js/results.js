@@ -440,13 +440,17 @@ function saveToHistory() {
     Object.keys(searchResult['ceneo']).forEach(function (key, ind) {
         let product_list = searchResult['ceneo'][key];
         let activeProductName = "#productName" + (ind + 1);
-        activeProductName = $(activeProductName)[0].innerText;
-        let activeProduct;
-        product_list.forEach(function (product, ind) {
-            if (product['name'] === activeProductName) {
-                activeProduct = product;
-            }
-        });
+        let activeProduct = {};
+        if ($(activeProductName).length > 0) {
+            activeProductName = $(activeProductName)[0].innerText;
+            product_list.forEach(function (product, ind) {
+                if (product['name'] === activeProductName) {
+                    activeProduct = product;
+                }
+            });
+        }else {
+            activeProduct['ceneo'] = [];
+        }
         activeProduct['amount'] = searchResult['amount'][key]
         productsToSaveDict[key] = activeProduct;
     });
