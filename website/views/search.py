@@ -19,6 +19,7 @@ search_results = dict()
 SUCCESS = '', 200
 
 TOKEN_IS_NONE = "Token is none", 400
+LIST_LENGTH_ERROR = '', 400
 PRODUCT_IS_NONE = "Product is none", 400
 ALLEGRO_NOT_SUPPORTED = "Allegro not supported", 400
 INVALID_TARGET = "Invalid target", 400
@@ -30,6 +31,8 @@ FORBIDDEN = "You do not have access to this resource", 403
 TOKEN_NOT_FOUND = "Token not found", 404
 PRODUCT_NOT_FOUND = "Product not found", 404
 
+TOKEN_TAKEN = "This token has already been taken", 409
+
 
 # delete token from search results
 def delete_token(token):
@@ -38,6 +41,30 @@ def delete_token(token):
         return True
     else:
         return False
+
+
+# add token to search results
+@search.route('/search/token/<token>', methods=['GET'])
+def search_token_get(token=None):
+    # validation
+    if token is None:
+        return TOKEN_IS_NONE
+
+    length = request.args.get('length')  # number of products to search
+    if length is None:
+        return LIST_LENGTH_ERROR
+
+    if token not in search_results:
+        search_results[token] = {
+            "ceneo": dict(),
+            "amount": dict(),
+            "length": length,
+            "counter": 0,
+            "blocked": False
+        }
+        return SUCCESS
+    else:
+        return TOKEN_TAKEN
 
 
 # add product to search results
@@ -66,10 +93,13 @@ def search_add_get(token=None):
     # get results
     ceneo_browser = CeneoBrowser()
     ceneo_search_result = ceneo_browser.search(product, target=target)
-    if token not in search_results:
-        search_results[token] = {"ceneo": dict(), "amount": dict()}
-    search_results[token]['ceneo'][product] = ceneo_search_result
-    search_results[token]['amount'][product] = amount
+    if search_results[token]['blocked'] is False:
+        search_results[token]['ceneo'][product] = ceneo_search_result
+        search_results[token]['amount'][product] = amount
+    search_results[token]['counter'] += 1
+    if search_results[token]['blocked'] is True:
+        if search_results[token]['counter'] == search_results[token]['length']:
+            delete_token(token)
     return SUCCESS
 
 
@@ -91,7 +121,10 @@ def search_get(token=None):
     if token in search_results:
         # get result from results dict
         results = search_results[token]
-        delete_token(token)
+        if results['counter'] == results['length']:
+            delete_token(token)
+        else:
+            search_results[token]['blocked'] = True
 
         # jsonify
         json_result = json.dumps(results, indent=4, cls=CustomEncoder, ensure_ascii=False)
