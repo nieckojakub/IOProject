@@ -47,7 +47,7 @@ def delete_token(token):
 # delete unused tokens
 def delete_unused_tokens():
     for token in search_results.keys():
-        if search_results[token]['creation_date'] - datetime.datetime.now() > datetime.timedelta(hours=1):
+        if datetime.datetime.now() - search_results[token]['creation_date'] > datetime.timedelta(hours=1):
             delete_token(token)
 
 
@@ -136,6 +136,8 @@ def search_get(token=None):
             delete_token(token)
         else:
             search_results[token]['blocked'] = True
+
+        results = {'ceneo': results['ceneo'], 'amount': results['amount']}
 
         # jsonify
         json_result = json.dumps(results, indent=4, cls=CustomEncoder, ensure_ascii=False)
