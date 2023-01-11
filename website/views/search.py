@@ -103,14 +103,14 @@ def search_add_get(token=None):
     ceneo_browser = CeneoBrowser()
     ceneo_search_result = ceneo_browser.search(product, target=target)
     if token in search_results:
+        search_results[token]['counter'] += 1
         if search_results[token]['blocked'] is False:
             search_results[token]['ceneo'][product] = ceneo_search_result
             search_results[token]['amount'][product] = amount
-        search_results[token]['counter'] += 1
-        if search_results[token]['blocked'] is True:
+            return token, 200
+        else:
             if int(search_results[token]['counter']) == int(search_results[token]['length']):
                 delete_token(token)
-    return SUCCESS
 
 
 # DELETE search results with given token

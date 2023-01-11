@@ -422,33 +422,37 @@ function sendOneProduct(product) {
         url: url,
         data: { target: target, product: product['name'], amount: product["amount"] },
         success: function (data, status) {
-            product['status'] = SearchStatus.SEARCH_SUCCESS;
-            searchedProductsCounter += 1;
-            refreshModalTable();
-            progressbarExtend(parseFloat(bar.style.width));
-            if (searchedProductsCounter === listToReturn.length) {
-                // show results button
-                $("#modalSearchText").hide();
-                $("#modalResultsBtn").show();
-                $("#modalPartialResultsBtn").hide();
-                document.getElementById("timeSummar").innerHTML = document.getElementById("timer").innerHTML;
-                document.getElementById("timer").innerHTML = "";
-                negativeEnsure();
-                stopTimer = true;
+            if (token === Number(data)){
+                product['status'] = SearchStatus.SEARCH_SUCCESS;
+                searchedProductsCounter += 1;
+                refreshModalTable();
+                progressbarExtend(parseFloat(bar.style.width));
+                if (searchedProductsCounter === listToReturn.length) {
+                    // show results button
+                    $("#modalSearchText").hide();
+                    $("#modalResultsBtn").show();
+                    $("#modalPartialResultsBtn").hide();
+                    document.getElementById("timeSummar").innerHTML = document.getElementById("timer").innerHTML;
+                    document.getElementById("timer").innerHTML = "";
+                    negativeEnsure();
+                    stopTimer = true;
 
-            } else if (searchedProductsCounter > 0) {
-                $("#modalPartialResultsBtn").show();
+                } else if (searchedProductsCounter > 0) {
+                    $("#modalPartialResultsBtn").show();
+                }
             }
         },
         error: function (data, status) {
-            product['status'] = SearchStatus.SERVER_ERROR;
-            searchedProductsCounter += 1;
-            refreshModalTable();
-            progressbarExtend();
-            if (searchedProductsCounter === listToReturn.length) {
-                // show results button
-                $("#modalSearchText").hide()
-                $("#modalResultsBtn").show();
+            if (token === Number(data)){
+                product['status'] = SearchStatus.SERVER_ERROR;
+                searchedProductsCounter += 1;
+                refreshModalTable();
+                progressbarExtend();
+                if (searchedProductsCounter === listToReturn.length) {
+                    // show results button
+                    $("#modalSearchText").hide()
+                    $("#modalResultsBtn").show();
+                }
             }
         }
     });
