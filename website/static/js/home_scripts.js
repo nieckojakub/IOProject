@@ -2,10 +2,9 @@
 // ##################### variables ##########################
 // ##########################################################
 
-// list of products {name: '', status: ''} to send to serv
+// list of products to return {name: '', status: '', amount: ''} to send to serv
 let listToReturn = [];
 
-//let productsFromFile = "";
 let productsCounter = 0;
 let token = Math.floor(Math.random() * (1000000000));
 const INITIAL_SEARCH_HELP = "Enter what You are looking for."
@@ -319,24 +318,23 @@ function sendProducts(){
     $("#modalSearchText").show();
 
     //progressbar var
+    //max_progress_counter == 100% progress,
     max_progres_counter = listToReturn.length;
 
-    //max_progress_counter == 100% progress,
-    // progress_step = 1/max_progress_counter*100%
     progress_step = 1/max_progres_counter*100;
     current_progres = 0;
 
     // send all products to backend
-    listToReturn.forEach((element, ind) => {
+    listToReturn.forEach((element) => {
         sendOneProduct(element);
     })
 }
 
 // extend progress bar after progress is made
-function progressbarExtend(){
+function progressbarExtend(current_wid){
     if(parseFloat(bar.style.width) < 100 ){
         //TODO 
-        var width = 1;
+        var width = current_wid;
         var id = setInterval(frame, 10);
         function frame() {
             if (width >= current_progres) {
@@ -373,7 +371,7 @@ function sendOneProduct(product){
             product['status'] = SearchStatus.SEARCH_SUCCESS;
             searchedProductsCounter += 1;
             refreshModalTable();
-            progressbarExtend();
+            progressbarExtend(parseFloat(bar.style.width));
             if (searchedProductsCounter === listToReturn.length){
                 // show results button
                 $("#modalSearchText").hide()
@@ -439,7 +437,7 @@ function readFromFile(event){
 //validates product amount in products list element- onchange input
 function validateAmount(element){
 
-    if(!(Number.isInteger(element.value))){
+    if(!(Number.isInteger(parseInt(element.value)))){
         alert("You must enter number from 1 to 10!");
         element.value = 1;
         return null;
@@ -451,6 +449,15 @@ function validateAmount(element){
         alert("Minimum amount is 1.");
         element.value = 1;
         return null;
+    }
+
+    if(element.parentNode.parentNode.parentNode.id === "ListOfProducts"){
+        for(let temp of listToReturn){
+            if(temp["name"] === element.parentNode.parentNode.firstChild.firstChild.innerHTML){
+                temp["amount"] = parseInt(element.value);
+                break;
+            }
+        }
     }
 
 }
