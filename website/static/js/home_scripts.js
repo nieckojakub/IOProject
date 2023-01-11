@@ -4,6 +4,7 @@
 
 // list of products to return {name: '', status: '', amount: ''} to send to serv
 let listToReturn = [];
+let searchStarted = false;
 
 let productsCounter = 0;
 let token = Math.floor(Math.random() * (1000000000));
@@ -334,8 +335,22 @@ function couuntTime() {
 
 }
 
+//restart token after user cancel his searach
+function restartToken(){
+    if(searchStarted){
+        var isExecuted = confirm("Are you sure? You will lose already found data")
+    }
+    if(isExecuted){
+        token = Math.floor(Math.random() * (1000000000)); 
+        searchStarted = false;
+        stopTimer = true;
+        $("#modalPartialResultsBtn").hide();
+    }
+}
+
 //send data to the server
 function sendProducts() {
+    searchStarted = true;
     // hide search button
     $("#modalSearchBtn").hide();
     $("#modalSearchText").show();
