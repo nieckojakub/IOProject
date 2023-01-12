@@ -7,7 +7,7 @@ from website.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from website.app import bcrypt, login_manager
 from website.email import send_reset_email, send_mail_confirmation
-from .search import history_get
+from .search import history_get, history_delete
 from ..models import History, Product as ProductModel
 from sqlalchemy import select, delete
 
@@ -60,9 +60,7 @@ def signup():
 def account():
     search_btn_id = request.args.get('history-btn', None)
     if search_btn_id is not None:
-        stmt = delete(History).where(History.id == search_btn_id)
-        db.session.execute(stmt)
-        db.session.commit()
+        history_delete(search_btn_id)
         return redirect(url_for('auth.account'))
     history_data, _ = history_get()
     history_data = history_data.get_json()
