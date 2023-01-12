@@ -15,23 +15,32 @@
             <!-- list of products-->
             <div class="card rounded-lg" id="divListOfProducts" style="background-color:#ffffff; border-radius: 25px;">
                 <div id="ListOfProducts" class="card-body" style="color:#000000;">
+                    {% if history_data %}
+                    <form id="search-history-form" method="GET">
                     <ul class="list-group">
                         {% for product_history in history_data %}
                         <li class="list-group-item">
                             <div class="container">
                             <div class="row">
                             <div class="col">
-                                {{ product_history['products_list'] }}
-                                {{ product_history['search_date'] }}
+                                {% for product in product_history['products_list'] %}
+                                    <a class="link-primary" href="{{product['product_url']}}">{{ product['product_name'] }}</a>
+                                {% endfor %}
                             </div>
-                            <div class="col-auto">
-                                <button class="btn btn-danger" type="button">Delete</button>
+                            <div class="col-auto align-middle">
+                                <button class="btn btn-danger" type="submit" name="history-btn" value="{{ product_history['history_id'] }}">Delete</button>
+                                <div class="w-100"></div>
+                                <small>Tue, 10 Jan 2023 22:01:41 </small>
                             </div>
                         </div>
                         </div>
                         </li>
                         {% endfor %}
                     </ul>
+                </form>
+                    {% else %}
+                    <strong style="color: #5200cc;">( Empty )</strong>
+                    {% endif %}
                 </div>
             </div>
         </div>

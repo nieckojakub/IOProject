@@ -8,6 +8,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 from website.app import bcrypt, login_manager
 from website.email import send_reset_email, send_mail_confirmation
 from .search import history_get
+from ..models import History, Product as ProductModel
+from sqlalchemy import select, delete
 
 auth = Blueprint('auth', __name__)
 
@@ -56,8 +58,37 @@ def signup():
 @auth.route('/account')
 @login_required
 def account():
+    search_btn_id = request.args.get('history-btn', None)
+    if search_btn_id is not None:
+        stmt = delete(History).where(History.id == search_btn_id)
+        db.session.execute(stmt)
+        db.session.commit()
+        return redirect(url_for('auth.account'))
     history_data, _ = history_get()
     history_data = history_data.get_json()
+    for product_history in history_data:
+        stmt = select(ProductModel).where(ProductModel.history_id == product_history['history_id'])
+        products_model = db.session.execute(stmt)
+        products = [prod[0] for prod in products_model.fetchall()]
+        product_list = list()
+        for product_list_item in product_history['products_list']:
+            product_name = product_list_item.split(':')[1].strip(' ')
+            product_url = '#'
+            for product in products:
+                if product.name == product_name:
+                    product_url = product.url
+                    break
+            product_list.append(
+                {
+                    'product_name': product_name,
+                    'product_url': product_url,
+                }
+            )
+        product_history['products_list'] = product_list
+        product_history['product_url'] = product_url
+        product_history['search_date'] = product_history['search_date'].strip(' GMT')
+        product_history['products_list'] = product_list
+
     return render_template('account.html',history_data=history_data)
 
 @auth.route('/reset_password', methods=['GET','POST'])
@@ -100,7 +131,7 @@ def confirm_email(token):
         user.confirmed_on=datetime.now()
         db.session.add(user)
         db.session.commit()
-        flash(f"Your email has been verified and you can now login to your account","success",)
+        flash(f"Your email has been verified and you can now login to your account","success",).fetchone()
         return redirect(url_for('auth.login'))
     else:
         flash('The confirmation link is invalid or has expired.', 'warning')
