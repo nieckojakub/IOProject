@@ -84,7 +84,7 @@ def account():
             )
         product_history['products_list'] = product_list
         product_history['product_url'] = product_url
-        product_history['search_date'] = product_history['search_date'].strip(' GMT')
+        product_history['search_date'] = product_history['search_date'].replace(' GMT','')
         product_history['products_list'] = product_list
 
     return render_template('account.html',history_data=history_data)
