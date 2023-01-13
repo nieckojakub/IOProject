@@ -152,7 +152,7 @@ function addProductFromFile(fileFromText) {
     }
 
     //adding product name to the listToReturn
-    listToReturn.push({ name: fileFromText, status: SearchStatus.NOT_SEARCHED, amount: 1 }); //TODO: zczytywanie ilosci z pliku
+    listToReturn.push({ name: fileFromText, status: SearchStatus.NOT_SEARCHED, amount: 1 });
 
     //creating html elements
     var newProduct = document.createElement("div");
@@ -393,7 +393,6 @@ function sendProducts() {
 // extend progress bar after progress is made
 function progressbarExtend(current_wid) {
     if (parseFloat(bar.style.width) < 100) {
-        //TODO 
         var width = current_wid;
         var id = setInterval(frame, 10);
         function frame() {

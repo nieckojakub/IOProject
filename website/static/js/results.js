@@ -87,7 +87,7 @@ where:
 *Z indicates shop number for a specific product, starting from 1
 
 */
-//TODO- najniższa cena i najkrótszy czas dostawy do ulepszenia
+
 function generateDOM() {
     var productsCounter = 1;
     //for now, only ceneo is implemented
@@ -472,11 +472,7 @@ function saveToHistory() {
     });
 }
 
-//TODO
-//sorting shops function
-function sortResults() {
 
-}
 
 function showResultsModal(isOptimizedForStorecount) {
 
