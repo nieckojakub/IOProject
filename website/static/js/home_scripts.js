@@ -63,6 +63,12 @@ function addProduct() {
         displaySubmitBtn(1);
     }
 
+    if(isInputDuplicated(searchInput.value)){
+        searchInput.value == ""
+        alert("You have already entered that product!");
+        return 0;
+    }
+
     //adding product name to the listToReturn
     listToReturn.push({ name: searchInput.value, status: SearchStatus.NOT_SEARCHED, amount: document.getElementById("amountMain").value }); //name
 
@@ -480,6 +486,9 @@ function goToResults() {
 //read .txt file with a list of products and load them to the listOfProducts DOM element
 //@param: event from changing input element, input must be text element, separted by new line, ',' or ' '
 function readFromFile(event) {
+    
+    let containsDuplicat = false;
+    
     //catch input element
     var fileInput = event.target;
     var productsFromFile = [];
@@ -500,14 +509,33 @@ function readFromFile(event) {
                 alert("You cannot add more than 10 items!");
                 break;
             } else {
-                addProductFromFile(toAdd);
+                if(isInputDuplicated(toAdd)){
+                    containsDuplicat = true;
+                }else{
+                    addProductFromFile(toAdd);
+                }
             }
+        }
+        if(containsDuplicat){
+            alert("Duplicated items were ommited.");
         }
     };
     reader.readAsText(fileInput.files[0]);
 
 }
-//TODO- walidacja czy ktoś nie wpisał tego samego produktu
+
+//functions that checks if product was already inputed
+
+function isInputDuplicated(product){
+
+    for(let enteredProduct of listToReturn){
+        if(enteredProduct["name"] === product){
+            return true;
+        }
+    }
+    return false;
+
+}
 
 //functions handling plus/minus products counter
 //@param: selected element e.g. minus button, amount input 
