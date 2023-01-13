@@ -26,6 +26,9 @@ const SearchStatus = {
     SEARCH_SUCCESS: "OK"
 };
 
+//flag to stop and restart counter
+var stopTimer = false;
+
 // ##########################################################
 // ##################### DOM elems ##########################
 // ##########################################################
@@ -318,10 +321,8 @@ function showModal() {
     $('#staticBackdrop').modal('show');
 }
 
-//flag to stop and restart counter
-var stopTimer = false;
 //count up from 0m 0s
-function couuntTime() {
+function countTime() {
     var countUpDate = new Date();
     //timer
     var x = setInterval(function () {
@@ -344,9 +345,9 @@ function couuntTime() {
 //restart token after user cancel his searach
 function restartToken() {
     if (searchStarted) {
-        var isExecuted = confirm("Are you sure? You will lose already found data")
+        var restart = confirm("Are you sure? You will lose already found data")
     }
-    if (isExecuted) {
+    if (restart) {
         token = Math.floor(Math.random() * (1000000000));
         searchStarted = false;
         stopTimer = true;
@@ -361,7 +362,7 @@ function sendProducts() {
     $("#modalSearchBtn").hide();
     $("#modalSearchText").show();
 
-    couuntTime();
+    countTime();
 
     //progressbar var
     //max_progress_counter == 100% progress,
@@ -524,7 +525,6 @@ function readFromFile(event) {
 }
 
 //functions that checks if product was already inputed
-
 function isInputDuplicated(product) {
 
     for (let enteredProduct of listToReturn) {
