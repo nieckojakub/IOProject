@@ -63,7 +63,7 @@ function addProduct() {
         displaySubmitBtn(1);
     }
 
-    if(isInputDuplicated(searchInput.value)){
+    if (isInputDuplicated(searchInput.value)) {
         searchInput.value == ""
         alert("You have already entered that product!");
         return 0;
@@ -342,12 +342,12 @@ function couuntTime() {
 }
 
 //restart token after user cancel his searach
-function restartToken(){
-    if(searchStarted){
+function restartToken() {
+    if (searchStarted) {
         var isExecuted = confirm("Are you sure? You will lose already found data")
     }
-    if(isExecuted){
-        token = Math.floor(Math.random() * (1000000000)); 
+    if (isExecuted) {
+        token = Math.floor(Math.random() * (1000000000));
         searchStarted = false;
         stopTimer = true;
         $("#modalPartialResultsBtn").hide();
@@ -427,7 +427,7 @@ function sendOneProduct(product) {
         url: url,
         data: { target: target, product: product['name'], amount: product["amount"] },
         success: function (data, status) {
-            if (token === Number(data)){
+            if (token === Number(data)) {
                 product['status'] = SearchStatus.SEARCH_SUCCESS;
                 searchedProductsCounter += 1;
                 refreshModalTable();
@@ -448,7 +448,7 @@ function sendOneProduct(product) {
             }
         },
         error: function (data, status) {
-            if (token === Number(data)){
+            if (token === Number(data)) {
                 product['status'] = SearchStatus.SERVER_ERROR;
                 searchedProductsCounter += 1;
                 refreshModalTable();
@@ -485,9 +485,9 @@ function goToResults() {
 //read .txt file with a list of products and load them to the listOfProducts DOM element
 //@param: event from changing input element, input must be text element, separted by new line, ',' or ' '
 function readFromFile(event) {
-    
+
     let containsDuplicat = false;
-    
+
     //catch input element
     var fileInput = event.target;
     var productsFromFile = [];
@@ -508,14 +508,14 @@ function readFromFile(event) {
                 alert("You cannot add more than 10 items!");
                 break;
             } else {
-                if(isInputDuplicated(toAdd)){
+                if (isInputDuplicated(toAdd)) {
                     containsDuplicat = true;
-                }else{
+                } else {
                     addProductFromFile(toAdd);
                 }
             }
         }
-        if(containsDuplicat){
+        if (containsDuplicat) {
             alert("Duplicated items were ommited.");
         }
     };
@@ -525,10 +525,10 @@ function readFromFile(event) {
 
 //functions that checks if product was already inputed
 
-function isInputDuplicated(product){
+function isInputDuplicated(product) {
 
-    for(let enteredProduct of listToReturn){
-        if(enteredProduct["name"] === product){
+    for (let enteredProduct of listToReturn) {
+        if (enteredProduct["name"] === product) {
             return true;
         }
     }

@@ -9,7 +9,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">Your search overview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="restartToken()"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    onclick="restartToken()"></button>
             </div>
             <div class="modal-body">
                 <div id="progresbarDiv" style="width:100%;">
@@ -33,7 +34,8 @@
                 <div id="modalResultsBtn" style="display: none; text-align: center;">
                     <button type="button" class="btn btn-success
                     mt-2" onclick="goToResults();" style="width: 100%">Show Results</button>
-                    <h5 style="display: inline;">Your search took: <h5 style="display: inline;" id="timeSummar"></h5></h5>
+                    <h5 style="display: inline;">Your search took: <h5 style="display: inline;" id="timeSummar"></h5>
+                    </h5>
                 </div>
 
                 <div id="modalSearchText" style="display: none; width: 100%">
@@ -49,20 +51,15 @@
                 <div id="ensureDiv" style="display: none; width: 100%">
                     <b>Are you sure You want to see only partial results?</b>
                     <button type="button" class="btn btn-success
-                    mt-2" onclick="goToResults();" style="display: inline; " id="ensurePositive">Go to results page</button>
+                    mt-2" onclick="goToResults();" style="display: inline; " id="ensurePositive">Go to results
+                        page</button>
                     <button type="button" class="btn btn-danger
-                    mt-2" onclick="negativeEnsure();" style="display: inline; " id="ensureNegative">Continue searching</button>
+                    mt-2" onclick="negativeEnsure();" style="display: inline; " id="ensureNegative">Continue
+                        searching</button>
                 </div>
 
 
             </div>
-
-            <!---
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Understood</button>
-            </div>
-            -->
         </div>
     </div>
 </div>
@@ -111,10 +108,12 @@
                     <div class="col-auto mt-2">
 
                         <div class="input-group" style="max-width: 127px;">
-                            <button id="minusButtonMain" class="btn btn-danger" type="button" style="display:inline" onclick="return minusBtn(this);" >-</button>
+                            <button id="minusButtonMain" class="btn btn-danger" type="button" style="display:inline"
+                                onclick="return minusBtn(this);">-</button>
                             <input id="amountMain" type="text" class="form-control" value="1" min="1" max="10"
                                 style="display:inline; max-width: 45px;" onchange="return validateAmount(this);">
-                            <button id="plusButtonMain" class="btn btn-success" type="button" style="display:inline" onclick="return plusBtn(this);" >+</button>
+                            <button id="plusButtonMain" class="btn btn-success" type="button" style="display:inline"
+                                onclick="return plusBtn(this);">+</button>
                         </div>
 
                     </div>
@@ -124,7 +123,7 @@
                     </div>
                     <div class="col-auto">
                         <form>
-                            <input type="file" id="addFromFileInput" accept="text/plain" style="display: none;"
+                            <input type="file" id="addFromFileInput" accept=".txt" style="display: none;"
                                 onchange="return readFromFile(event);"></input>
                             <button type="button" id="addFromFileButton" class="btn btn-primary mt-2"
                                 onclick="document.getElementById('addFromFileInput').click()">From File</button>

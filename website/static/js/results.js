@@ -448,7 +448,7 @@ function saveToHistory() {
                     activeProduct = product;
                 }
             });
-        }else {
+        } else {
             activeProduct['ceneo'] = [];
         }
         activeProduct['amount'] = searchResult['amount'][key]
