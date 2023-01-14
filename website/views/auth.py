@@ -110,7 +110,11 @@ def account():
 @auth.route('/reset_password', methods=['GET','POST'])
 def reset_request():
     if current_user.is_authenticated:
-        return redirect(url_for('views.home'))
+        user = User.query.filter_by(id=current_user.id).first()
+        send_reset_email(user)
+        logout_user()
+        flash('An email has been sent with instructions to reset your password.','info')
+        return redirect(url_for('auth.login'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -147,7 +151,7 @@ def confirm_email(token):
         user.confirmed_on=datetime.now()
         db.session.add(user)
         db.session.commit()
-        flash(f"Your email has been verified and you can now login to your account","success",).fetchone()
+        flash(f"Your email has been verified and you can now login to your account","success",)
         return redirect(url_for('auth.login'))
     else:
         flash('The confirmation link is invalid or has expired.', 'warning')
