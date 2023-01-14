@@ -9,7 +9,8 @@ DEFAULT_PRODUCT_LIMIT_OPTION = 10
 DEFAULT_PRODUCT_SORT_OPTION = "TRUE"
 DEFAULT_ALLEGRO_OPTION = "FALSE"
 DEFAULT_FILE_OPTION = "valid_products.txt"
-
+ALLEGRO_TARGET = "ALLEGRO"
+CENEO_TARGET = "CENEO"
 
 ceneo_browser = CeneoBrowser()
 
@@ -27,15 +28,19 @@ def product_sort_fixture(request):
     return request.param
 
 @pytest.fixture(scope="class")
-def product_allegro_fixture(request):
+def product_target_fixture(request):
     return request.param
 
 @pytest.fixture(scope="class")
 def product_list_fixture(pytestconfig, request):
-    if pytestconfig.getoption("allegro").upper() == DEFAULT_ALLEGRO_OPTION:
-        is_allegro_specific = True
-    else:
-        is_allegro_specific = False
+
+    target = None
+    if pytestconfig.getoption("target") is None:
+        pass
+    elif pytestconfig.getoption("target").upper() == ALLEGRO_TARGET:
+        target = ALLEGRO_TARGET
+    elif pytestconfig.getoption("target").upper() == CENEO_TARGET:
+        target = CENEO_TARGET
 
     try:
         limit = int(pytestconfig.getoption("limit"))
@@ -50,7 +55,7 @@ def product_list_fixture(pytestconfig, request):
         request.param,
         limit=limit,
         sort=sort,
-        is_allegro_specific=is_allegro_specific,
+        target=target,
     )
 
 
@@ -63,7 +68,7 @@ def pytest_addoption(parser):
         "--sort", action="store", default=DEFAULT_PRODUCT_SORT_OPTION
     )
     parser.addoption(
-        "--allegro", action="store", default=DEFAULT_ALLEGRO_OPTION
+        "--target", action="store", default=None
     )
 
 
@@ -90,15 +95,19 @@ def get_product_data_tuple():
     else:
         default_sort_option_bool = True if DEFAULT_PRODUCT_SORT_OPTION == 'TRUE' else False
         sort = default_sort_option_bool
-    allegro_option_flag = re.findall("--ALLEGRO(?:=|\s)\S+", arg_line)
-    if allegro_option_flag:
-        allegro_option_flag_value = (
-            allegro_option_flag[-1].split(" ")[-1].split("=")[-1]
+    target_option_flag = re.findall("--TARGET(?:=|\s)\S+", arg_line)
+    if target_option_flag:
+        target_option_flag_value = (
+            target_option_flag[-1].split(" ")[-1].split("=")[-1]
         )
-        is_allegro_specific = True if allegro_option_flag_value == "TRUE" else False
+        if target_option_flag_value == ALLEGRO_TARGET:
+            target = ALLEGRO_TARGET
+        elif target_option_flag_value == CENEO_TARGET:
+            target = CENEO_TARGET
+        else:
+            target = None
     else:
-        default_allegro_option_bool = True if DEFAULT_ALLEGRO_OPTION == 'TRUE' else False
-        is_allegro_specific = default_allegro_option_bool
+        target = None
     script_dir = os.path.dirname(__file__)
     path = os.path.join(script_dir, file_name)
     with open(path, "r") as f:
@@ -112,7 +121,7 @@ def get_product_data_tuple():
                     product_name, 
                     limit, 
                     sort, 
-                    is_allegro_specific
+                    target
                 ))
             else:
                 continue

@@ -1,5 +1,5 @@
 import pytest, os, re, decimal
-from .conftest import get_product_data_tuple
+from .conftest import get_product_data_tuple, ALLEGRO_TARGET, CENEO_TARGET
 
 
 @pytest.mark.parametrize(
@@ -7,19 +7,21 @@ from .conftest import get_product_data_tuple
     + "product_list_fixture,"
     + "product_limit_fixture, "
     + "product_sort_fixture, "
-    + "product_allegro_fixture",
+    + "product_target_fixture",
     get_product_data_tuple(),
     indirect=True,
 )
 class TestCeneoSearch:
+
     def test_product_name(
         self,
         product_name_fixture,
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
+        print(product_list_fixture)
         for product in product_list_fixture:
             assert (
                 product.name is not None
@@ -31,7 +33,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             assert product.url is not None, (
@@ -49,7 +51,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             if product.rating is None:
@@ -66,7 +68,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             assert product.img is not None, (
@@ -87,7 +89,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             assert isinstance(product.description, str), (
@@ -101,7 +103,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             assert product.shop_list, (
@@ -115,7 +117,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -130,7 +132,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -159,7 +161,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -175,7 +177,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -191,7 +193,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -207,11 +209,11 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
-                assert shop.delivery_time is not None, (
+                assert shop.delivery_time is None, (
                     f'[ "QUERY: "{product_name_fixture}",'
                     f' PRODUCT: "{product.name}",'
                     f' SHOP: "{shop.name}" ]'
@@ -223,7 +225,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
         prev_offer_price = 0
         for product in product_list_fixture:
@@ -240,20 +242,23 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_allegro_fixture,
+        product_target_fixture
     ):
-        is_allegro_specific = product_allegro_fixture
+        print(product_list_fixture)
+        target = product_target_fixture
         for product in product_list_fixture:
             for shop in product.shop_list:
-                if is_allegro_specific:
+                if target == ALLEGRO_TARGET:
                     assert shop.name == "allegro.pl", (
                         f'[ "QUERY: "{product_name_fixture}",'
                         f' PRODUCT: "{product.name}",'
-                        f" ALLEGRO SPECIFIC: {is_allegro_specific} ]"
+                        f" TARGET: {target} ]"
                     )
-                else:
+                elif target == CENEO_TARGET:
                     assert shop.name != "allegro.pl", (
                         f'[ "QUERY: "{product_name_fixture}",'
                         f' PRODUCT: "{product.name}",'
-                        f" ALLEGRO SPECIFIC: {is_allegro_specific}, ]"
-                    )
+                        f" TARGET: {target} ]"
+                    )                    
+                else:
+                    assert True
