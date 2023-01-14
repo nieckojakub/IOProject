@@ -559,7 +559,8 @@ function showResultsModal(isOptimizedForStorecount) {
             let amount = row.insertCell(2);
             amount.innerHTML = searchResult["amount"][key];
             let link = row.insertCell(3);
-            link.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["url"];
+            link.innerHTML = '<a href="' + searchResult["ceneo"][key][selectedProducts[key] - 1]
+                ["shop_list"][nrSklepu]["url"] + '">link</a>';
             //console.log(key, selectedProducts[key]);
         }
     }
