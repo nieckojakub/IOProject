@@ -12,14 +12,13 @@ from .conftest import get_product_data_tuple, ALLEGRO_TARGET, CENEO_TARGET
     indirect=True,
 )
 class TestCeneoSearch:
-
     def test_product_name(
         self,
         product_name_fixture,
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         print(product_list_fixture)
         for product in product_list_fixture:
@@ -33,14 +32,16 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             assert product.url is not None, (
                 f'[ "QUERY: "{product_name_fixture}",'
                 f' PRODUCT: "{product.name}" ]'
             )
-            assert re.match("https://www.ceneo.pl/[0-9]+", product.url), (
+            assert re.match(
+                "https://www.ceneo.pl/(Zabawki/)?[0-9]+", product.url
+            ), (
                 f'[ "QUERY: "{product_name_fixture}",'
                 f' PRODUCT: "{product.name}" ]'
             )
@@ -51,7 +52,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             if product.rating is None:
@@ -68,7 +69,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             assert product.img is not None, (
@@ -89,7 +90,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             assert isinstance(product.description, str), (
@@ -103,7 +104,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             assert product.shop_list, (
@@ -117,7 +118,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -132,7 +133,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -161,7 +162,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -177,7 +178,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -193,7 +194,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -209,7 +210,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         for product in product_list_fixture:
             for shop in product.shop_list:
@@ -225,7 +226,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         prev_offer_price = 0
         for product in product_list_fixture:
@@ -242,7 +243,7 @@ class TestCeneoSearch:
         product_list_fixture,
         product_limit_fixture,
         product_sort_fixture,
-        product_target_fixture
+        product_target_fixture,
     ):
         print(product_list_fixture)
         target = product_target_fixture
@@ -259,6 +260,6 @@ class TestCeneoSearch:
                         f'[ "QUERY: "{product_name_fixture}",'
                         f' PRODUCT: "{product.name}",'
                         f" TARGET: {target} ]"
-                    )                    
+                    )
                 else:
                     assert True
