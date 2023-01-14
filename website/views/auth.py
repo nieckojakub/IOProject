@@ -8,7 +8,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from website.app import bcrypt, login_manager
 from website.email import send_reset_email, send_mail_confirmation
 from .search import history_get, history_delete
-from ..models import History, Product as ProductModel
+from ..models import History, Product as ProductModel, load_user
 from sqlalchemy import select, delete
 
 auth = Blueprint('auth', __name__)
@@ -62,6 +62,11 @@ def account():
     if search_btn_id is not None:
         history_delete(search_btn_id)
         return redirect(url_for('auth.account'))
+
+    # Prepare account data
+    user = load_user(current_user.id)
+    user.registered_on = user.registered_on.date()
+    # Prepare history data
     history_data, _ = history_get()
     history_data = history_data.get_json()
     for product_history in history_data:
@@ -87,7 +92,7 @@ def account():
         product_history['search_date'] = product_history['search_date'].replace(' GMT','')
         product_history['products_list'] = product_list
 
-    return render_template('account.html',history_data=history_data)
+    return render_template('account.html',history_data=history_data, user=user)
 
 @auth.route('/reset_password', methods=['GET','POST'])
 def reset_request():
