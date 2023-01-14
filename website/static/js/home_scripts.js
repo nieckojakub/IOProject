@@ -26,6 +26,17 @@ const SearchStatus = {
     SEARCH_SUCCESS: "OK"
 };
 
+const InfoStatus = {
+    NO_PRODUCT_INPUTED: "Please, enter your product first",
+    DUPLICAT_INPUTED: "You have already entered that product!",
+    SOURCE_WASNT_CHOSEN: "Please, choose source of your search first.",
+    UP_LIMIT_EXCEDEED: "You cannot add more than 10 items!",
+    OMITING_DUPLICATS: "Duplicated items were ommited.",
+    NaN_PROVIDED: "You must enter number from 1 to 10!",
+    MAX_AMOUNT_INFO: "Maximum amount is 10.",
+    MIN_AMOUNT_INFO: "Minimum amount is 1.",
+}
+
 //flag to stop and restart counter
 var stopTimer = false;
 
@@ -58,7 +69,7 @@ function addProduct() {
 
     //checking if input is nonempty
     if (searchInput.value == "") {
-        alert("Please, enter your product first");
+        displayInfo("NO_PRODUCT_INPUTED");
         return 0;
     }
     //showing submit button
@@ -68,7 +79,7 @@ function addProduct() {
 
     if (isInputDuplicated(searchInput.value)) {
         searchInput.value == ""
-        alert("You have already entered that product!");
+        displayInfo("DUPLICAT_INPUTED");
         return 0;
     }
 
@@ -273,7 +284,7 @@ function refreshModalTable() {
 function showModal() {
     // validation
     if (!(allegroCheckbox.checked || ceneoCheckbox.checked)) {
-        alert("Please, choose source of your search first.")
+        displayInfo("SOURCE_WASNT_CHOSEN");
         return 0;
     }
 
@@ -506,7 +517,7 @@ function readFromFile(event) {
         }
         for (toAdd of productsFromFile) {
             if (productsCounter >= 10) {
-                alert("You cannot add more than 10 items!");
+                displayInfo("UP_LIMIT_EXCEDEED");
                 break;
             } else {
                 if (isInputDuplicated(toAdd)) {
@@ -517,7 +528,7 @@ function readFromFile(event) {
             }
         }
         if (containsDuplicat) {
-            alert("Duplicated items were ommited.");
+            displayInfo("OMITING_DUPLICATS")
         }
     };
     reader.readAsText(fileInput.files[0]);
@@ -542,15 +553,15 @@ function isInputDuplicated(product) {
 function validateAmount(element) {
 
     if (!(Number.isInteger(parseInt(element.value)))) {
-        alert("You must enter number from 1 to 10!");
+        displayInfo("NaN_PROVIDED");
         element.value = 1;
         return null;
     } else if (element.value > 10) {
-        alert("Maximum amount is 10.");
+        displayInfo("MAX_AMOUNT_INFO");
         element.value = 10;
         return null;
     } else if (element.value < 1) {
-        alert("Minimum amount is 1.");
+        displayInfo("MIN_AMOUNT_INFO");
         element.value = 1;
         return null;
     }
@@ -570,7 +581,7 @@ function minusBtn(element) {
 
     var counter = element.parentNode.children[1];
     if (counter.value == 1) {
-        alert("Minimum amount is 1.");
+        displayInfo("MIN_AMOUNT_INFO");
         return null;
     } else {
         counter.value--;
@@ -593,7 +604,7 @@ function plusBtn(element) {
 
     var counter = element.parentNode.children[1];
     if (counter.value == 10) {
-        alert("Maximum amount is 10.");
+        displayInfo("MAX_AMOUNT_INFO");
         return null;
     } else {
         counter.value++;
@@ -609,4 +620,9 @@ function plusBtn(element) {
         }
     }
 
+}
+//function display info to user
+function displayInfo(infoCode){
+    document.getElementById("trigerInfoModal").click();
+    document.getElementById("infoInModal").innerHTML = InfoStatus[infoCode];
 }

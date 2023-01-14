@@ -9,6 +9,11 @@ let modalSearchOverviewTableBody =
         getElementsByTagName('tbody')[0];
 
 
+const InfoStatus = {
+    ITEM_ADDED_TO_HISTORY: "Your search was successfully saved.",
+    FAIL_TO_SAVE: "Log in first."
+}
+
 // ##########################################################
 // ##################### DOM elems ##########################
 // ##########################################################
@@ -273,7 +278,6 @@ function generateDOM() {
             var lowPriceValue = document.createElement("td");
             lowPriceValue.setAttribute("id", "productLowPrice" + productsCounter);
             //searching lowest price
-            //TODO- to da sie lepiej zrobić
             var minTempPrice = 10000000000;
             tempData["shop_list"].forEach((tempPrice) => {
                 if (tempPrice["price"] <= minTempPrice) {
@@ -295,7 +299,6 @@ function generateDOM() {
             var shorDevTimeValue = document.createElement("td");
             shorDevTimeValue.setAttribute("id", "productShortDev" + productsCounter);
             //searching shortest dev time
-            //TODO- to da sie lepiej zrobić
             var minDevTime = 10000000000;
             tempData["shop_list"].forEach((tempDevTime) => {
                 if (tempDevTime["delivery_time"] !== null) {
@@ -462,12 +465,11 @@ function saveToHistory() {
             'products': JSON.stringify(productsToSaveDict)
         },
         success: function () {
-            // TODO
-            alert("Success");
+            displayInfo("ITEM_ADDED_TO_HISTORY");
+            document.getElementById("saveButton").disabled = true;
         },
         error: function () {
-            // TODO
-            alert("Failed");
+            displayInfo("FAIL_TO_SAVE");
         }
     });
 }
@@ -572,7 +574,7 @@ function showResultsModal(isOptimizedForStorecount) {
 
 
 
-//refresh currently shown data withe new one, indicated by a radiobutton selected by user
+//refresh currently shown data withe new one, indicated by a radiobutton selected by the user
 //@param
 //selectedProductNumber- product number e.g. for user input-> ['X','Y','Z'] selectedProductNumber would be 1 for X, 2 for Y and 3 for Z;
 //selectedRadioButtonNumber- number of radio button selected by user in a specific radiobutton group- from 1 to 10
@@ -597,7 +599,6 @@ function refreshNewData(selectedProductNumber, selectedRadioButtonNumber) {
         document.getElementById("productRating" + selectedProductNumber).innerHTML = "No data avaible";
     }
     //product lowest price
-    //TODO- to da sie lepiej zrobić
     var minTempPrice = 10000000000;
     newProductData["shop_list"].forEach((tempPrice) => {
         if (tempPrice["price"] <= minTempPrice) {
@@ -750,4 +751,11 @@ function generateShopListDOM(shopListUl, shopDic, ind, productsCounter) {
     shopListUl.appendChild(shopLiElement);
 
     return shopListUl;
+}
+
+
+//function display info to user
+function displayInfo(infoCode){
+    document.getElementById("trigerInfoModal").click();
+    document.getElementById("infoInModal").innerHTML = InfoStatus[infoCode];
 }
