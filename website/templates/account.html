@@ -4,10 +4,53 @@
 
 <div class="container-sm text-center" style="color: #FFFFFF; width: 85%; margin-top: 2vh">
     <!-- login card-->
+
+
     <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px;">
+        <div class="container py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+              <div class="col col-lg-6 mb-4 mb-lg-0">
+                <div class="card mb-3" style="border-radius: .5rem;">
+                  <div class="row g-0">
+                    <div class="col-md-4 gradient-custom text-center text-white"
+                      style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                      {% set image_path = 'img/' + user.imag_file %}
+                      <img src="{{url_for('static', filename = image_path)}}"
+                        alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
+                      <h5 class="account-primary-text">{{user.firstName}}</h5>
+                      <small>Registered on</small>
+                      <br>
+                      <small>{{ user.registered_on }}</small>
+                      <i class="far fa-edit mb-5"></i>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body p-4">
+                        <div class="row pt-1">
+                          <div class="col mb-3">
+                            <h6 class="account-info-text">Email</h6>
+                            <p class="text-muted">{{user.email}}</p>
+                          </div>
+                          </div>
+                          <div class="row pt-1">
+                          <div class="col mb-3">
+                            <h6 class="account-info-text">Full Name</h6>
+                            <p class="text-muted">{{user.firstName}} {{user.lastName}}</p>
+                          </div>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                          <a href="#!"><i class="fab fa-facebook-f fa-lg me-3 btn btn-primary">Change Password</i></a>
+                          <a href="#!"><i class="fab fa-twitter fa-lg me-3 btn btn-primary">Change Profile Image</i></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         <!-- card header-->
         <div class="card-body ">
-            <h3>Search History For {{ current_user.firstName }}</h3>
+            <h3>Search History</h3>
         </div>
         <!-- card body-->
         <div class="card-body">
