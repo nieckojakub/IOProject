@@ -3,124 +3,117 @@
 {% block content %}
 
 <div class="container-sm text-center" style="color: #FFFFFF; width: 85%; margin-top: 2vh">
-    <!-- login card-->
 
-
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  <!-- User Info Card-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form method="POST" action="" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <label class="form-label" for="customFile">Load Image</label>
-                    <input name="image" type="file" class="form-control" id="customFile" accept=".jpg,.png"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
+      <div class="modal-content">
+        <form method="POST" action="" enctype="multipart/form-data">
+          <div class="modal-header">
+            <label class="form-label" for="customFile">Load Image</label>
+            <input name="image" type="file" class="form-control" id="customFile" accept=".jpg,.png" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
     </div>
-</div>
-
-
-    <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px;">
-        <div class="container py-5">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-              <div class="col col-lg-6 mb-4 mb-lg-0">
-                <div class="card mb-3" style="border-radius: .5rem;">
-                  <div class="row g-0">
-                    <div class="col-md-4 gradient-custom text-center text-white"
-                      style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-                      {% set image_path = 'img/' + user.imag_file %}
-                      <img src="{{url_for('static', filename = image_path)}}"
-                        alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
-                      <h5 class="account-primary-text">{{user.firstName}}</h5>
-                      <small>Registered on</small>
-                      <br>
-                      <small>{{ user.registered_on }}</small>
-                      <i class="far fa-edit mb-5"></i>
+  </div>
+  <div class="card rounded-lg" style="background-color:#5200cc; border-radius: 25px;">
+    <div class="container py-5">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-lg-6 mb-4 mb-lg-0">
+          <div class="card mb-3" style="border-radius: .5rem;">
+            <div class="row g-0">
+              <div class="col-md-4 gradient-custom text-center text-white"
+                style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                {% set image_path = 'img/' + user.imag_file %}
+                <img src="{{url_for('static', filename = image_path)}}" alt="Avatar" class="img-fluid my-5"
+                  style="width: 80px;" />
+                <h5 class="account-primary-text">{{user.firstName}}</h5>
+                <small>Registered on</small>
+                <br>
+                <small>{{ user.registered_on }}</small>
+                <i class="far fa-edit mb-5"></i>
+              </div>
+              <div class="col-md-8">
+                <div class="card-body p-4">
+                  <div class="row pt-1">
+                    <div class="col mb-3">
+                      <h6 class="account-info-text">Email</h6>
+                      <p class="text-muted">{{user.email}}</p>
                     </div>
-                    <div class="col-md-8">
-                      <div class="card-body p-4">
-                        <div class="row pt-1">
-                          <div class="col mb-3">
-                            <h6 class="account-info-text">Email</h6>
-                            <p class="text-muted">{{user.email}}</p>
-                          </div>
-                          </div>
-                          <div class="row pt-1">
-                          <div class="col mb-3">
-                            <h6 class="account-info-text">Full Name</h6>
-                            <p class="text-muted">{{user.firstName}} {{user.lastName}}</p>
-                          </div>
-                        </div>
-                        <div class="d-flex justify-content-start">
-                          <a href="{{ url_for('auth.reset_request') }}" class="fab fa-facebook-f fa-lg me-3 btn btn-primary">Change Password</a>
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Change Profile Image</button>
-                        </div>
-                      </div>
+                  </div>
+                  <div class="row pt-1">
+                    <div class="col mb-3">
+                      <h6 class="account-info-text">Full Name</h6>
+                      <p class="text-muted">{{user.firstName}} {{user.lastName}}</p>
                     </div>
+                  </div>
+                  <div class="d-flex justify-content-start">
+                    <a href="{{ url_for('auth.reset_request') }}"
+                      class="fab fa-facebook-f fa-lg me-3 btn btn-primary">Change Password</a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Change
+                      Profile Image</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        <!-- card header-->
-        <div class="card-body ">
-            <h3>Search History</h3>
         </div>
-        <!-- card body-->
-        <div class="card-body">
-            <!-- list of products-->
-            {% if history_data %}
-            <div id="divHistoryList" class="card rounded-lg p-3"
-                style="background-color: #FFFFFF; border-radius: 25px;">
-                <ul class="list-group">
-                    {% for product_history in history_data %}
-                    <li class="list-group-item list-group-item-action">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col" style="position: relative">
-                                    <a  class="stretched-link"
-                                        style="text-decoration: none;"
-                                        href="{{ url_for('views.results_db', history_id=product_history['history_id'])}}">
-                                        {{ product_history['search_date'] }}
-                                    </a>
-                                </div>
-                                <div class="col-auto">
-                                    <form id="search-history-form" method="GET">
-                                        <button class="btn btn-danger" type="submit" name="history-btn"
-                                            value="{{ product_history['history_id'] }}">Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% else %}
-            <div class="card rounded-lg" style="background-color: white; border-radius: 25px;">
-                <strong style="color: #5200cc;">( Empty )</strong>
-            </div>
-            {% endif %}
-        </div>
+      </div>
     </div>
+    <!-- card header-->
+    <div class="card-body ">
+      <h3>Search History</h3>
+    </div>
+    <!-- card body-->
+    <div class="card-body">
+      <!-- list of products-->
+      {% if history_data %}
+      <div id="divHistoryList" class="card rounded-lg p-3" style="background-color: #FFFFFF; border-radius: 25px;">
+        <ul class="list-group">
+          {% for product_history in history_data %}
+          <li class="list-group-item list-group-item-action">
+            <div class="container">
+              <div class="row">
+                <div class="col" style="position: relative">
+                  <a class="stretched-link" style="text-decoration: none;"
+                    href="{{ url_for('views.results_db', history_id=product_history['history_id'])}}">
+                    {{ product_history['search_date'] }}
+                  </a>
+                </div>
+                <div class="col-auto">
+                  <form id="search-history-form" method="GET">
+                    <button class="btn btn-danger" type="submit" name="history-btn"
+                      value="{{ product_history['history_id'] }}">Delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% else %}
+      <div class="card rounded-lg" style="background-color: white; border-radius: 25px;">
+        <strong style="color: #5200cc;">( Empty )</strong>
+      </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endblock %}
 
 
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
+  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
+  integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 {% endblock %}

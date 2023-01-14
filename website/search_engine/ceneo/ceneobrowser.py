@@ -14,7 +14,7 @@ class CeneoBrowser(Browser):
         "https://www.ceneo.pl" is applied.
     """
 
-    URL = "https://www.ceneo.pl"
+    URL = "https://www.ceneo.pl/Zabawki"
     FORM_SELECTOR = 'form[action="/search"]'
     FORM_INPUT_SELECTOR = "#form-head-search-q"
     PRODUCT_LIMIT = 10
@@ -82,13 +82,15 @@ class CeneoBrowser(Browser):
                 is_allegro = True
             else:
                 is_allegro = False
-            
+
             # Delivery price
             delivery_price = scrap_offer.scrapOfferDeliveryPrice(
                 shop_offer_html, product_price, is_allegro
             )
             # Product delivery time
-            delivery_time = scrap_offer.scrapOfferDeliveryTime(shop_offer_html, is_allegro)
+            delivery_time = scrap_offer.scrapOfferDeliveryTime(
+                shop_offer_html, is_allegro
+            )
 
             # Create Shop object and append it to the list
             shop_list.append(
@@ -145,6 +147,8 @@ class CeneoBrowser(Browser):
         """
         # Sort by price url prefix
         SORT_SUFFIX = ";0112-0.htm"
+        # Layout Body
+        PRODUCT_LIST_BODY_SELECTOR = ".category-list-body"
         # Row layout
         PRODUCT_LIST_LAYOUT_SELECTOR = ".cat-prod-row"
         # Grid layout
@@ -179,6 +183,13 @@ class CeneoBrowser(Browser):
             search_results_page = self.get(sorted_results_page_url)
         # Retrive html code
         search_result_html = search_results_page.soup
+        # Try to narrow the html code to the page with products only to avoid
+        # sponsored products
+        product_list_body = search_result_html.select(
+            PRODUCT_LIST_BODY_SELECTOR
+        )
+        if product_list_body:
+            search_result_html = product_list_body[0]
 
         # Now we need to check what kind of results page we got
         # There are three types of results page layout:

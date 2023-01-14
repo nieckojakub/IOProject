@@ -10,7 +10,7 @@ from website.email import send_reset_email, send_mail_confirmation
 from .search import history_get, history_delete
 from ..models import History, Product as ProductModel, load_user
 from sqlalchemy import select, update
-import os 
+from os import path
 
 auth = Blueprint('auth', __name__)
 
@@ -59,9 +59,18 @@ def signup():
 @auth.route('/account', methods=('GET', 'POST'))
 @login_required
 def account():
+    DEFAULT_IMAGE = 'default.jpg'
     # Prepare account data
     user = load_user(current_user.id)
     user.registered_on = user.registered_on.date()
+    image_path = path.join(url_for('static', filename='img'), user.imag_file)
+    image_path = path.join(current_app.root_path, image_path.strip('/'))
+    if not path.isfile(image_path):
+        # Profile image does not exits change it to the default one
+        stmt = update(User).where(User.id == current_user.id).values(imag_file = DEFAULT_IMAGE)
+        db.session.execute(stmt)
+        db.session.commit()
+        user.imag_file = DEFAULT_IMAGE
     # Prepare history data
     history_data, _ = history_get()
     history_data = history_data.get_json()
@@ -96,9 +105,9 @@ def account():
         if image.filename == '':
             flash('No file selected', 'danger')
             return redirect(url_for('auth.account'))
-        image_name = str(user.id) + os.path.splitext(image.filename)[1]
-        image_path = os.path.join(url_for('static', filename='img'), image_name)
-        image_path = os.path.join(current_app.root_path, image_path.strip('/'))
+        image_name = str(user.id) + path.splitext(image.filename)[1]
+        image_path = path.join(url_for('static', filename='img'), image_name)
+        image_path = path.join(current_app.root_path, image_path.strip('/'))
         image.save(image_path)
         stmt = update(User).where(User.id == current_user.id).values(imag_file = image_name)
         db.session.execute(stmt)
