@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, url_for, flash,redirect
+from flask import Blueprint, render_template, request, url_for, flash,redirect, current_app
 from datetime import datetime
 # from website.token import generate_confirmation_token, confirm_token
 from website.views.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
@@ -9,7 +9,8 @@ from website.app import bcrypt, login_manager
 from website.email import send_reset_email, send_mail_confirmation
 from .search import history_get, history_delete
 from ..models import History, Product as ProductModel, load_user
-from sqlalchemy import select, delete
+from sqlalchemy import select, update
+import os 
 
 auth = Blueprint('auth', __name__)
 
@@ -55,14 +56,9 @@ def signup():
         return redirect(url_for('auth.login'))
     return render_template('signup.html',form=form)
 
-@auth.route('/account')
+@auth.route('/account', methods=('GET', 'POST'))
 @login_required
 def account():
-    search_btn_id = request.args.get('history-btn', None)
-    if search_btn_id is not None:
-        history_delete(search_btn_id)
-        return redirect(url_for('auth.account'))
-
     # Prepare account data
     user = load_user(current_user.id)
     user.registered_on = user.registered_on.date()
@@ -91,7 +87,24 @@ def account():
         product_history['product_url'] = product_url
         product_history['search_date'] = product_history['search_date'].replace(' GMT','')
         product_history['products_list'] = product_list
-
+    search_btn_id = request.args.get('history-btn', None)
+    if search_btn_id is not None:
+        history_delete(search_btn_id)
+        return redirect(url_for('auth.account'))
+    if request.method == 'POST':
+        image = request.files.get('image', None)
+        if image.filename == '':
+            flash('No file selected', 'danger')
+            return redirect(url_for('auth.account'))
+        image_name = str(user.id) + os.path.splitext(image.filename)[1]
+        image_path = os.path.join(url_for('static', filename='img'), image_name)
+        image_path = os.path.join(current_app.root_path, image_path.strip('/'))
+        image.save(image_path)
+        stmt = update(User).where(User.id == current_user.id).values(imag_file = image_name)
+        db.session.execute(stmt)
+        db.session.commit()
+        user.image_file = image_name
+        return redirect(url_for('auth.account'))
     return render_template('account.html',history_data=history_data, user=user)
 
 @auth.route('/reset_password', methods=['GET','POST'])
