@@ -184,7 +184,6 @@ def history_post():
     return SUCCESS
 
 
-# TODO: not tested, might not work
 # GET all history entries from logged user
 @search.route('/history', methods=['GET'])
 def history_get():

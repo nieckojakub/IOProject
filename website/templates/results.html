@@ -45,6 +45,27 @@
     </div>
 </div>
 
+<!-- Info Modal -->
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoModalLabel">Disclaimer.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="display: grid; place-items: center;">
+                <h3 id="infoInModal"></h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Info button trigger-->
+<button id="trigerInfoModal" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infoModal"
+    style="display:none">
+</button>
+
+
 <!-- results card-->
 <div class="container-sm text-center" style="color: #FFFFFF; width: 100%; margin-top: 0vh">
 
