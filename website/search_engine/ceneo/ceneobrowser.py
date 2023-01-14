@@ -2,7 +2,6 @@ from mechanicalsoup import Browser
 from ..product import Product
 from ..shop import Shop
 from . import scrap_offer
-from . import scrap_allegro_offer
 from . import scrap_product
 from typing import List, Optional
 import re
@@ -69,45 +68,28 @@ class CeneoBrowser(Browser):
             product_availability = scrap_offer.scrapOfferAvailability(
                 shop_offer_html
             )
-            if target == self.ALLEGRO_TARGET and shop_name == "allegro.pl":
-                # Prepare html
-                product_allegro_redirect = self.get(shop_url)
-                product_allegro_redirect_html = product_allegro_redirect.soup
-                script_tags = product_allegro_redirect_html.select("script")
-                allegro_offer_url = ""
-                # for script_tag in script_tags:
-                #     script_tag_content = script_tag.text
-                #     allegro_offer_link = re.search(
-                #         '"https://allegro.pl/oferta/\S+"', script_tag_content
-                #     )
-                #     if allegro_offer_link:
-                #         allegro_offer_url = allegro_offer_link[0].strip('"')
-                #         break
-                # if allegro_offer_url == "":
-                #     continue
-                # product_allegro_page = self.get(allegro_offer_url)
-                # product_allegro_html = product_allegro_page.soup
-                # Allegro delivery price
-                delivery_price = None
-                # delivery_price = scrap_allegro_offer.scrapOfferDeliveryPrice(
-                #     product_allegro_html
-                # )
-                # Allegro product delivery time
-                delivery_time = None
-                # delivery_time = scrap_allegro_offer.scrapOfferDeliveryTime(product_allegro_html)
-            elif target == self.CENEO_TARGET and shop_name != "allegro.pl" or target is None:
-                # Delivery price
-                delivery_price = scrap_offer.scrapOfferDeliveryPrice(
-                    shop_offer_html, product_price
-                )
-                # Product delivery time
-                delivery_time = scrap_offer.scrapOfferDeliveryTime(
-                    shop_offer_html
-                )
-                # Create Shop object and append it to the list
-            else:
+            if (
+                target == self.ALLEGRO_TARGET and shop_name != "allegro.pl"
+            ) or (target == self.CENEO_TARGET and shop_name == "allegro.pl"):
                 continue
+
+            if (
+                target == self.ALLEGRO_TARGET and shop_name != "allegro.pl"
+            ) or (target == self.CENEO_TARGET and shop_name == "allegro.pl"):
+                continue
+
+            if shop_name == "allegro.pl":
+                is_allegro = True
+            else:
+                is_allegro = False
             
+            # Delivery price
+            delivery_price = scrap_offer.scrapOfferDeliveryPrice(
+                shop_offer_html, product_price, is_allegro
+            )
+            # Product delivery time
+            delivery_time = scrap_offer.scrapOfferDeliveryTime(shop_offer_html, is_allegro)
+
             # Create Shop object and append it to the list
             shop_list.append(
                 Shop(

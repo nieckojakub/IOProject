@@ -66,7 +66,7 @@ def scrapOfferPrice(shop_offer_html: Any) -> Union[float, None]:
 
 
 def scrapOfferDeliveryPrice(
-    shop_offer_html: Any, product_price: Union[float, None]
+    shop_offer_html: Any, product_price: Union[float, None], is_allegro: bool
 ) -> Union[float, None]:
     if product_price is None:
         return None
@@ -117,5 +117,5 @@ def scrapOfferAvailability(shop_offer_html: Any) -> Union[int, None]:
     return product_availability
 
 
-def scrapOfferDeliveryTime(shop_offer_html: Any) -> Union[int, None]:
+def scrapOfferDeliveryTime(shop_offer_html: Any, is_allegro: bool) -> Union[int, None]:
     return None
