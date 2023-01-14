@@ -486,22 +486,83 @@ function showResultsModal(isOptimizedForStorecount) {
 
 
     // optimize results
-    let ind = 0;
-    for (var key in selectedProducts) {
-        let row = modalSearchOverviewTableBody.insertRow(ind);
-        ind = ind + 1;
-        let nrSklepu = 0;
-        let name = row.insertCell(0);
-        name.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
-        let price = row.insertCell(1);
-        price.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["price"];
-        let amount = row.insertCell(2);
-        amount.innerHTML = searchResult["amount"][key];
-        let link = row.insertCell(3);
-        link.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["url"];
-        console.log(key, selectedProducts[key]);
-    }
+    if(isOptimizedForStorecount){
+        
+        
+        var selectedProductsStores = {};
+        var selectedProductsTemp = {...selectedProducts};
 
+        //count which stores are most common
+        while(Object.keys(selectedProductsTemp).length > 0){
+            var storeList = {};
+            for(var key in selectedProductsTemp){ //iterate over searches
+                for(var storeIterated in searchResult["ceneo"][key][selectedProductsTemp[key]-1]["shop_list"]){ //iterate over stores for that search
+                    if(searchResult["ceneo"][key][selectedProductsTemp[key]-1]["shop_list"][storeIterated]["name"] in storeList){
+                        storeList[searchResult["ceneo"][key][selectedProductsTemp[key]-1]["shop_list"][storeIterated]["name"]]++;
+                    } else{
+                        storeList[searchResult["ceneo"][key][selectedProductsTemp[key]-1]["shop_list"][storeIterated]["name"]] = 1;
+                    }
+                }
+            }
+            //choose the most common one
+            var max = 0;
+            var bestStore;
+            for(var key in storeList){
+                if (storeList[key] > max){
+                    bestStore = key;
+                    max = storeList[key];
+                }
+            }
+            //add the most common one to selectedProductsStores and delete the product from searched
+            for(var key in selectedProductsTemp){ //iterate over searches
+                for(var storeIterated in searchResult["ceneo"][key][selectedProductsTemp[key]-1]["shop_list"]){ //iterate over stores for that search
+                    if(searchResult["ceneo"][key][selectedProductsTemp[key]-1]["shop_list"][storeIterated]["name"] == bestStore){
+                        selectedProductsStores[key] = searchResult["ceneo"][key][selectedProductsTemp[key]-1]["shop_list"][storeIterated];
+                        delete selectedProductsTemp[key];
+                        break;
+                    }
+                }
+            }
+        }
+        console.log(selectedProductsStores);
+        let ind = 0;
+        for (var key in selectedProducts) {
+            let row = modalSearchOverviewTableBody.insertRow(ind);
+            ind = ind + 1;
+            let name = row.insertCell(0);
+            name.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
+            let price = row.insertCell(1);
+            price.innerHTML = selectedProductsStores[key]['price']
+            let amount = row.insertCell(2);
+            amount.innerHTML = searchResult["amount"][key];
+            
+            let store = row.insertCell(3);
+            store.innerHTML = selectedProductsStores[key]['name']
+
+            let link = row.insertCell(4);
+            link.innerHTML = selectedProductsStores[key]['url']
+            //console.log(key, selectedProducts[key]);
+        }
+
+
+    } else {
+
+        let ind = 0;
+        for (var key in selectedProducts) {
+            let row = modalSearchOverviewTableBody.insertRow(ind);
+            ind = ind + 1;
+            let nrSklepu = 0;
+            let name = row.insertCell(0);
+            name.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
+            let price = row.insertCell(1);
+            price.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["price"];
+            let amount = row.insertCell(2);
+            amount.innerHTML = searchResult["amount"][key];
+            let link = row.insertCell(3);
+            link.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["url"];
+            //console.log(key, selectedProducts[key]);
+        }
+    }
     //refreshModalTable();
 
     // show modal
