@@ -28,6 +28,7 @@ $(function () {
     if (pathname[1] === 'results_db') {
         let history_id = pathname[2];
         url = "/history/" + history_id;
+        document.getElementById("saveButton").disabled = true;
     } else if (pathname[1] === 'results') {
         token = pathname[2];
         url = "/search/" + token;
@@ -461,6 +462,7 @@ function saveToHistory() {
     $.ajax({
         type: "POST",
         url: "/history",
+        async: false,
         data: {
             'products': JSON.stringify(productsToSaveDict)
         },
