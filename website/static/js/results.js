@@ -487,7 +487,14 @@ function showResultsModal(isOptimizedForStorecount) {
     // show search button
     $("#modalSaveButton").show();
     $("#modalGoBackButton").show();
-
+    //var selectedProducts = {...selectedProducts};
+    //var searchResult  = {...searchResult};
+    for(var key in searchResult["ceneo"]){
+        if(searchResult["ceneo"][key].length == 0){
+            //delete searchResult["ceneo"][key];
+            delete selectedProducts[key];
+        }
+    }
 
     // optimize results
     if(isOptimizedForStorecount){
@@ -536,15 +543,15 @@ function showResultsModal(isOptimizedForStorecount) {
             let name = row.insertCell(0);
             name.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
             let price = row.insertCell(1);
-            price.innerHTML = selectedProductsStores[key]['price']
+            price.innerHTML = selectedProductsStores[key]['price'];
             let amount = row.insertCell(2);
             amount.innerHTML = searchResult["amount"][key];
             
             let store = row.insertCell(3);
-            store.innerHTML = selectedProductsStores[key]['name']
+            store.innerHTML = selectedProductsStores[key]['name'];
 
             let link = row.insertCell(4);
-            link.innerHTML = selectedProductsStores[key]['url']
+            link.innerHTML = '<a href="' + selectedProductsStores[key]['url'] + '">link</a>';
             //console.log(key, selectedProducts[key]);
         }
 
@@ -562,7 +569,9 @@ function showResultsModal(isOptimizedForStorecount) {
             price.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["price"];
             let amount = row.insertCell(2);
             amount.innerHTML = searchResult["amount"][key];
-            let link = row.insertCell(3);
+            let store = row.insertCell(3);
+            store.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["name"];
+            let link = row.insertCell(4);
             link.innerHTML = '<a href="' + searchResult["ceneo"][key][selectedProducts[key] - 1]
                 ["shop_list"][nrSklepu]["url"] + '">link</a>';
             //console.log(key, selectedProducts[key]);
