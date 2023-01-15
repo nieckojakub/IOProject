@@ -119,6 +119,8 @@ class CeneoBrowser(Browser):
             product_main_html
         )
 
+
+        shop_list.sort(key = lambda shop: shop.price)
         # Return product object
         return Product(
             product_name,
