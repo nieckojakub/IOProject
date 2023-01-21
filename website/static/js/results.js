@@ -3,6 +3,7 @@
 // ##########################################################
 let searchResult;
 let selectedProducts = {};
+let productsToWrite = {};
 
 let modalSearchOverviewTableBody =
     document.getElementById('modalSearchOverviewTable').
@@ -479,6 +480,7 @@ function saveToHistory() {
 
 
 function showResultsModal(isOptimizedForStorecount) {
+    productsToWrite = {};
 
     // clear table with products
     modalSearchOverviewTableBody.innerHTML = "";
@@ -541,17 +543,21 @@ function showResultsModal(isOptimizedForStorecount) {
             let row = modalSearchOverviewTableBody.insertRow(ind);
             ind = ind + 1;
             let name = row.insertCell(0);
+            productsToWrite[key] = {};
             name.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
+            productsToWrite[key]["name"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
             let price = row.insertCell(1);
             price.innerHTML = selectedProductsStores[key]['price'];
+            productsToWrite[key]["price"] = selectedProductsStores[key]['price'];
             let amount = row.insertCell(2);
             amount.innerHTML = searchResult["amount"][key];
-            
+            productsToWrite[key]["amount"] = searchResult["amount"][key];
             let store = row.insertCell(3);
             store.innerHTML = selectedProductsStores[key]['name'];
-
+            productsToWrite[key]["store"] = selectedProductsStores[key]['name'];
             let link = row.insertCell(4);
             link.innerHTML = '<a href="' + selectedProductsStores[key]['url'] + '">link</a>';
+            productsToWrite[key]["link"] = selectedProductsStores[key]['url']
             //console.log(key, selectedProducts[key]);
         }
 
@@ -563,17 +569,23 @@ function showResultsModal(isOptimizedForStorecount) {
             let row = modalSearchOverviewTableBody.insertRow(ind);
             ind = ind + 1;
             let nrSklepu = 0;
+            productsToWrite[key] = {};
             let name = row.insertCell(0);
             name.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
+            productsToWrite[key]["name"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
             let price = row.insertCell(1);
             price.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["price"];
+            productsToWrite[key]["price"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["price"];
             let amount = row.insertCell(2);
             amount.innerHTML = searchResult["amount"][key];
+            productsToWrite[key]["amount"] = searchResult["amount"][key];
             let store = row.insertCell(3);
             store.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["name"];
+            productsToWrite[key]["store"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["name"];
             let link = row.insertCell(4);
             link.innerHTML = '<a href="' + searchResult["ceneo"][key][selectedProducts[key] - 1]
                 ["shop_list"][nrSklepu]["url"] + '">link</a>';
+            productsToWrite[key]["link"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["url"];
             //console.log(key, selectedProducts[key]);
         }
     }
@@ -583,6 +595,14 @@ function showResultsModal(isOptimizedForStorecount) {
     $('#staticBackdrop').modal('show');
 }
 
+function saveToFile(){
+    const link = document.createElement("a");
+    const file = new Blob([JSON.stringify(productsToWrite, null, 2)], { type: 'text/plain' });
+    link.href = URL.createObjectURL(file);
+    link.download = "results.txt";
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
 
 
 //refresh currently shown data withe new one, indicated by a radiobutton selected by the user
