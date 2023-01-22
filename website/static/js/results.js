@@ -539,6 +539,7 @@ function showResultsModal(isOptimizedForStorecount) {
         }
         console.log(selectedProductsStores);
         let ind = 0;
+        let total = 0;
         for (var key in selectedProducts) {
             let row = modalSearchOverviewTableBody.insertRow(ind);
             ind = ind + 1;
@@ -547,24 +548,32 @@ function showResultsModal(isOptimizedForStorecount) {
             name.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
             productsToWrite[key]["name"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
             let price = row.insertCell(1);
-            price.innerHTML = selectedProductsStores[key]['price'];
+            price.innerHTML = `${selectedProductsStores[key]['price']}zł`;
             productsToWrite[key]["price"] = selectedProductsStores[key]['price'];
             let amount = row.insertCell(2);
             amount.innerHTML = searchResult["amount"][key];
             productsToWrite[key]["amount"] = searchResult["amount"][key];
-            let store = row.insertCell(3);
+            let priceForAmount = row.insertCell(3);
+            priceForAmount.innerHTML = `${Math.round(searchResult["amount"][key] * productsToWrite[key]["price"] * 100)/100}zł`;
+            productsToWrite[key]["totalPrice"] = Math.round(searchResult["amount"][key] * productsToWrite[key]["price"] * 100)/100;
+            let store = row.insertCell(4);
             store.innerHTML = selectedProductsStores[key]['name'];
             productsToWrite[key]["store"] = selectedProductsStores[key]['name'];
-            let link = row.insertCell(4);
+            let link = row.insertCell(5);
             link.innerHTML = '<a href="' + selectedProductsStores[key]['url'] + '">link</a>';
             productsToWrite[key]["link"] = selectedProductsStores[key]['url']
-            //console.log(key, selectedProducts[key]);
+            total = total + productsToWrite[key]["totalPrice"];
         }
+        let row = modalSearchOverviewTableBody.insertRow(ind);
+        let totalText = row.insertCell(0);
+        totalText.innerHTML = `Total: ${Math.round(total*100)/100}zł`;
+        totalText.style.fontWeight = 'bold';
 
 
     } else {
 
         let ind = 0;
+        let total = 0;
         for (var key in selectedProducts) {
             let row = modalSearchOverviewTableBody.insertRow(ind);
             ind = ind + 1;
@@ -574,20 +583,27 @@ function showResultsModal(isOptimizedForStorecount) {
             name.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
             productsToWrite[key]["name"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["name"];
             let price = row.insertCell(1);
-            price.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["price"];
+            price.innerHTML = `${searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["price"]}zł`;
             productsToWrite[key]["price"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["price"];
             let amount = row.insertCell(2);
             amount.innerHTML = searchResult["amount"][key];
             productsToWrite[key]["amount"] = searchResult["amount"][key];
-            let store = row.insertCell(3);
+            let priceForAmount = row.insertCell(3);
+            priceForAmount.innerHTML = `${Math.round(searchResult["amount"][key] * productsToWrite[key]["price"] * 100)/100}zł`;
+            productsToWrite[key]["totalPrice"] = Math.round(searchResult["amount"][key] * productsToWrite[key]["price"] * 100)/100;
+            let store = row.insertCell(4);
             store.innerHTML = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["name"];
             productsToWrite[key]["store"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["name"];
-            let link = row.insertCell(4);
+            let link = row.insertCell(5);
             link.innerHTML = '<a href="' + searchResult["ceneo"][key][selectedProducts[key] - 1]
                 ["shop_list"][nrSklepu]["url"] + '">link</a>';
             productsToWrite[key]["link"] = searchResult["ceneo"][key][selectedProducts[key] - 1]["shop_list"][nrSklepu]["url"];
-            //console.log(key, selectedProducts[key]);
+            total = total + productsToWrite[key]["totalPrice"];
         }
+        let row = modalSearchOverviewTableBody.insertRow(ind);
+        let totalText = row.insertCell(0);
+        totalText.innerHTML = `Total: ${Math.round(total*100)/100}zł`;
+        totalText.style.fontWeight = 'bold';
     }
     //refreshModalTable();
 
