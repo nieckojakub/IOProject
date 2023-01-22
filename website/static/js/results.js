@@ -613,7 +613,8 @@ function showResultsModal(isOptimizedForStorecount) {
 
 function saveToFile(){
     const link = document.createElement("a");
-    const file = new Blob([JSON.stringify(productsToWrite, null, 2)], { type: 'text/plain' });
+    //const file = new Blob([JSON.stringify(productsToWrite, null, 2)], { type: 'text/plain' });
+    const file = new Blob([dictToASCII(dictionaryToList(productsToWrite)).split('\n').slice(2).join('\n')], { type: 'text/plain' });
     link.href = URL.createObjectURL(file);
     link.download = "results.txt";
     link.click();
@@ -806,3 +807,65 @@ function displayInfo(infoCode){
     document.getElementById("trigerInfoModal").click();
     document.getElementById("infoInModal").innerHTML = InfoStatus[infoCode];
 }
+
+function dictToASCII(dict) {
+    // Get the keys of the dictionary (these will be the table headers)
+    var headers = Object.keys(dict[0]);
+    // Get the number of columns by getting the number of keys
+    var numCols = headers.length;
+    // Create an array to hold the rows of the table
+    var rows = [];
+    // Add the headers to the first row of the table
+    rows.push(headers);
+    // Loop through each item in the dictionary
+    dict.forEach(function(item) {
+      // Create an array to hold the values for this row
+      var row = [];
+      // Loop through each key in the item
+      headers.forEach(function(key) {
+        // Add the value for this key to the row array
+        row.push(item[key]);
+      });
+      // Add the row to the rows array
+      rows.push(row);
+    });
+    // Find the maximum length of each column
+    var colWidths = new Array(numCols).fill(0);
+    rows.forEach(function(row) {
+      row.forEach(function(cell, i) {
+        colWidths[i] = Math.max(colWidths[i], cell.toString().length);
+      });
+    });
+    // Create a horizontal separator
+    var sep = "+";
+    colWidths.forEach(function(colWidth) {
+      sep += "-" + "-".repeat(colWidth) + "-+";
+    });
+    // Create the string for the table
+    var tableStr = sep + "\n";
+    // Add the headers to the table string
+    tableStr += "| " + headers.join(" | ") + " |\n";
+    tableStr += sep + "\n";
+    // Loop through each row in the rows array
+    rows.forEach(function(row) {
+      // Add the row to the table string
+      tableStr += "| ";
+      row.forEach(function(cell, i) {
+        tableStr += cell.toString().padEnd(colWidths[i]) + " | ";
+      });
+      tableStr = tableStr.slice(0, -1);
+      tableStr += "\n";
+    });
+    // Add the bottom separator to the table string
+    tableStr += sep;
+    // Return the table string
+    return tableStr;
+  }
+  function dictionaryToList(dict) {
+    var list = [];
+    for (var key in dict) {
+      list.push(dict[key]);
+    }
+    return list;
+  }
+  
