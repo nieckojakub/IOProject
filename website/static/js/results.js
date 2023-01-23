@@ -568,6 +568,7 @@ function showResultsModal(isOptimizedForStorecount) {
         let totalText = row.insertCell(0);
         totalText.innerHTML = `Total: ${Math.round(total*100)/100}zł`;
         totalText.style.fontWeight = 'bold';
+        productsToWrite["&total&Price&"] = Math.round(total*100)/100;
 
 
     } else {
@@ -604,6 +605,7 @@ function showResultsModal(isOptimizedForStorecount) {
         let totalText = row.insertCell(0);
         totalText.innerHTML = `Total: ${Math.round(total*100)/100}zł`;
         totalText.style.fontWeight = 'bold';
+        productsToWrite["&total&Price&"] = Math.round(total*100)/100;
     }
     //refreshModalTable();
 
@@ -614,7 +616,13 @@ function showResultsModal(isOptimizedForStorecount) {
 function saveToFile(){
     const link = document.createElement("a");
     //const file = new Blob([JSON.stringify(productsToWrite, null, 2)], { type: 'text/plain' });
-    const file = new Blob([dictToASCII(dictionaryToList(productsToWrite)).split('\n').slice(2).join('\n')], { type: 'text/plain' });
+    let total = productsToWrite["&total&Price&"];
+    delete productsToWrite["&total&Price&"];
+    let stringToSave = dictToASCII(dictionaryToList(productsToWrite), ["Product Name:", "Price", "Requested Amount", "Total price for selected amount", "Store", "Store Link"]).split('\n').slice(2).join('\n') + `\nTotal:${total}zł`;
+    let lines = stringToSave.split("\n");
+    [lines[0], lines[1]] = [lines[1], lines[0]];
+    stringToSave = lines.join("\n");
+    const file = new Blob([stringToSave], { type: 'text/plain' });
     link.href = URL.createObjectURL(file);
     link.download = "results.txt";
     link.click();
@@ -808,7 +816,7 @@ function displayInfo(infoCode){
     document.getElementById("infoInModal").innerHTML = InfoStatus[infoCode];
 }
 
-function dictToASCII(dict) {
+function dictToASCII(dict, realHeaders) {
     // Get the keys of the dictionary (these will be the table headers)
     var headers = Object.keys(dict[0]);
     // Get the number of columns by getting the number of keys
@@ -816,7 +824,7 @@ function dictToASCII(dict) {
     // Create an array to hold the rows of the table
     var rows = [];
     // Add the headers to the first row of the table
-    rows.push(headers);
+    rows.push(realHeaders);
     // Loop through each item in the dictionary
     dict.forEach(function(item) {
       // Create an array to hold the values for this row
