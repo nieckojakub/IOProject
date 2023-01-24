@@ -29,7 +29,7 @@ class CeneoBrowser(Browser):
         self.search_form = self.ceneo_html.select(self.FORM_SELECTOR)[0]
         self.search_input = self.search_form.select(self.FORM_INPUT_SELECTOR)[0]
 
-    def scrapProductInfo(
+    def __scrapProductInfo(
         self, product_main_page_url: str, target: str = None
     ) -> Product:
         """Extract information about the product.
@@ -78,19 +78,12 @@ class CeneoBrowser(Browser):
             ) or (target == self.CENEO_TARGET and shop_name == "allegro.pl"):
                 continue
 
-            if shop_name == "allegro.pl":
-                is_allegro = True
-            else:
-                is_allegro = False
-
             # Delivery price
             delivery_price = scrap_offer.scrapOfferDeliveryPrice(
-                shop_offer_html, product_price, is_allegro
+                shop_offer_html, product_price
             )
             # Product delivery time
-            delivery_time = scrap_offer.scrapOfferDeliveryTime(
-                shop_offer_html, is_allegro
-            )
+            delivery_time = scrap_offer.scrapOfferDeliveryTime(shop_offer_html)
 
             # Create Shop object and append it to the list
             shop_list.append(
@@ -119,8 +112,7 @@ class CeneoBrowser(Browser):
             product_main_html
         )
 
-
-        shop_list.sort(key = lambda shop: shop.price)
+        shop_list.sort(key=lambda shop: shop.price)
         # Return product object
         return Product(
             product_name,
@@ -149,6 +141,8 @@ class CeneoBrowser(Browser):
         """
         # Sort by price url prefix
         SORT_SUFFIX = ";0112-0.htm"
+        # Captcha pattern in the url
+        CAPTCHA_LINK_PATTERN = "CAPTCHA"
         # Layout Body
         PRODUCT_LIST_BODY_SELECTOR = ".category-list-body"
         # Row layout
@@ -179,6 +173,9 @@ class CeneoBrowser(Browser):
         if search_results_page.url == self.url:
             # Throwing an error expected here
             return []
+        elif CAPTCHA_LINK_PATTERN in search_results_page.url.upper():
+            return []
+
         # Sort products
         if sort:
             sorted_results_page_url = search_results_page.url + SORT_SUFFIX
@@ -206,7 +203,7 @@ class CeneoBrowser(Browser):
         )
         if product_main_container:
             # We got the main layout
-            return [self.scrapProductInfo(search_results_page.url)]
+            return [self.__scrapProductInfo(search_results_page.url)]
 
         # Check if the list layout selector appears on the results page
         product_list_containers = search_result_html.select(
@@ -257,13 +254,13 @@ class CeneoBrowser(Browser):
                 if regex_result is not None:
                     # Create the full product main page url
                     product_main_page_url = self.URL + a_tag["href"]
-                    product_obj = self.scrapProductInfo(
+                    product_obj = self.__scrapProductInfo(
                         product_main_page_url=product_main_page_url,
                         target=target,
                     )
                     if product_obj is not None:
                         product_list.append(
-                            self.scrapProductInfo(
+                            self.__scrapProductInfo(
                                 product_main_page_url=product_main_page_url,
                                 target=target,
                             )
