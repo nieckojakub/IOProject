@@ -36,10 +36,12 @@ class CeneoBrowser(Browser):
 
         This method is used by the search() method.
 
-        :param product_main_page_url: Link to ceneo page with product offer.
+        :param product_main_page_url: Url to the ceneo page with the product 
+            offer.
+        :param target: Specifies type of shop filtering.
         :return: Product object is returned.
         """
-        ALLEGRO_SHIPPING_SUFFIX = "#shipping-info"
+        
         SHOP_OFFER_SELECTOR = ".product-offers__list__item"
 
         # Prepare html
@@ -50,12 +52,6 @@ class CeneoBrowser(Browser):
         shop_list = list()
 
         shop_offers_html = product_main_html.select(SHOP_OFFER_SELECTOR)
-        # if not product_rating and shop_offers_html:
-        #     # There is no Product rating in the ceneo product overview.
-        #     # Try to extract rating from the first shop offer.
-        #     product_rating = scrap_product.scrapProductRating(
-        #         shop_offers_html[0], is_shop_offer=True
-        #     )
 
         for shop_offer_html in shop_offers_html:
             # Shop name
@@ -128,13 +124,15 @@ class CeneoBrowser(Browser):
         search_query: str,
         limit: int = PRODUCT_LIMIT,
         sort: bool = True,
-        target: str = None,
+        target: str = None
     ) -> List[Product]:
         """Search for the given product.
 
-        :param product_name: User-specified product name
+        :param search_query: User-specified product name
         :param limit: Specifies the maximum size of returned list. By default
             PRODUCT_LIMIT of 10 is used.
+        :param sort: Sort products by the price from low to high.
+        :param target: Specifies type of shop filtering.
         :return: If several products match the search criteria, a list of
         Product objects (with a maximum length limited by the limit variable)
         is returned. Otherwise only one Product object is returned.
@@ -171,7 +169,6 @@ class CeneoBrowser(Browser):
         # - if not, something is wrong with the form
 
         if search_results_page.url == self.url:
-            # Throwing an error expected here
             return []
         elif CAPTCHA_LINK_PATTERN in search_results_page.url.upper():
             return []
@@ -227,7 +224,7 @@ class CeneoBrowser(Browser):
             # We got the another grid-like layout
             product_containers = product_grid_2_containers
         else:
-            # Error ??
+            # Error
             return []
 
         # Count the products
