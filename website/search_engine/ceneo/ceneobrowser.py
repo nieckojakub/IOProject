@@ -29,17 +29,19 @@ class CeneoBrowser(Browser):
         self.search_form = self.ceneo_html.select(self.FORM_SELECTOR)[0]
         self.search_input = self.search_form.select(self.FORM_INPUT_SELECTOR)[0]
 
-    def scrapProductInfo(
+    def __scrapProductInfo(
         self, product_main_page_url: str, target: str = None
     ) -> Product:
         """Extract information about the product.
 
         This method is used by the search() method.
 
-        :param product_main_page_url: Link to ceneo page with product offer.
+        :param product_main_page_url: Url to the ceneo page with the product 
+            offer.
+        :param target: Specifies type of shop filtering.
         :return: Product object is returned.
         """
-        ALLEGRO_SHIPPING_SUFFIX = "#shipping-info"
+        
         SHOP_OFFER_SELECTOR = ".product-offers__list__item"
 
         # Prepare html
@@ -50,12 +52,6 @@ class CeneoBrowser(Browser):
         shop_list = list()
 
         shop_offers_html = product_main_html.select(SHOP_OFFER_SELECTOR)
-        # if not product_rating and shop_offers_html:
-        #     # There is no Product rating in the ceneo product overview.
-        #     # Try to extract rating from the first shop offer.
-        #     product_rating = scrap_product.scrapProductRating(
-        #         shop_offers_html[0], is_shop_offer=True
-        #     )
 
         for shop_offer_html in shop_offers_html:
             # Shop name
@@ -78,19 +74,12 @@ class CeneoBrowser(Browser):
             ) or (target == self.CENEO_TARGET and shop_name == "allegro.pl"):
                 continue
 
-            if shop_name == "allegro.pl":
-                is_allegro = True
-            else:
-                is_allegro = False
-
             # Delivery price
             delivery_price = scrap_offer.scrapOfferDeliveryPrice(
-                shop_offer_html, product_price, is_allegro
+                shop_offer_html, product_price
             )
             # Product delivery time
-            delivery_time = scrap_offer.scrapOfferDeliveryTime(
-                shop_offer_html, is_allegro
-            )
+            delivery_time = scrap_offer.scrapOfferDeliveryTime(shop_offer_html)
 
             # Create Shop object and append it to the list
             shop_list.append(
@@ -119,8 +108,7 @@ class CeneoBrowser(Browser):
             product_main_html
         )
 
-
-        shop_list.sort(key = lambda shop: shop.price)
+        shop_list.sort(key=lambda shop: shop.price)
         # Return product object
         return Product(
             product_name,
@@ -136,19 +124,23 @@ class CeneoBrowser(Browser):
         search_query: str,
         limit: int = PRODUCT_LIMIT,
         sort: bool = True,
-        target: str = None,
+        target: str = None
     ) -> List[Product]:
         """Search for the given product.
 
-        :param product_name: User-specified product name
+        :param search_query: User-specified product name
         :param limit: Specifies the maximum size of returned list. By default
             PRODUCT_LIMIT of 10 is used.
+        :param sort: Sort products by the price from low to high.
+        :param target: Specifies type of shop filtering.
         :return: If several products match the search criteria, a list of
         Product objects (with a maximum length limited by the limit variable)
         is returned. Otherwise only one Product object is returned.
         """
         # Sort by price url prefix
         SORT_SUFFIX = ";0112-0.htm"
+        # Captcha pattern in the url
+        CAPTCHA_LINK_PATTERN = "CAPTCHA"
         # Layout Body
         PRODUCT_LIST_BODY_SELECTOR = ".category-list-body"
         # Row layout
@@ -177,8 +169,10 @@ class CeneoBrowser(Browser):
         # - if not, something is wrong with the form
 
         if search_results_page.url == self.url:
-            # Throwing an error expected here
             return []
+        elif CAPTCHA_LINK_PATTERN in search_results_page.url.upper():
+            return []
+
         # Sort products
         if sort:
             sorted_results_page_url = search_results_page.url + SORT_SUFFIX
@@ -206,7 +200,7 @@ class CeneoBrowser(Browser):
         )
         if product_main_container:
             # We got the main layout
-            return [self.scrapProductInfo(search_results_page.url)]
+            return [self.__scrapProductInfo(search_results_page.url)]
 
         # Check if the list layout selector appears on the results page
         product_list_containers = search_result_html.select(
@@ -230,7 +224,7 @@ class CeneoBrowser(Browser):
             # We got the another grid-like layout
             product_containers = product_grid_2_containers
         else:
-            # Error ??
+            # Error
             return []
 
         # Count the products
@@ -257,13 +251,13 @@ class CeneoBrowser(Browser):
                 if regex_result is not None:
                     # Create the full product main page url
                     product_main_page_url = self.URL + a_tag["href"]
-                    product_obj = self.scrapProductInfo(
+                    product_obj = self.__scrapProductInfo(
                         product_main_page_url=product_main_page_url,
                         target=target,
                     )
                     if product_obj is not None:
                         product_list.append(
-                            self.scrapProductInfo(
+                            self.__scrapProductInfo(
                                 product_main_page_url=product_main_page_url,
                                 target=target,
                             )

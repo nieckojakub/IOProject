@@ -76,26 +76,47 @@
       {% if history_data %}
       <div id="divHistoryList" class="card rounded-lg p-3" style="background-color: #FFFFFF; border-radius: 25px;">
         <ul class="list-group">
-          {% for product_history in history_data %}
-          <li class="list-group-item list-group-item-action">
-            <div class="container">
-              <div class="row">
-                <div class="col" style="position: relative">
-                  <a class="stretched-link" style="text-decoration: none;"
-                    href="{{ url_for('views.results_db', history_id=product_history['history_id'])}}">
-                    {{ product_history['search_date'] }}
-                  </a>
+          <div id="accordion">
+            {% for product_history in history_data %}
+            <div class="card">
+              <div class="card-header" id="heading{{ product_history['history_id'] }}">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-9">
+                      <h5 class="mb-0 text-primary">
+                        <button class="btn collapsed" data-toggle="collapse"
+                          data-target="#collapse{{ product_history['history_id'] }}" aria-expanded="true"
+                          aria-controls="collapseOne">
+                          {{ product_history['search_date'] }}
+                        </button>
+                      </h5>
+                    </div>
+                    <div class="col-3 d-flex justify-content-end">
+                      <form id="search-history-form" method="GET">
+                        <a href="{{ url_for('views.results_db', history_id=product_history['history_id'])}}" class="btn btn-primary" role="button">Details</a>
+
+                        <button class="btn btn-danger" type="submit" name="history-btn"
+                          value="{{ product_history['history_id'] }}">Delete</button>
+                      </form>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-auto">
-                  <form id="search-history-form" method="GET">
-                    <button class="btn btn-danger" type="submit" name="history-btn"
-                      value="{{ product_history['history_id'] }}">Delete</button>
-                  </form>
+              </div>
+              <div id="collapse{{ product_history['history_id'] }}" class="collapse"
+                aria-labelledby="heading{{ product_history['history_id'] }}" data-parent="#accordion">
+                <div class="card-body">
+                  {% for product in product_history['products_list'] %}
+                  <div class="row">
+                    <div class="col-9">
+                    <a class="link-primary" target="_blank" href="{{product['product_url']}}">{{ product['product_name'] }}</a>
+                  </div>
+                  </div>
+                  {% endfor %}
                 </div>
               </div>
             </div>
-          </li>
-          {% endfor %}
+            {% endfor %}
+          </div>
         </ul>
       </div>
       {% else %}
