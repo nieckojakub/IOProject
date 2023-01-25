@@ -119,7 +119,7 @@ def get_product_data_tuple():
     # Get the --file option.
     file_option = re.findall("--FILE(?:=|\s)\S+", arg_line)
     if file_option:
-        file_name = file_option[-1].split(" ")[-1].split("=")[-1]
+        file_name = file_option[-1].split(" ")[-1].split("=")[-1].lower()
     else:
         file_name = DEFAULT_FILE_OPTION
 
